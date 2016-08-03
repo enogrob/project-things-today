@@ -1,0 +1,93 @@
+THINGS=$HOME/Things
+TODAY=$THINGS/Today
+PROJECTS=$THINGS/Projects
+RESOURCES=$THINGS/Resources
+
+replace_icon(){
+    droplet=$1
+    icon=$2
+    if [[ $icon =~ ^https?:// ]]; then
+        curl -sLo /tmp/icon $icon
+        icon=/tmp/icon
+    fi
+    rm -rf $droplet$'/Icon\r'
+    sips -i $icon >/dev/null
+    DeRez -only icns $icon > /tmp/icns.rsrc
+    Rez -append /tmp/icns.rsrc -o $droplet$'/Icon\r'
+    SetFile -a C $droplet
+    SetFile -a V $droplet$'/Icon\r'
+}
+
+function tds() {
+    if [[ $# -eq 1 ]]; then 
+        PROJECT=$1
+        PROJECT_TYPE=project
+   elif [[ $# -eq 2 ]]; then
+        PROJECT_TYPE = $2
+    else
+        echo "==> Wrong number of parameters"
+        echo $?
+    fi
+    mkdir -p $PROJECTS/$PROJECT
+    if [[ $PROJECT_TYPE =~ specialization ]]; then
+        replace_icon $PROJECTS/$PROJECT $RESOURCES/specialization.tiff
+        tag -a specialization $PROJECTS/$PROJECT
+    fi
+    if [[ $PROJECT_TYPE =~ project ]]; then
+        replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
+        tag -a project $PROJECTS/$PROJECT
+    fi
+    if [[ $PROJECT_TYPE =~ ebook ]]; then
+        replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
+        tag -a ebook $PROJECTS/$PROJECT
+    fi
+    if [[ $PROJECT_TYPE =~ tutorial ]]; then
+        replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
+        tag -a tutorial $PROJECTS/$PROJECT
+    fi
+    if [[ $PROJECT_TYPE =~ codewars ]]; then
+        replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
+        tag -a codewars $PROJECTS/$PROJECT
+    fi
+    if [[ $PROJECT_TYPE =~ course ]]; then
+        replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
+        tag -a course $PROJECTS/$PROJECT
+    fi 
+    cd $PROJECTS/$PROJECT
+    pushd .
+    open -g . 
+    tag -l $PROJECTS/$PROJECT
+}
+
+function tdy() {
+    cd $TODAY
+    tree -L 1 -Cd -l 
+    open -g .
+}
+
+function tdf() {
+    PROJECT=`basename $PWD`
+    ln -sf $PWD $TODAY/$PROJECT
+    pushd .
+    tree -L 1 -Cd -l $TODAY
+}
+
+function tdl() {
+    cd $PROJECTS
+    tree -L 1 -Cd -l 
+    open -g .
+}
+
+function tde() {
+    PROJECT=`basename $PWD`
+    cd $TODAY
+    \rm $PROJECT
+    tree -L 1 -Cd -l 
+    open -g .
+}
+
+function tdg() {
+    cd $PROJECTS/$PROJECT
+    pushd .
+    open -g .
+}

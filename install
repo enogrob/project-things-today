@@ -1,0 +1,2 @@
+cp .todayrc ~/
+source ~/.todayrc
