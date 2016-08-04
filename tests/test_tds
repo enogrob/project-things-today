@@ -1,0 +1,97 @@
+test_01_tds_should_print_error_bad_argument() {
+    source ~/.todayrc
+    assert_equals "Error: Bad argument!" "$(tds)"
+}
+
+test_02_tds_should_return_status_code_1() {
+    source ~/.todayrc
+    tds > /dev/null
+    assert_equals $? 1 
+}
+
+test_03_tds_should_create_dir_in_Projects() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+        
+    tds learning-nodejs > /dev/null
+    assert "test -d $PROJECTS/$PROJECT"
+}
+
+test_04_tds_should_create_project_project_type_vars() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+        
+    tds learning-nodejs > /dev/null
+    assert_equals "learning-nodejs" $PROJECT
+    assert_equals "project" $PROJECT_TYPE
+}
+
+test_05_tds_should_create_project_tag() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+        
+    tds learning-nodejs > /dev/null
+    assert_equals "/Users/enogrob/Things/Projects/learning-nodejs	project" "$(tag -l $PROJECTS/$PROJECT)" 
+}
+
+test_06_tds_should_create_project_tag_specialization() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+        
+    tds learning-nodejs specialization > /dev/null
+    assert_equals "/Users/enogrob/Things/Projects/learning-nodejs	specialization" "$(tag -l $PROJECTS/$PROJECT)" 
+}
+
+test_07_tds_should_create_project_icon() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+        
+    tds learning-nodejs > /dev/null
+    assert "test -f $PROJECTS/$PROJECT/Icon?"
+}
+
+test_08_tds_should_print_error_bad_project_type() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+        
+    assert_equals "Error: Bad project type!" "$(tds learning-nodejs xxxx)"
+}
+
+test_09_tds_should_return_status_code_1_for_bad_project_type() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    
+    tds learning-nodejs xxxx > /dev/null
+    assert_equals $? 1 
+}
+
+test_10_tdf_should_create_link_in_Today() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -f "$TODAY/learning-nodejs" ]; then rm -f $TODAY/learning-nodejs; fi
+    
+    tds learning-nodejs > /dev/null
+    tdf > /dev/null
+    assert "test -L $TODAY/$PROJECT"
+}
+
+test_11_tde_should_remove_link_in_Today() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -f "$TODAY/learning-nodejs" ]; then rm -f $TODAY/learning-nodejs; fi
+    
+    tds learning-nodejs > /dev/null
+    tdf > /dev/null
+    tde > /dev/null
+    assert "! test -f $TODAY/$PROJECT"
+    
+    
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -f "$TODAY/learning-nodejs" ]; then rm -f $TODAY/learning-nodejs; fi
+}
+
+# Change to directory where bash_unit so
+# that we can use our scripts under test
+# more easily
+
+cd $(dirname $0)
