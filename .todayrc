@@ -65,6 +65,7 @@ function tds() {
             ;;
     esac
     cd $PROJECTS/$PROJECT
+    tree -L 1 -Cd -l 
     open -g . 
     tag -l $PROJECTS/$PROJECT
 }
@@ -158,5 +159,12 @@ function tde() {
 
 function tdg() {
     cd $PROJECTS/$PROJECT
+    tree -L 1 -Cd -l 
+    open -g .
+}
+
+function tda() {
+    cd $AREAS
+    tree -L 1 -Cd -l 
     open -g .
 }
