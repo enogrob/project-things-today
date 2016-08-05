@@ -1,8 +1,9 @@
 THINGS=$HOME/Things
 TODAY=$THINGS/Today
+AREAS=$THINGS/Areas
 PROJECTS=$THINGS/Projects
 RESOURCES=$THINGS/Resources
-AREAS=$THINGS/Areas
+
 
 replace_icon(){
     droplet=$1
@@ -17,15 +18,6 @@ replace_icon(){
     Rez -append /tmp/icns.rsrc -o $droplet$'/Icon\r'
     SetFile -a C $droplet
     SetFile -a V $droplet$'/Icon\r'
-}
-
-function tdgit(){
-    if [ -n "$1" ]; then
-        git add . && \
-        git commit -am "$*" && \
-        git push origin master && \
-        hub browse .
-    fi
 }
 
 function tds() {
@@ -77,12 +69,6 @@ function tds() {
     tree -L 1 -Cd -l 
     open -g . 
     tag -l $PROJECTS/$PROJECT
-}
-
-function tdy() {
-    cd $TODAY
-    tree -L 1 -Cd -l 
-    open -g .
 }
 
 function tdf() {
@@ -142,8 +128,29 @@ function tdf() {
     tree -L 1 -Cd -l $TODAY
 }
 
-function tdl() {
+function tdy() {
+    cd $TODAY
+    tree -L 1 -Cd -l 
+    open -g .
+}
+
+function tdp() {
     cd $PROJECTS
+    tree -L 1 -Cd -l 
+    open -g .
+}
+
+function tdj() {
+    if [ "$#" -gt 0 ]; then
+        PROJECT="$*"
+    fi
+    cd $PROJECTS/$PROJECT
+    tree -L 1 -Cd -l 
+    open -g .
+}
+
+function tda() {
+    cd $AREAS
     tree -L 1 -Cd -l 
     open -g .
 }
@@ -166,14 +173,11 @@ function tde() {
     open -g . 
 }
 
-function tdg() {
-    cd $PROJECTS/$PROJECT
-    tree -L 1 -Cd -l 
-    open -g .
-}
-
-function tda() {
-    cd $AREAS
-    tree -L 1 -Cd -l 
-    open -g .
+function tdg(){
+    if [ "$#" -gt 0 ]; then
+        git add . && \
+        git commit -am "$*" && \
+        git push origin master && \
+        hub browse .
+    fi
 }
