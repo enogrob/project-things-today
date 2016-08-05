@@ -19,6 +19,15 @@ replace_icon(){
     SetFile -a V $droplet$'/Icon\r'
 }
 
+function tdgit(){
+    if [ -n "$1" ]; then
+        git add . && \
+        git commit -am "$*" && \
+        git push origin master && \
+        hub browse .
+    fi
+}
+
 function tds() {
     case $# in 
         1) PROJECT=$1
