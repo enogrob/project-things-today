@@ -84,10 +84,32 @@ test_11_tde_should_remove_link_in_Today() {
     tdf > /dev/null
     tde > /dev/null
     assert "! test -f $TODAY/$PROJECT"
+}
+
+test_12_tdf_should_create_link_in_Areas() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -f "$TODAY/learning-nodejs" ]; then rm -f $TODAY/learning-nodejs; fi      
+    
+    tds learning-nodejs > /dev/null
+    tdf rails > /dev/null
+    assert "test -L $TODAY/$AREA"
+}
+
+test_13_tde_should_remove_link_in_Areas() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -f "$TODAY/learning-nodejs" ]; then rm -f $TODAY/learning-nodejs; fi
+    
+    tds learning-nodejs > /dev/null
+    tdf rails > /dev/null
+    tde > /dev/null
+    assert "! test -L $TODAY/$AREA"
     
     
     if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
     if [ -f "$TODAY/learning-nodejs" ]; then rm -f $TODAY/learning-nodejs; fi
+    if [ -e "$TODAY/$AREA" ]; then rm -f $TODAY/$AREA/learning-nodejs; fi
 }
 
 # Change to directory where bash_unit so

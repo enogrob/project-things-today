@@ -2,6 +2,7 @@ THINGS=$HOME/Things
 TODAY=$THINGS/Today
 PROJECTS=$THINGS/Projects
 RESOURCES=$THINGS/Resources
+AREAS=$THINGS/Areas
 
 replace_icon(){
     droplet=$1
@@ -64,7 +65,6 @@ function tds() {
             ;;
     esac
     cd $PROJECTS/$PROJECT
-    pushd .
     open -g . 
     tag -l $PROJECTS/$PROJECT
 }
@@ -76,9 +76,59 @@ function tdy() {
 }
 
 function tdf() {
-    PROJECT=`basename $PWD`
-    ln -sf $PWD $TODAY/$PROJECT
-    pushd .
+    case $# in 
+        0) PROJECT=`basename $PWD`
+           ln -sf $PWD $TODAY/$PROJECT
+           ;;          
+        1) AREA=$1
+           case $AREA in
+                codewars)
+                ;;
+                course)
+                ;;
+                coursera)
+                ;;
+                catabases)
+                ;;
+                datascience)
+                ;;
+                devops)
+                ;;
+                ebook)
+                ;;
+                iot)
+                ;;
+                job)
+                ;;
+                krishnamurti)
+                ;;
+                phoenix)
+                ;;
+                rails)
+                ;;
+                ruby)
+                ;;
+                specialization)
+                ;;
+                suspended)
+                ;;
+                tutorial)
+                ;;
+                udemy)
+                ;;
+                webdev)
+                ;;
+                *)  echo "Error: Bad project type!"
+                    return 1
+                ;;
+           esac
+           ln -sf $PWD $AREAS/$AREA/$PROJECT
+           if [ ! -e "$TODAY/$AREA" ]; then ln -sf $AREAS/$AREA $TODAY/$AREA ; fi         
+           ;;
+        *) echo "Error: Bad argument!"
+           return 1
+           ;;
+    esac
     tree -L 1 -Cd -l $TODAY
 }
 
@@ -90,14 +140,23 @@ function tdl() {
 
 function tde() {
     PROJECT=`basename $PWD`
+    AREADIR=`find $AREAS -name $PROJECT`
+    if [ -n "$AREADIR" ]; then
+       AREADIRNAME=`dirname $AREADIR`
+       AREA=`basename $AREADIRNAME`
+       if [ -e "$AREAS/$AREA/$PROJECT" ]; then rm -f $AREAS/$AREA/$PROJECT; fi
+       if [ -e "$TODAY/$AREA" ]; then
+          files=($AREAS/$AREA/*)
+          if [ ${#files[@]} -lt 2 ]; then rm -f $TODAY/$AREA; fi
+       fi 
+    fi
+    if [ -L "$TODAY/$PROJECT" ]; then rm -f $TODAY/$PROJECT; fi  
     cd $TODAY
-    \rm $PROJECT
     tree -L 1 -Cd -l 
-    open -g .
+    open -g . 
 }
 
 function tdg() {
     cd $PROJECTS/$PROJECT
-    pushd .
     open -g .
 }
