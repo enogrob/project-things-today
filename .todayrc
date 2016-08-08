@@ -3,7 +3,10 @@ TODAY=$THINGS/Today
 AREAS=$THINGS/Areas
 PROJECTS=$THINGS/Projects
 RESOURCES=$THINGS/Resources
-
+INBOX=$THINGS/Inbox
+LOGBOOK=$THINGS/Logbook
+SCHEDULED=$THINGS/Scheduled
+SOMEDAY=$THINGS/Someday
 
 replace_icon(){
     droplet=$1
@@ -180,4 +183,39 @@ function tdg(){
         git push origin master && \
         hub browse .
     fi
+}
+
+function things() {
+    case $1 in
+        projects)
+            cd $PROJECTS
+            tree -L 1 -Cd -l 
+            open -g .
+            ;;
+        today)
+            cd $TODAY
+            tree -L 1 -Cd -l 
+            open -g .
+            ;;
+        inbox)
+            cd $INBOX
+            tree -L 1 -Cd -l 
+            open -g .
+            ;;
+        logbook)
+            cd $LOGBOOK
+            tree -L 1 -Cd -l 
+            open -g .
+            ;;
+        scheduled)
+            cd $SCHEDULED
+            tree -L 1 -Cd -l 
+            open -g .
+            ;;
+        someday)
+            cd $SOMEDAY
+            tree -L 1 -Cd -l 
+            open -g .
+            ;;
+    esac
 }
