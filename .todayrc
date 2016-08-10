@@ -8,6 +8,18 @@ LOGBOOK=$THINGS/Logbook
 SCHEDULED=$THINGS/Scheduled
 SOMEDAY=$THINGS/Someday
 
+alias tdy='things today'
+alias tdyl='things today list'
+alias tdp='things projects'
+alias tdpl='things projects list'
+alias tdpi='things projects start'
+alias tdpe='things projects stop'
+alias tda='things areas'
+alias tdal='things areas list'
+alias tdai='things areas start'
+alias tdae='things areas stop'
+alias tdgit='things git'
+
 replace_icon(){
     droplet=$1
     icon=$2
@@ -23,341 +35,245 @@ replace_icon(){
     SetFile -a V $droplet$'/Icon\r'
 }
 
-function tds() {
-    case $# in 
-        1) PROJECT=$1
-           PROJECT_TYPE=project
-           ;;
-           
-        2) PROJECT=$1
-           PROJECT_TYPE=$2
-           ;;
-        *) echo "Error: Bad argument!"
-           return 1
-           ;;
-    esac
-    
-    mkdir -p $PROJECTS/$PROJECT
-    
-    case $PROJECT_TYPE in
-        specialization) 
-            replace_icon $PROJECTS/$PROJECT $RESOURCES/specialization.tiff
-            tag -a specialization $PROJECTS/$PROJECT
-            ;;
-        project)        
-            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-            tag -a project $PROJECTS/$PROJECT
-            ;;
-        ebook)
-            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-            tag -a ebook $PROJECTS/$PROJECT
-            ;;
-        tutorial)       
-            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-            tag -a tutorial $PROJECTS/$PROJECT
-            ;;
-        codewars)
-            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-            tag -a codewars $PROJECTS/$PROJECT
-            ;;
-        course)
-            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-            tag -a course $PROJECTS/$PROJECT
-            ;;
-        *)  echo "Error: Bad project type!"
-            return 1
-            ;;
-    esac
-    cd $PROJECTS/$PROJECT
-    tree -L 1 -Cd -l 
-    open -g . 
-    tag -l $PROJECTS/$PROJECT
-}
-
-function tdf() {
-    case $# in 
-        0) PROJECT=`basename $PWD`
-           ln -sf $PWD $TODAY/$PROJECT
-           ;;          
-        1) AREA=$1
-           case $AREA in
-                codewars)
-                ;;
-                course)
-                ;;
-                coursera)
-                ;;
-                catabases)
-                ;;
-                datascience)
-                ;;
-                devops)
-                ;;
-                ebook)
-                ;;
-                iot)
-                ;;
-                job)
-                ;;
-                krishnamurti)
-                ;;
-                phoenix)
-                ;;
-                rails)
-                ;;
-                ruby)
-                ;;
-                specialization)
-                ;;
-                suspended)
-                ;;
-                tutorial)
-                ;;
-                udemy)
-                ;;
-                webdev)
-                ;;
-                *)  echo "Error: Bad project type!"
-                    return 1
-                ;;
-           esac
-           ln -sf $PWD $AREAS/$AREA/$PROJECT
-           if [ ! -e "$TODAY/$AREA" ]; then ln -sf $AREAS/$AREA $TODAY/$AREA ; fi         
-           ;;
-        *) echo "Error: Bad argument!"
-           return 1
-           ;;
-    esac
-    tree -L 1 -Cd -l $TODAY
-}
-
-function tdy() {
-    cd $TODAY
-    tree -L 1 -Cd -l 
-    open -g .
-}
-
-function tdp() {
-    cd $PROJECTS
-    tree -L 1 -Cd -l 
-    open -g .
-}
-
-function tdj() {
-    if [ "$#" -gt 0 ]; then
-        PROJECT="$*"
-    fi
-    cd $PROJECTS/$PROJECT
-    tree -L 1 -Cd -l 
-    open -g .
-}
-
-function tda() {
-    cd $AREAS
-    tree -L 1 -Cd -l 
-    open -g .
-}
-
-function tde() {
-    PROJECT=`basename $PWD`
-    AREADIR=`find $AREAS -name $PROJECT`
-    if [ -n "$AREADIR" ]; then
-       AREADIRNAME=`dirname $AREADIR`
-       AREA=`basename $AREADIRNAME`
-       if [ -e "$AREAS/$AREA/$PROJECT" ]; then rm -f $AREAS/$AREA/$PROJECT; fi
-       if [ -e "$TODAY/$AREA" ]; then
-          files=($AREAS/$AREA/*)
-          if [ ${#files[@]} -lt 2 ]; then rm -f $TODAY/$AREA; fi
-       fi 
-    fi
-    if [ -L "$TODAY/$PROJECT" ]; then rm -f $TODAY/$PROJECT; fi  
-    cd $TODAY
-    tree -L 1 -Cd -l 
-    open -g . 
-}
-
-function tdg(){
-    if [ "$#" -gt 0 ]; then
-        git add . && \
-        git commit -am "$*" && \
-        git push origin master && \
-        hub browse .
-    fi
-}
-
 function things() {
     case $1 in
         areas)
-            cd $AREAS
-            tree -L 1 -Cd -l 
-            open -g .
-            ;;
-        projects)
-            cd $PROJECTS
-            tree -L 1 -Cd -l 
-            open -g .
-            ;;
-        today)
-            cd $TODAY
-            tree -L 1 -Cd -l 
-            open -g .
-            ;;
-        inbox)
-            cd $INBOX
-            tree -L 1 -Cd -l 
-            open -g .
-            ;;
-        logbook)
-            cd $LOGBOOK
-            tree -L 1 -Cd -l 
-            open -g .
-            ;;
-        scheduled)
-            cd $SCHEDULED
-            tree -L 1 -Cd -l 
-            open -g .
-            ;;
-        someday)
-            cd $SOMEDAY
-            tree -L 1 -Cd -l 
-            open -g .
-            ;;
-        fallback)
             shift
-            case $# in 
-                0) PROJECT=`basename $PWD`
-                   ln -sf $PWD $TODAY/$PROJECT
-                   ;;          
-                1) AREA=$1
-                   case $AREA in
-                        codewars)
-                        ;;
-                        course)
-                        ;;
-                        coursera)
-                        ;;
-                        catabases)
-                        ;;
-                        datascience)
-                        ;;
-                        devops)
-                        ;;
+            case $1 in
+                list)
+                    tree -L 1 -Cd -l $AREAS
+                    open -g $AREAS
+                    ;;
+
+                start)
+                    shift
+                    if [ $# -eq 1 ]; then
+                        PROJECT=`basename $PWD`
+                        AREA=$1
+                    else
+                        echo "Error: Bad number of arguments!"
+                        return 1
+                    fi
+                    case $AREA in
+                         codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
+                         rails|ruby|specialization|suspended|tutorial|udemy|webdev)
+                         ;;
+                         *)  
+                         echo "Error: Bad project type!"
+                         return 1
+                         ;;
+                    esac
+                    ln -sf $PWD $AREAS/$AREA/$PROJECT
+                    if [ ! -e "$TODAY/$AREA" ]; then ln -sf $AREAS/$AREA $TODAY/$AREA ; fi  
+                    tree -L 1 -Cd -l $TODAY
+                    open -g $TODAY 
+                    ;;
+                    
+                stop)
+                    PROJECT=`basename $PWD`
+                    AREADIR=`find $AREAS -name $PROJECT`
+                    if [ -n "$AREADIR" ]; then
+                       AREADIRNAME=`dirname $AREADIR`
+                       AREA=`basename $AREADIRNAME`
+                       if [ -e "$AREAS/$AREA/$PROJECT" ]; then rm -f $AREAS/$AREA/$PROJECT; fi
+                       if [ -e "$TODAY/$AREA" ]; then
+                          files=($AREAS/$AREA/*)
+                          if [ ${#files[@]} -lt 2 ]; then rm -f $TODAY/$AREA; fi
+                       fi 
+                    fi
+                    ;;
+                    
+                *)
+                    cd $AREAS
+                    tree -L 1 -Cd -l 
+                    open -g .
+                    ;;
+            esac
+            ;;
+            
+        projects)
+            shift
+            case $1 in
+                list)
+                    tree -L 1 -Cd -l $PROJECTS
+                    open -g $PROJECTS
+                    ;;
+
+                start)
+                    PROJECT=`basename $PWD`
+                    ln -sf $PWD $TODAY/$PROJECT
+                    tree -L 1 -Cd -l $TODAY
+                    open -g $TODAY
+                    ;;
+                    
+                stop)
+                    shift
+                    PROJECT=`basename $PWD`
+                    AREADIR=`find $AREAS -name $PROJECT`
+                    if [ -n "$AREADIR" ]; then
+                       AREADIRNAME=`dirname $AREADIR`
+                       AREA=`basename $AREADIRNAME`
+                       if [ -e "$AREAS/$AREA/$PROJECT" ]; then rm -f $AREAS/$AREA/$PROJECT; fi
+                       if [ -e "$TODAY/$AREA" ]; then
+                          files=($AREAS/$AREA/*)
+                          if [ ${#files[@]} -lt 2 ]; then rm -f $TODAY/$AREA; fi
+                       fi 
+                    fi
+                    if [ -L "$TODAY/$PROJECT" ]; then rm -f $TODAY/$PROJECT; fi  
+                    cd $TODAY
+                    tree -L 1 -Cd -l 
+                    open -g . 
+                    ;;
+                    
+                new)
+                    shift
+                    if [ $# -eq 1 ]; then
+                        PROJECT=$1
+                        PROJECT_TYPE=project
+                    elif [ $# -eq 2 ]; then
+                        # Still have to test the validation
+                        PROJECT_TYPE=$2 #
+                    else
+                        echo "Error: Bad number of arguments!"
+                        return 1
+                    fi
+                    mkdir -p $PROJECTS/$PROJECT
+                    case $PROJECT_TYPE in
+                        specialization) 
+                            replace_icon $PROJECTS/$PROJECT $RESOURCES/specialization.tiff
+                            tag -a specialization $PROJECTS/$PROJECT
+                            ;;
+                        project)        
+                            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
+                            tag -a project $PROJECTS/$PROJECT
+                            ;;
                         ebook)
-                        ;;
-                        iot)
-                        ;;
-                        job)
-                        ;;
-                        krishnamurti)
-                        ;;
-                        phoenix)
-                        ;;
-                        rails)
-                        ;;
-                        ruby)
-                        ;;
-                        specialization)
-                        ;;
-                        suspended)
-                        ;;
-                        tutorial)
-                        ;;
-                        udemy)
-                        ;;
-                        webdev)
-                        ;;
+                            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
+                            tag -a ebook $PROJECTS/$PROJECT
+                            ;;
+                        tutorial)       
+                            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
+                            tag -a tutorial $PROJECTS/$PROJECT
+                            ;;
+                        codewars)
+                            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
+                            tag -a codewars $PROJECTS/$PROJECT
+                            ;;
+                        course)
+                            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
+                            tag -a course $PROJECTS/$PROJECT
+                            ;;
                         *)  echo "Error: Bad project type!"
                             return 1
-                        ;;
-                   esac
-                   ln -sf $PWD $AREAS/$AREA/$PROJECT
-                   if [ ! -e "$TODAY/$AREA" ]; then ln -sf $AREAS/$AREA $TODAY/$AREA ; fi         
-                   ;;
-                *) echo "Error: Bad argument!"
-                   return 1
-                   ;;
-                esac
-                tree -L 1 -Cd -l $TODAY
-                ;;
-            end)
-                shift
-                PROJECT=`basename $PWD`
-                AREADIR=`find $AREAS -name $PROJECT`
-                if [ -n "$AREADIR" ]; then
-                   AREADIRNAME=`dirname $AREADIR`
-                   AREA=`basename $AREADIRNAME`
-                   if [ -e "$AREAS/$AREA/$PROJECT" ]; then rm -f $AREAS/$AREA/$PROJECT; fi
-                   if [ -e "$TODAY/$AREA" ]; then
-                      files=($AREAS/$AREA/*)
-                      if [ ${#files[@]} -lt 2 ]; then rm -f $TODAY/$AREA; fi
-                   fi 
-                fi
-                if [ -L "$TODAY/$PROJECT" ]; then rm -f $TODAY/$PROJECT; fi  
-                cd $TODAY
-                tree -L 1 -Cd -l 
-                open -g . 
-                ;;
-            start)
-                shift
-                case $# in 
-                    1) PROJECT=$1
-                       PROJECT_TYPE=project
-                       ;;
-             
-                    2) PROJECT=$1
-                       PROJECT_TYPE=$2
-                       ;;
-                    *) echo "Error: Bad argument!"
-                       return 1
-                       ;;
-                esac
-                
-                mkdir -p $PROJECTS/$PROJECT
-                
-                case $PROJECT_TYPE in
-                    specialization) 
-                        replace_icon $PROJECTS/$PROJECT $RESOURCES/specialization.tiff
-                        tag -a specialization $PROJECTS/$PROJECT
-                        ;;
-                    project)        
-                        replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-                        tag -a project $PROJECTS/$PROJECT
-                        ;;
-                    ebook)
-                        replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-                        tag -a ebook $PROJECTS/$PROJECT
-                        ;;
-                    tutorial)       
-                        replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-                        tag -a tutorial $PROJECTS/$PROJECT
-                        ;;
-                    codewars)
-                        replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-                        tag -a codewars $PROJECTS/$PROJECT
-                        ;;
-                    course)
-                        replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-                        tag -a course $PROJECTS/$PROJECT
-                        ;;
-                    *)  echo "Error: Bad project type!"
-                        return 1
-                        ;;
-                esac
-                cd $PROJECTS/$PROJECT
-                tree -L 1 -Cd -l 
-                open -g . 
-                tag -l $PROJECTS/$PROJECT
-                ;;
-            git)
-                shift
-                if [ "$#" -gt 0 ]; then
-                    git add . && \
-                    git commit -am "$*" && \
-                    git push origin master && \
-                    hub browse .
-                fi
-                ;;
+                            ;;
+                    esac
+                    cd $PROJECTS/$PROJECT
+                    tree -L 1 -Cd -l 
+                    open -g . 
+                    tag -l $PROJECTS/$PROJECT
+                    ;;
+                    
+                *)
+                    cd $PROJECTS
+                    tree -L 1 -Cd -l 
+                    open -g .
+                    ;;
+            esac
+            ;;
             
+        today)
+            shift
+            case $1 in
+                list)
+                    tree -L 1 -Cd -l $TODAY
+                    open -g $TODAY
+                    ;;
+                *)
+                    cd $TODAY
+                    tree -L 1 -Cd -l 
+                    open -g .
+            esac
+            ;;
             
+        inbox)
+            shift
+            case $1 in
+                list)
+                    tree -L 1 -Cd -l $INBOX
+                    open -g $INBOX
+                    ;;
+                *)
+                    cd $INBOX
+                    tree -L 1 -Cd -l 
+                    open -g .
+            esac
+            ;;
+            
+        logbook)
+            shift
+            case $1 in
+                list)
+                    tree -L 1 -Cd -l $LOGBOOK
+                    open -g $LOGBOOK
+                    ;;
+                *)
+                    cd $LOGBOOK
+                    tree -L 1 -Cd -l 
+                    open -g .
+            esac
+            ;;
+            
+        scheduled)
+            shift
+            case $1 in
+                list)
+                    tree -L 1 -Cd -l $SCHEDULED
+                    open -g $SCHEDULED
+                    ;;
+                *)
+                    cd $SCHEDULED
+                    tree -L 1 -Cd -l 
+                    open -g .
+            esac
+            ;;
+            
+        someday)
+            shift
+            case $1 in
+                list)
+                    tree -L 1 -Cd -l $SOMEDAY
+                    open -g $SOMEDAY
+                    ;;
+                *)
+                    cd $SOMEDAY
+                    tree -L 1 -Cd -l 
+                    open -g .
+            esac
+            ;;        
+ 
+        git)
+            shift
+            if [ "$#" -gt 0 ]; then
+                git add . && \
+                git commit -am "$*" && \
+                git push origin master && \
+                hub browse .
+            fi
+            ;;
+        *)
+            echo 'tdy:   things today'
+            echo ''
+            echo 'tdp:   things projects'
+            echo 'tdpl:  things projects list'
+            echo 'tdpi:  things projects start'
+            echo 'tdpe:  things projects stop'
+            echo ''
+            echo 'tda:   things areas'
+            echo 'tdal:  things areas list'
+            echo 'tdai:  things areas start'
+            echo 'tdae:  things areas stop'
+            echo ''
+            echo 'tdgit: things git'
+            ;;
     esac
 }
