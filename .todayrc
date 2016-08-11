@@ -14,6 +14,7 @@ alias tdp='things projects'
 alias tdpl='things projects list'
 alias tdpi='things projects start'
 alias tdpe='things projects stop'
+alias tdpn='things projects new'
 alias tda='things areas'
 alias tdal='things areas list'
 alias tdai='things areas start'
@@ -131,7 +132,7 @@ function things() {
                         PROJECT=$1
                         PROJECT_TYPE=project
                     elif [ $# -eq 2 ]; then
-                        # Still have to test the validation
+                        PROJECT=$1
                         PROJECT_TYPE=$2 #
                     else
                         echo "Error: Bad number of arguments!"

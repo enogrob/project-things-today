@@ -1,0 +1,26 @@
+test_01_tdpi_should_create_link_in_Today() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -f "$TODAY/learning-nodejs" ]; then rm -f $TODAY/learning-nodejs; fi
+    
+    things projects new learning-nodejs > /dev/null
+    things projects start > /dev/null
+    assert "test -L $TODAY/$PROJECT"
+}
+
+test_02_tdpi_should_create_link_in_Areas() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -f "$TODAY/learning-nodejs" ]; then rm -f $TODAY/learning-nodejs; fi      
+    
+    things projects new learning-nodejs > /dev/null
+    things areas start rails > /dev/null
+    assert "test -L $TODAY/$AREA"
+}
+
+
+# Change to directory where bash_unit so
+# that we can use our scripts under test
+# more easily
+
+cd $(dirname $0)
