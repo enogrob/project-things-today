@@ -65,6 +65,27 @@ test_09_tdpn_should_return_status_code_1_for_bad_project_type() {
     assert_equals $? 1 
 }
 
+test_10_tdpi_should_create_link_in_Today() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -L "$TODAY/learning-nodejs" ]; then rm -f $TODAY/learning-nodejs; fi
+    
+    things projects new learning-nodejs > /dev/null
+    things projects start > /dev/null
+    assert "test -L $TODAY/$PROJECT"
+}
+
+test_11_tdpe_should_remove_link_in_Today() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -f "$TODAY/learning-nodejs" ]; then rm -f $TODAY/learning-nodejs; fi
+    
+    things projects new learning-nodejs > /dev/null
+    things projects start > /dev/null
+    things projects stop > /dev/null
+    assert "! test -f $TODAY/$PROJECT"
+}
+
 # Change to directory where bash_unit so
 # that we can use our scripts under test
 # more easily

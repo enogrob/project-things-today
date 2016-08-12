@@ -1,0 +1,42 @@
+test_01_tda_should_go_to_and_list_Areas() {
+    source ~/.todayrc    
+    
+    things areas > /dev/null
+    assert_equals "$AREAS" "$PWD"
+}
+
+#test_02_tdal_should_list_Areas() {     
+#    source ~/.todayrc  
+#        
+#    things areas list > /dev/null
+#    assert "test -L $TODAY/$AREA"
+#}
+
+test_03_tdai_should_create_link_in_Areas() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -L "$TODAY/learning-nodejs" ]; then rm -f $TODAY/learning-nodejs; fi  
+    if [ -L "$TODAY/$AREA" ]; then rm -f $TODAY/$AREA; fi       
+    
+    things projects new learning-nodejs > /dev/null
+    things areas start rails > /dev/null
+    assert "test -L $TODAY/$AREA"
+}
+
+test_04_tdae_should_remove_link_in_Areas() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -L "$TODAY/learning-nodejs" ]; then rm -f $TODAY/learning-nodejs; fi  
+    if [ -L "$TODAY/$AREA" ]; then rm -f $TODAY/$AREA; fi       
+    
+    things projects new learning-nodejs > /dev/null
+    things areas start rails > /dev/null
+    things areas stop > /dev/null
+    assert "! test -L $TODAY/$AREA"
+}
+
+# Change to directory where bash_unit so
+# that we can use our scripts under test
+# more easily
+
+cd $(dirname $0)

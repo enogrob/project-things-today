@@ -1,0 +1,41 @@
+test_01_tdl_should_go_to_and_list_Logbook() {
+    source ~/.todayrc    
+    
+    things logbook > /dev/null
+    assert_equals "$LOGBOOK" "$PWD"
+}
+
+#test_02_tdll_should_list_Logbook() {     
+#    source ~/.todayrc  
+#        
+#    things logbook list > /dev/null
+#}
+
+test_03_tdai_should_create_link_in_Logbook() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -L "$LOGBOOK/learning-nodejs" ]; then rm -f $LOGBOOK/learning-nodejs; fi  
+    
+    things projects new learning-nodejs > /dev/null
+    things logbook start > /dev/null
+    assert "test -L $LOGBOOK/$PROJECT"
+}
+
+test_04_tdae_should_remove_link_in_Logbook() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+    if [ -L "$LOGBOOK/learning-nodejs" ]; then rm -f $LOGBOOK/learning-nodejs; fi    
+    
+    things projects new learning-nodejs > /dev/null
+    things logbook start > /dev/null
+    things logbook stop > /dev/null
+    assert "! test -L $LOGBOOK/$PROJECT"
+    
+    if [ -d "$PROJECTS/learning-nodejs" ]; then rm -Rf $PROJECTS/learning-nodejs; fi
+}
+
+# Change to directory where bash_unit so
+# that we can use our scripts under test
+# more easily
+
+cd $(dirname $0)

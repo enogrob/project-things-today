@@ -10,15 +10,23 @@ SOMEDAY=$THINGS/Someday
 
 alias tdy='things today'
 alias tdyl='things today list'
+
 alias tdp='things projects'
 alias tdpl='things projects list'
 alias tdpi='things projects start'
 alias tdpe='things projects stop'
 alias tdpn='things projects new'
+
 alias tda='things areas'
 alias tdal='things areas list'
 alias tdai='things areas start'
 alias tdae='things areas stop'
+
+alias tdl='things logbook'
+alias tdll='things logbook list'
+alias tdli='things logbook start'
+alias tdle='things logbook stop'
+
 alias tdgit='things git'
 
 replace_icon(){
@@ -64,8 +72,11 @@ function things() {
                          return 1
                          ;;
                     esac
-                    ln -sf $PWD $AREAS/$AREA/$PROJECT
-                    if [ ! -e "$TODAY/$AREA" ]; then ln -sf $AREAS/$AREA $TODAY/$AREA ; fi  
+                    PROJECTDIR=`find $PROJECTS -name $PROJECT`
+                    if [ -n "$PROJECTDIR" ]; then
+                        if [ ! -L "$AREAS/$AREA/$PROJECT" ]; then ln -sf $PWD $AREAS/$AREA/$PROJECT; fi
+                        if [ ! -L "$TODAY/$AREA" ]; then ln -sf $AREAS/$AREA $TODAY/$AREA ; fi  
+                    fi
                     tree -L 1 -Cd -l $TODAY
                     open -g $TODAY 
                     ;;
@@ -76,12 +87,15 @@ function things() {
                     if [ -n "$AREADIR" ]; then
                        AREADIRNAME=`dirname $AREADIR`
                        AREA=`basename $AREADIRNAME`
-                       if [ -e "$AREAS/$AREA/$PROJECT" ]; then rm -f $AREAS/$AREA/$PROJECT; fi
-                       if [ -e "$TODAY/$AREA" ]; then
+                       if [ -L "$AREAS/$AREA/$PROJECT" ]; then rm -f $AREAS/$AREA/$PROJECT; fi
+                       if [ -L "$TODAY/$AREA" ]; then
                           files=($AREAS/$AREA/*)
                           if [ ${#files[@]} -lt 2 ]; then rm -f $TODAY/$AREA; fi
                        fi 
                     fi
+                    cd $TODAY
+                    tree -L 1 -Cd -l 
+                    open -g . 
                     ;;
                     
                 *)
@@ -102,25 +116,30 @@ function things() {
 
                 start)
                     PROJECT=`basename $PWD`
-                    ln -sf $PWD $TODAY/$PROJECT
+                    PROJECTDIR=`find $PROJECTS -name $PROJECT`
+                    if [ -n "$PROJECTDIR" ]; then
+                        if [ ! -e "$TODAY/$PROJECT" ]; then ln -sf $PWD $TODAY/$PROJECT; fi
+                    fi
                     tree -L 1 -Cd -l $TODAY
                     open -g $TODAY
                     ;;
                     
                 stop)
-                    shift
                     PROJECT=`basename $PWD`
-                    AREADIR=`find $AREAS -name $PROJECT`
-                    if [ -n "$AREADIR" ]; then
-                       AREADIRNAME=`dirname $AREADIR`
-                       AREA=`basename $AREADIRNAME`
-                       if [ -e "$AREAS/$AREA/$PROJECT" ]; then rm -f $AREAS/$AREA/$PROJECT; fi
-                       if [ -e "$TODAY/$AREA" ]; then
-                          files=($AREAS/$AREA/*)
-                          if [ ${#files[@]} -lt 2 ]; then rm -f $TODAY/$AREA; fi
-                       fi 
+                    PROJECTDIR=`find $PROJECTS -name $PROJECT`
+                    if [ -n "$PROJECTDIR" ]; then
+                        AREADIR=`find $AREAS -name $PROJECT`
+                        if [ -n "$AREADIR" ]; then
+                           AREADIRNAME=`dirname $AREADIR`
+                           AREA=`basename $AREADIRNAME`
+                           if [ -e "$AREAS/$AREA/$PROJECT" ]; then rm -f $AREAS/$AREA/$PROJECT; fi
+                           if [ -e "$TODAY/$AREA" ]; then
+                              files=($AREAS/$AREA/*)
+                              if [ ${#files[@]} -lt 2 ]; then rm -f $TODAY/$AREA; fi
+                           fi 
+                        fi
+                        if [ -L "$TODAY/$PROJECT" ]; then rm -f $TODAY/$PROJECT; fi  
                     fi
-                    if [ -L "$TODAY/$PROJECT" ]; then rm -f $TODAY/$PROJECT; fi  
                     cd $TODAY
                     tree -L 1 -Cd -l 
                     open -g . 
@@ -217,6 +236,26 @@ function things() {
                     tree -L 1 -Cd -l $LOGBOOK
                     open -g $LOGBOOK
                     ;;
+                    
+                start)
+                     PROJECT=`basename $PWD`
+                     PROJECTDIR=`find $PROJECTS -name $PROJECT`
+                     if [ -n "$PROJECTDIR" ]; then
+                         if [ ! -e "$LOGBOOK/$PROJECT" ]; then ln -sf $PWD $LOGBOOK/$PROJECT; fi
+                     fi
+                     tree -L 1 -Cd -l $LOGBOOK
+                     open -g $LOGBOOK
+                     ;;
+                    
+                stop)
+                     PROJECT=`basename $PWD`
+                     PROJECTDIR=`find $PROJECTS -name $PROJECT`
+                     if [ -n "$PROJECTDIR" ]; then
+                         if [ -e "$LOGBOOK/$PROJECT" ]; then rm -f $LOGBOOK/$PROJECT; fi
+                     fi
+                     tree -L 1 -Cd -l $LOGBOOK
+                     open -g $LOGBOOK
+                     ;;
                 *)
                     cd $LOGBOOK
                     tree -L 1 -Cd -l 
