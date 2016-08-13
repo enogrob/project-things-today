@@ -300,20 +300,11 @@ function things() {
                 hub browse .
             fi
             ;;
+            
         *)
-            echo 'tdy:   things today'
-            echo ''
-            echo 'tdp:   things projects'
-            echo 'tdpl:  things projects list'
-            echo 'tdpi:  things projects start'
-            echo 'tdpe:  things projects stop'
-            echo ''
-            echo 'tda:   things areas'
-            echo 'tdal:  things areas list'
-            echo 'tdai:  things areas start'
-            echo 'tdae:  things areas stop'
-            echo ''
-            echo 'tdgit: things git'
+            cd $THINGS
+            tree -L 1 -Cd -l 
+            open -g .
             ;;
     esac
 }
