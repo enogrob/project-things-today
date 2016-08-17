@@ -84,6 +84,8 @@ test_11_tdpe_should_remove_link_in_Today() {
     things projects start > /dev/null
     things projects stop > /dev/null
     assert "! test -f $TODAY/$PROJECT"
+    
+    if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
 }
 
 # Change to directory where bash_unit so

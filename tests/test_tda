@@ -26,6 +26,8 @@ test_03_tdae_should_remove_link_in_Areas() {
     things areas start rails > /dev/null
     things areas stop > /dev/null
     assert "! test -L $TODAY/$AREA"
+    
+    if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
 }
 
 # Change to directory where bash_unit so
