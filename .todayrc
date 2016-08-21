@@ -27,6 +27,9 @@ alias tdll='things logbook list'
 alias tdli='things logbook start'
 alias tdle='things logbook stop'
 
+alias tdi='things inbox'
+alias tdil='things inbox list'
+
 alias tdgit='things git'
 
 replace_icon(){
