@@ -5,7 +5,7 @@ Solution Integrator Experienced - Certified by Ericsson
 
 # Things Today
 
-![ebook_cover](images/krishnamurti.png)
+![ebook_cover](images/things.png)
 
 ## Table of Contents
 
