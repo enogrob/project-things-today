@@ -1,5 +1,4 @@
 THINGS=$HOME/Things
-TODAY=$THINGS/Today
 AREAS=$THINGS/Areas
 PROJECTS=$THINGS/Projects
 RESOURCES=$THINGS/Resources
@@ -7,6 +6,9 @@ INBOX=$THINGS/Inbox
 LOGBOOK=$THINGS/Logbook
 SCHEDULED=$THINGS/Scheduled
 SOMEDAY=$THINGS/Someday
+CLOUD=$HOME/Google\ Drive/Today
+LOCAL=$HOME/Things/Today
+TODAY=$HOME/Today
 
 alias tdy='things today'
 alias tdyl='things today list'
@@ -26,6 +28,10 @@ alias tdl='things logbook'
 alias tdll='things logbook list'
 alias tdli='things logbook start'
 alias tdle='things logbook stop'
+
+alias tdc='things cloud'
+alias tdci='things cloud start'
+alias tdce='things cloud stop'
 
 alias tdi='things inbox'
 alias tdil='things inbox list'
@@ -302,6 +308,44 @@ function things() {
                 git push origin master && \
                 hub browse .
             fi
+            ;;
+            
+        cloud)
+            shift
+            case $1 in
+                start)
+                    echo "=> Configuring TODAY to CLOUD..."
+                    echo ""
+                    rm $TODAY
+                    touch $TODAY
+                    ln -sf "$CLOUD" $TODAY
+                    echo "-- TODAY  :"
+                    ls -l $TODAY
+                    echo ""
+                    ;;
+                stop)
+                    echo "=> Configuring TODAY to LOCAL..."
+                    echo ""
+                    rm $TODAY
+                    touch $TODAY
+                    ln -sf $LOCAL $TODAY
+                    echo "-- TODAY  :"
+                    ls -l $TODAY
+                    echo ""
+                    ;;
+                *) 
+                    echo "=> Listing TODAY configuration..."
+                    echo ""
+                    echo "-- TODAY  :"
+                    if [ ! -L $HTODAY ]; then 
+                      echo "$TODAY do not exist !"
+                      echo ""
+                    else  
+                      ls -l $TODAY
+                      echo ""
+                    fi
+                    ;;
+            esac
             ;;
             
         *)

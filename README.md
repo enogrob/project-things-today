@@ -13,6 +13,7 @@ Solution Integrator Experienced - Certified by Ericsson
 Table of Contents
 
 Done recently
+[x] Implemented partial feature 'things cloud"
 [x] Implemented tests for features tdp, tda and tdl
 [x] Implemented complete feature 'things logbook'
 [x] Implemented complete feature 'things areas'
