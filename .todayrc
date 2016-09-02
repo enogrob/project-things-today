@@ -1,14 +1,19 @@
-THINGS=$HOME/Things
+THINGS=$HOME/THINGS_HOME
+
+TODAY_LINK=$HOME/Today
+PROJECTS_LINK=$HOME/Projects
+
 AREAS=$THINGS/Areas
 PROJECTS=$THINGS/Projects
-RESOURCES=$THINGS/Resources
+RESOURCES=$THINGS/Resources/images
 INBOX=$THINGS/Inbox
 LOGBOOK=$THINGS/Logbook
 SCHEDULED=$THINGS/Scheduled
 SOMEDAY=$THINGS/Someday
-CLOUD=$HOME/Google\ Drive/Today
-LOCAL=$HOME/Things/Today
-TODAY=$HOME/Today
+TODAY=$THINGS/Today
+
+CLOUD=$HOME/Google\ Drive/Things
+LOCAL=$HOME/Things
 
 alias tdy='things today'
 alias tdyl='things today list'
@@ -38,8 +43,8 @@ alias tdil='things inbox list'
 
 alias tdgit='things git'
 
-is_Today() {
-if [ "$1" == "`readlink $TODAY`" ]
+is_Things() {
+if [ "$1" == "`readlink $THINGS`" ]
   then
     # 0 = true
     return 0 
@@ -325,44 +330,50 @@ function things() {
             shift
             case $1 in
                 start)
-                    if is_Today "$CLOUD"; then
-                        echo "=> TODAY already to CLOUD!"
+                    if is_Things "$CLOUD"; then
+                        echo "=> THINGS already to CLOUD!"
                         echo ""
                     else
-                        echo "=> Configuring TODAY to CLOUD..."
+                        echo "=> Configuring THINGS to CLOUD..."
                         echo ""
-                        rm $TODAY
-                        touch $TODAY
-                        ln -sf "$CLOUD" $TODAY
-                        echo "-- TODAY  :"
-                        ls -l $TODAY
+                        unlink $TODAY_LINK
+                        unlink $PROJECTS_LINK
+                        ln -sf "$CLOUD/Today" $TODAY_LINK
+                        ln -sf "$CLOUD/Projects" $PROJECTS_LINK                     
+                        unlink $THINGS
+                        ln -sf "$CLOUD" $THINGS
+                        echo "-- THINGS  :"
+                        ls -l $THINGS
                         echo ""
                     fi
                     ;;
                 stop)
-                    if is_Today $LOCAL; then
-                        echo "=> TODAY already to LOCAL!"
+                    if is_Things $LOCAL; then
+                        echo "=> THINGS already to LOCAL!"
                         echo ""
                     else
-                        echo "=> Configuring TODAY to LOCAL..."
+                        echo "=> Configuring THINGS to LOCAL..."
                         echo ""
-                        rm $TODAY
-                        touch $TODAY
-                        ln -sf $LOCAL $TODAY
-                        echo "-- TODAY  :"
-                        ls -l $TODAY
+                        unlink $TODAY_LINK
+                        unlink $PROJECTS_LINK
+                        ln -sf "$LOCAL/Today" $TODAY_LINK
+                        ln -sf "$LOCAL/Projects" $PROJECTS_LINK                     
+                        unlink $THINGS
+                        ln -sf "$LOCAL" $THINGS
+                        echo "-- THINGS  :"
+                        ls -l $THINGS
                         echo ""
                     fi
                     ;;
                 *) 
                     echo "=> Listing TODAY configuration..."
                     echo ""
-                    echo "-- TODAY  :"
-                    if [ ! -L $TODAY ]; then 
-                      echo "$TODAY do not exist !"
+                    echo "-- THINGS  :"
+                    if [ ! -L $THINGS ]; then 
+                      echo "THINGS do not exist !"
                       echo ""
                     else  
-                      ls -l $TODAY
+                      ls -l $THINGS
                       echo ""
                     fi
                     ;;
@@ -370,6 +381,11 @@ function things() {
             ;;
             
         *)
+            if [ ! -L "$THINGS" ]; then
+                ln -sf "$LOCAL" $THINGS
+                ln -sf "$LOCAL/Today" $TODAY_LINK
+                ln -sf "$LOCAL/Projects" $PROJECTS_LINK
+            fi
             cd $THINGS
             tree -L 1 -Cd -l 
             open -g .
