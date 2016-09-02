@@ -38,6 +38,17 @@ alias tdil='things inbox list'
 
 alias tdgit='things git'
 
+is_Today() {
+if [ "$1" == "`readlink $TODAY`" ]
+  then
+    # 0 = true
+    return 0 
+  else
+    # 1 = false
+    return 1
+  fi
+}
+
 replace_icon(){
     droplet=$1
     icon=$2
@@ -314,30 +325,40 @@ function things() {
             shift
             case $1 in
                 start)
-                    echo "=> Configuring TODAY to CLOUD..."
-                    echo ""
-                    rm $TODAY
-                    touch $TODAY
-                    ln -sf "$CLOUD" $TODAY
-                    echo "-- TODAY  :"
-                    ls -l $TODAY
-                    echo ""
+                    if is_Today "$CLOUD"; then
+                        echo "=> TODAY already to CLOUD!"
+                        echo ""
+                    else
+                        echo "=> Configuring TODAY to CLOUD..."
+                        echo ""
+                        rm $TODAY
+                        touch $TODAY
+                        ln -sf "$CLOUD" $TODAY
+                        echo "-- TODAY  :"
+                        ls -l $TODAY
+                        echo ""
+                    fi
                     ;;
                 stop)
-                    echo "=> Configuring TODAY to LOCAL..."
-                    echo ""
-                    rm $TODAY
-                    touch $TODAY
-                    ln -sf $LOCAL $TODAY
-                    echo "-- TODAY  :"
-                    ls -l $TODAY
-                    echo ""
+                    if is_Today $LOCAL; then
+                        echo "=> TODAY already to LOCAL!"
+                        echo ""
+                    else
+                        echo "=> Configuring TODAY to LOCAL..."
+                        echo ""
+                        rm $TODAY
+                        touch $TODAY
+                        ln -sf $LOCAL $TODAY
+                        echo "-- TODAY  :"
+                        ls -l $TODAY
+                        echo ""
+                    fi
                     ;;
                 *) 
                     echo "=> Listing TODAY configuration..."
                     echo ""
                     echo "-- TODAY  :"
-                    if [ ! -L $HTODAY ]; then 
+                    if [ ! -L $TODAY ]; then 
                       echo "$TODAY do not exist !"
                       echo ""
                     else  
