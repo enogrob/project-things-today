@@ -37,6 +37,7 @@ alias tdle='things logbook stop'
 alias tdc='things cloud'
 alias tdci='things cloud start'
 alias tdce='things cloud stop'
+alias tdcc='things cloud copy'
 
 alias tdi='things inbox'
 alias tdil='things inbox list'
@@ -364,6 +365,17 @@ function things() {
                         ls -l $THINGS
                         echo ""
                     fi
+                    ;;
+                copy)
+                    PROJECT=`basename $PWD`
+                    PROJECTDIR=`find $PROJECTS -name $PROJECT`
+                    if [ -n "$PROJECTDIR" ]; then
+                        if [ ! -e "$CLOUD/Projects/$PROJECT" ]; then 
+                            rsync -avErL $PWD "$CLOUD/Projects"
+                        fi
+                    fi
+                    tree -L 1 -Cd -l "$CLOUD/Projects/$PROJECT"
+                    open -g "$CLOUD/Projects/"
                     ;;
                 *) 
                     echo "=> Listing TODAY configuration..."
