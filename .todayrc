@@ -186,28 +186,12 @@ function things() {
                     mkdir -p $PROJECTS/$PROJECT
                     case $PROJECT_TYPE in
                         specialization) 
-                            replace_icon $PROJECTS/$PROJECT $RESOURCES/specialization.tiff
+                            replace_icon $PROJECTS/$PROJECT $RESOURCES/specialization.icns
                             tag -a specialization $PROJECTS/$PROJECT
                             ;;
-                        project)        
-                            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-                            tag -a project $PROJECTS/$PROJECT
-                            ;;
-                        ebook)
-                            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-                            tag -a ebook $PROJECTS/$PROJECT
-                            ;;
-                        tutorial)       
-                            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-                            tag -a tutorial $PROJECTS/$PROJECT
-                            ;;
-                        codewars)
-                            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-                            tag -a codewars $PROJECTS/$PROJECT
-                            ;;
-                        course)
-                            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.tiff
-                            tag -a course $PROJECTS/$PROJECT
+                        project|ebook|tutorial|codewars|course)        
+                            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.icns
+                            tag -a $PROJECT_TYPE $PROJECTS/$PROJECT
                             ;;
                         *)  echo "Error: Bad project type!"
                             return 1
