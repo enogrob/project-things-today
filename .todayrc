@@ -141,32 +141,32 @@ function things() {
                     ;;
 
                 start)
-                    PROJECT=`basename $PWD`
-                    PROJECTDIR=`find $PROJECTS -name $PROJECT`
+                    PROJECT=`basename "$PWD"`
+                    PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ ! -e "$TODAY/$PROJECT" ]; then ln -sf $PWD $TODAY/$PROJECT; fi
+                        if [ ! -e "$TODAY/$PROJECT" ]; then ln -sf "$PWD" "$TODAY/$PROJECT"; fi
                     fi
-                    tree -L 1 -Cd -l $TODAY
-                    open -g $TODAY
+                    tree -L 1 -Cd -l "$TODAY"
+                    open -g "$TODAY"
                     ;;
                     
                 stop)
-                    PROJECT=`basename $PWD`
-                    PROJECTDIR=`find $PROJECTS -name $PROJECT`
+                    PROJECT=`basename "$PWD"`
+                    PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
                     if [ -n "$PROJECTDIR" ]; then
-                        AREADIR=`find $AREAS -name $PROJECT`
+                        AREADIR=`find "$AREAS" -name "$PROJECT"`
                         if [ -n "$AREADIR" ]; then
-                           AREADIRNAME=`dirname $AREADIR`
-                           AREA=`basename $AREADIRNAME`
-                           if [ -e "$AREAS/$AREA/$PROJECT" ]; then rm -f $AREAS/$AREA/$PROJECT; fi
+                           AREADIRNAME=`dirname "$AREADIR"`
+                           AREA=`basename "$AREADIRNAME"`
+                           if [ -e "$AREAS/$AREA/$PROJECT" ]; then rm -f "$AREAS/$AREA/$PROJECT"; fi
                            if [ -e "$TODAY/$AREA" ]; then
                               files=($AREAS/$AREA/*)
-                              if [ ${#files[@]} -lt 2 ]; then rm -f $TODAY/$AREA; fi
+                              if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
                            fi 
                         fi
-                        if [ -L "$TODAY/$PROJECT" ]; then rm -f $TODAY/$PROJECT; fi  
+                        if [ -L "$TODAY/$PROJECT" ]; then rm -f "$TODAY/$PROJECT"; fi  
                     fi
-                    cd $TODAY
+                    cd "$TODAY"
                     tree -L 1 -Cd -l 
                     open -g . 
                     ;;
