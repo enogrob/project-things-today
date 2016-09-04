@@ -76,14 +76,14 @@ function things() {
             shift
             case $1 in
                 list)
-                    tree -L 1 -Cd -l $AREAS
-                    open -g $AREAS
+                    tree -L 1 -Cd -l "$AREAS"
+                    open -g "$AREAS"
                     ;;
 
                 start)
                     shift
                     if [ $# -eq 1 ]; then
-                        PROJECT=`basename $PWD`
+                        PROJECT=`basename "$PWD"`
                         AREA=$1
                     else
                         echo "Error: Bad number of arguments!"
@@ -98,34 +98,34 @@ function things() {
                          return 1
                          ;;
                     esac
-                    PROJECTDIR=`find $PROJECTS -name $PROJECT`
+                    PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ ! -L "$AREAS/$AREA/$PROJECT" ]; then ln -sf $PWD $AREAS/$AREA/$PROJECT; fi
-                        if [ ! -L "$TODAY/$AREA" ]; then ln -sf $AREAS/$AREA $TODAY/$AREA ; fi  
+                        if [ ! -L "$AREAS/$AREA/$PROJECT" ]; then ln -sf "$PWD" "$AREAS/$AREA/$PROJECT"; fi
+                        if [ ! -L "$TODAY/$AREA" ]; then ln -sf "$AREAS/$AREA" "$TODAY/$AREA" ; fi  
                     fi
-                    tree -L 1 -Cd -l $TODAY
-                    open -g $TODAY 
+                    tree -L 1 -Cd -l "$TODAY"
+                    open -g "$TODAY" 
                     ;;
                     
                 stop)
-                    PROJECT=`basename $PWD`
-                    AREADIR=`find $AREAS -name $PROJECT`
+                    PROJECT=`basename "$PWD"`
+                    AREADIR=`find "$AREAS" -name $PROJECT`
                     if [ -n "$AREADIR" ]; then
-                       AREADIRNAME=`dirname $AREADIR`
-                       AREA=`basename $AREADIRNAME`
-                       if [ -L "$AREAS/$AREA/$PROJECT" ]; then rm -f $AREAS/$AREA/$PROJECT; fi
+                       AREADIRNAME=`dirname "$AREADIR"`
+                       AREA=`basename "$AREADIRNAME"`
+                       if [ -L "$AREAS/$AREA/$PROJECT" ]; then rm -f "$AREAS/$AREA/$PROJECT"; fi
                        if [ -L "$TODAY/$AREA" ]; then
-                          files=($AREAS/$AREA/*)
-                          if [ ${#files[@]} -lt 2 ]; then rm -f $TODAY/$AREA; fi
+                          files=("$AREAS/$AREA/*")
+                          if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
                        fi 
                     fi
-                    cd $TODAY
+                    cd "$TODAY"
                     tree -L 1 -Cd -l 
                     open -g . 
                     ;;
                     
                 *)
-                    cd $AREAS
+                    cd "$AREAS"
                     tree -L 1 -Cd -l 
                     open -g .
                     ;;
@@ -136,8 +136,8 @@ function things() {
             shift
             case $1 in
                 list)
-                    tree -L 1 -Cd -l $PROJECTS
-                    open -g $PROJECTS
+                    tree -L 1 -Cd -l "$PROJECTS"
+                    open -g "$PROJECTS"
                     ;;
 
                 start)
@@ -183,28 +183,28 @@ function things() {
                         echo "Error: Bad number of arguments!"
                         return 1
                     fi
-                    mkdir -p $PROJECTS/$PROJECT
+                    mkdir -p "$PROJECTS/$PROJECT"
                     case $PROJECT_TYPE in
                         specialization) 
-                            replace_icon $PROJECTS/$PROJECT $RESOURCES/specialization.icns
-                            tag -a specialization $PROJECTS/$PROJECT
+                            replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/specialization.icns"
+                            tag -a specialization "$PROJECTS/$PROJECT"
                             ;;
                         project|ebook|tutorial|codewars|course)        
-                            replace_icon $PROJECTS/$PROJECT $RESOURCES/project.icns
-                            tag -a $PROJECT_TYPE $PROJECTS/$PROJECT
+                            replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
+                            tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                             ;;
                         *)  echo "Error: Bad project type!"
                             return 1
                             ;;
                     esac
-                    cd $PROJECTS/$PROJECT
+                    cd "$PROJECTS/$PROJECT"
                     tree -L 1 -Cd -l 
                     open -g . 
-                    tag -l $PROJECTS/$PROJECT
+                    tag -l "$PROJECTS/$PROJECT"
                     ;;
                     
                 *)
-                    cd $PROJECTS
+                    cd "$PROJECTS"
                     tree -L 1 -Cd -l 
                     open -g .
                     ;;
@@ -215,11 +215,11 @@ function things() {
             shift
             case $1 in
                 list)
-                    tree -L 1 -Cd -l $TODAY
-                    open -g $TODAY
+                    tree -L 1 -Cd -l "$TODAY"
+                    open -g "$TODAY"
                     ;;
                 *)
-                    cd $TODAY
+                    cd "$TODAY"
                     tree -L 1 -Cd -l 
                     open -g .
             esac
@@ -229,11 +229,11 @@ function things() {
             shift
             case $1 in
                 list)
-                    tree -L 1 -Cd -l $INBOX
-                    open -g $INBOX
+                    tree -L 1 -Cd -l "$INBOX"
+                    open -g "$INBOX"
                     ;;
                 *)
-                    cd $INBOX
+                    cd "$INBOX"
                     tree -L 1 -Cd -l 
                     open -g .
             esac
@@ -243,31 +243,31 @@ function things() {
             shift
             case $1 in
                 list)
-                    tree -L 1 -Cd -l $LOGBOOK
-                    open -g $LOGBOOK
+                    tree -L 1 -Cd -l "$LOGBOOK"
+                    open -g "$LOGBOOK"
                     ;;
                     
                 start)
-                     PROJECT=`basename $PWD`
-                     PROJECTDIR=`find $PROJECTS -name $PROJECT`
+                     PROJECT=`basename "$PWD"`
+                     PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
                      if [ -n "$PROJECTDIR" ]; then
-                         if [ ! -e "$LOGBOOK/$PROJECT" ]; then ln -sf $PWD $LOGBOOK/$PROJECT; fi
+                         if [ ! -e "$LOGBOOK/$PROJECT" ]; then ln -sf "$PWD" "$LOGBOOK/$PROJECT"; fi
                      fi
-                     tree -L 1 -Cd -l $LOGBOOK
-                     open -g $LOGBOOK
+                     tree -L 1 -Cd -l "$LOGBOOK"
+                     open -g "$LOGBOOK"
                      ;;
                     
                 stop)
-                     PROJECT=`basename $PWD`
-                     PROJECTDIR=`find $PROJECTS -name $PROJECT`
+                     PROJECT=`basename "$PWD"`
+                     PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
                      if [ -n "$PROJECTDIR" ]; then
-                         if [ -e "$LOGBOOK/$PROJECT" ]; then rm -f $LOGBOOK/$PROJECT; fi
+                         if [ -e "$LOGBOOK/$PROJECT" ]; then rm -f "$LOGBOOK/$PROJECT"; fi
                      fi
-                     tree -L 1 -Cd -l $LOGBOOK
-                     open -g $LOGBOOK
+                     tree -L 1 -Cd -l "$LOGBOOK"
+                     open -g "$LOGBOOK"
                      ;;
                 *)
-                    cd $LOGBOOK
+                    cd "$LOGBOOK"
                     tree -L 1 -Cd -l 
                     open -g .
             esac
@@ -277,11 +277,11 @@ function things() {
             shift
             case $1 in
                 list)
-                    tree -L 1 -Cd -l $SCHEDULED
-                    open -g $SCHEDULED
+                    tree -L 1 -Cd -l "$SCHEDULED"
+                    open -g "$SCHEDULED"
                     ;;
                 *)
-                    cd $SCHEDULED
+                    cd "$SCHEDULED"
                     tree -L 1 -Cd -l 
                     open -g .
             esac
@@ -291,11 +291,11 @@ function things() {
             shift
             case $1 in
                 list)
-                    tree -L 1 -Cd -l $SOMEDAY
-                    open -g $SOMEDAY
+                    tree -L 1 -Cd -l "$SOMEDAY"
+                    open -g "$SOMEDAY"
                     ;;
                 *)
-                    cd $SOMEDAY
+                    cd "$SOMEDAY"
                     tree -L 1 -Cd -l 
                     open -g .
             esac
@@ -324,7 +324,7 @@ function things() {
                         unlink $TODAY_LINK
                         unlink $PROJECTS_LINK
                         ln -sf "$CLOUD/Today" $TODAY_LINK
-                        ln -sf "$CLOUD/Projects" $PROJECTS_LINK                     
+                        ln -sf "$CLOUD/Projects" $PROJECTS_LINK
                         unlink $THINGS
                         ln -sf "$CLOUD" $THINGS
                         echo "-- THINGS  :"
@@ -382,7 +382,7 @@ function things() {
                 ln -sf "$LOCAL/Today" $TODAY_LINK
                 ln -sf "$LOCAL/Projects" $PROJECTS_LINK
             fi
-            cd $THINGS
+            cd "$THINGS"
             tree -L 1 -Cd -l 
             open -g .
             ;;
