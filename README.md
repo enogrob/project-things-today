@@ -13,6 +13,8 @@ Solution Integrator Experienced - Certified by Ericsson
 Table of Contents
 
 Done recently
+[x] Understood Google Drive issue
+[x] Implemented things cloud feature tdpi tdpe
 [x] Implemented partial feature 'things cloud"
 [x] Implemented tests for features tdp, tda and tdl
 [x] Implemented complete feature 'things logbook'
