@@ -1,3 +1,14 @@
+## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
+## Prepared : Roberto Nogueira
+## File     : .todayrc
+## Version  : PA01
+## Date     : 2016-09-05
+## Project  : things-today
+## Reference: bash
+##
+## Purpose  : Develop a system in order to help TODAY management directory
+##            for projects.
+
 THINGS=$HOME/THINGS_HOME
 
 TODAY_LINK=$HOME/Today
