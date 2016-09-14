@@ -200,7 +200,8 @@ function things() {
                             replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/specialization.icns"
                             tag -a specialization "$PROJECTS/$PROJECT"
                             ;;
-                        project|ebook|tutorial|codewars|course)        
+                        codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
+                            rails|ruby|suspended|tutorial|udemy|webdev)    
                             replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
                             tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                             ;;
