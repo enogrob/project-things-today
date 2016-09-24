@@ -201,7 +201,7 @@ function things() {
                             tag -a specialization "$PROJECTS/$PROJECT"
                             ;;
                         codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                            rails|ruby|suspended|tutorial|udemy|webdev)    
+                            rails|ruby|suspended|tutorial|udemy|webdev|project)    
                             replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
                             tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                             ;;
