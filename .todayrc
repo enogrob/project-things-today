@@ -185,12 +185,32 @@ function things() {
                 new)
                     shift
                     
-                    if [ $# -eq 1 ]; then
+                    if [ $# -eq 0 ]; then
+                        echo "Error: Bad number of arguments!"
+                        return 1
+                    elif [ $# -eq 1 ]; then
                         PROJECT=$1
                         PROJECT_TYPE=project
                     elif [ $# -eq 2 ]; then
                         PROJECT=$1
-                        PROJECT_TYPE=$2 #
+                        PROJECT_TYPE=$2
+                        case $PROJECT_TYPE in
+                            specialization) 
+                                replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/specialization.icns"
+                                tag -a specialization "$PROJECTS/$PROJECT"
+                                ;;
+                            codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
+                                rails|ruby|suspended|tutorial|udemy|webdev|project)    
+                                replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
+                                tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
+                                ;;
+                            *)  length=$(($#))
+                                P1=${@:1:$length}
+                                P2=`echo $P1 | awk '{print tolower($0)}'`
+                                PROJECT=`echo $P2 | sed 's/ /-/g'` 
+                                PROJECT_TYPE=project
+                                ;;
+                        esac    #
                     else
                         length=$(($#-1))
                         P1=${@:1:$length}

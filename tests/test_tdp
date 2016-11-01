@@ -31,7 +31,7 @@ test_05_tdpn_should_create_project_tag() {
     if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
         
     things projects new project-test > /dev/null
-    assert_equals "/Users/enogrob/Things/Projects/project-test	project" "$(tag -l $PROJECTS/$PROJECT)" 
+    assert_equals "/Users/enogrob/THINGS_HOME/Projects/project-test	project" "$(tag -l $PROJECTS/$PROJECT)" 
 }
 
 test_06_tdpn_should_create_project_tag_specialization() {
@@ -39,7 +39,7 @@ test_06_tdpn_should_create_project_tag_specialization() {
     if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
         
     things projects new project-test specialization > /dev/null
-    assert_equals "/Users/enogrob/Things/Projects/project-test	specialization" "$(tag -l $PROJECTS/$PROJECT)" 
+    assert_equals "/Users/enogrob/THINGS_HOME/Projects/project-test	specialization" "$(tag -l $PROJECTS/$PROJECT)" 
 }
 
 test_07_tdpn_should_create_project_icon() {
@@ -53,21 +53,17 @@ test_07_tdpn_should_create_project_icon() {
 test_08_tdpn_should_print_error_bad_project_type() {
     source ~/.todayrc
     if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
-        
-    assert_equals "Error: Bad project type!" "$(things projects new project-test xxxx)"
-}
-
-test_09_tdpn_should_return_status_code_1_for_bad_project_type() {
-    source ~/.todayrc
-    if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
     
-    things projects new project-test xxxx > /dev/null
-    assert_equals $? 1 
+    things projects new project-test xxxx> /dev/null
+    assert_equals "project-test-xxxx" $PROJECT
+    assert_equals "project" $PROJECT_TYPE   
 }
 
-test_10_tdpi_should_create_link_in_Today() {
+test_09_tdpi_should_create_link_in_Today() {
     source ~/.todayrc
     if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
+    if [ -d "$PROJECTS/project-test-xxxx" ]; then rm -Rf $PROJECTS/project-test-xxxx; fi
+    if [ -L "$TODAY/project-test-xxxx" ]; then rm -f $TODAY/project-test-xxxx; fi
     if [ -L "$TODAY/project-test" ]; then rm -f $TODAY/project-test; fi
     
     things projects new project-test > /dev/null
@@ -75,7 +71,7 @@ test_10_tdpi_should_create_link_in_Today() {
     assert "test -L $TODAY/$PROJECT"
 }
 
-test_11_tdpe_should_remove_link_in_Today() {
+test_10_tdpe_should_remove_link_in_Today() {
     source ~/.todayrc
     if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
     if [ -f "$TODAY/project-test" ]; then rm -f $TODAY/project-test; fi
@@ -86,6 +82,39 @@ test_11_tdpe_should_remove_link_in_Today() {
     assert "! test -f $TODAY/$PROJECT"
     
     if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
+}
+
+test_11_tdpn_should_create_dir_in_Projects() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
+        
+    things projects new Project Test > /dev/null
+    assert "test -d $PROJECTS/$PROJECT"
+}
+
+test_12_tdpn_should_create_project_project_type_vars() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
+        
+    things projects new Project Test > /dev/null
+    assert_equals "project-test" $PROJECT
+    assert_equals "project" $PROJECT_TYPE
+}
+
+test_13_tdpn_should_create_project_tag() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
+        
+    things projects new Project Test > /dev/null
+    assert_equals "/Users/enogrob/THINGS_HOME/Projects/project-test	project" "$(tag -l $PROJECTS/$PROJECT)" 
+}
+
+test_14_tdpn_should_create_project_tag_specialization() {
+    source ~/.todayrc
+    if [ -d "$PROJECTS/project-test" ]; then rm -Rf $PROJECTS/project-test; fi
+        
+    things projects new Project Test specialization > /dev/null
+    assert_equals "/Users/enogrob/THINGS_HOME/Projects/project-test	specialization" "$(tag -l $PROJECTS/$PROJECT)" 
 }
 
 # Change to directory where bash_unit so
