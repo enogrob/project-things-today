@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA01
-## Date     : 2016-09-05
+## Version  : PA02
+## Date     : 2016-11-10
 ## Project  : things-today
 ## Reference: bash
 ##
@@ -102,7 +102,7 @@ function things() {
                     fi
                     case $AREA in
                          codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                         rails|ruby|specialization|suspended|tutorial|udemy|webdev)
+                         rails|ruby|specialization|suspended|tutorial|udemy|webdev|tutorialspoint)
                          ;;
                          *)  
                          echo "Error: Bad project type!"
@@ -200,7 +200,7 @@ function things() {
                                 tag -a specialization "$PROJECTS/$PROJECT"
                                 ;;
                             codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                                rails|ruby|suspended|tutorial|udemy|webdev|project)    
+                                rails|ruby|suspended|tutorial|udemy|webdev|project|tutorialspoint)    
                                 replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
                                 tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                                 ;;
@@ -223,7 +223,7 @@ function things() {
                                 tag -a specialization "$PROJECTS/$PROJECT"
                                 ;;
                             codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                                rails|ruby|suspended|tutorial|udemy|webdev|project)    
+                                rails|ruby|suspended|tutorial|udemy|webdev|project|tutorialspoint)    
                                 replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
                                 tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                                 ;;
@@ -242,7 +242,7 @@ function things() {
                             tag -a specialization "$PROJECTS/$PROJECT"
                             ;;
                         codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                            rails|ruby|suspended|tutorial|udemy|webdev|project)    
+                            rails|ruby|suspended|tutorial|udemy|webdev|project|tutorialspoint)    
                             replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
                             tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                             ;;
