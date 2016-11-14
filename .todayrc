@@ -10,6 +10,7 @@
 ##            for projects.
 
 THINGS=$HOME/THINGS_HOME
+TODO_DIR=$HOME/.todo
 
 TODAY_LINK=$HOME/Today
 PROJECTS_LINK=$HOME/Projects
@@ -28,6 +29,8 @@ LOCAL=$HOME/Things
 
 alias tdy='things today'
 alias tdyl='things today list'
+alias tdyi='things today start'
+alias tdye='things today stop'
 
 alias tdp='things projects'
 alias tdpl='things projects list'
@@ -54,6 +57,8 @@ alias tdi='things inbox'
 alias tdil='things inbox list'
 
 alias tdgit='things git'
+
+alias t='~/.todo/todo.sh'
 
 is_Things() {
 if [ "$1" == "`readlink $THINGS`" ]
@@ -102,7 +107,7 @@ function things() {
                     fi
                     case $AREA in
                          codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                         rails|ruby|specialization|suspended|tutorial|udemy|webdev|tutorialspoint)
+                         rails|ruby|specialization|suspended|tutorial|udemy|webdev|tutorialspoint|sololearn)
                          ;;
                          *)  
                          echo "Error: Bad project type!"
@@ -200,7 +205,7 @@ function things() {
                                 tag -a specialization "$PROJECTS/$PROJECT"
                                 ;;
                             codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                                rails|ruby|suspended|tutorial|udemy|webdev|project|tutorialspoint)    
+                                rails|ruby|suspended|tutorial|udemy|webdev|project|tutorialspoint|sololearn)    
                                 replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
                                 tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                                 ;;
@@ -223,7 +228,7 @@ function things() {
                                 tag -a specialization "$PROJECTS/$PROJECT"
                                 ;;
                             codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                                rails|ruby|suspended|tutorial|udemy|webdev|project|tutorialspoint)    
+                                rails|ruby|suspended|tutorial|udemy|webdev|project|tutorialspoint|sololearn)    
                                 replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
                                 tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                                 ;;
@@ -242,7 +247,7 @@ function things() {
                             tag -a specialization "$PROJECTS/$PROJECT"
                             ;;
                         codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                            rails|ruby|suspended|tutorial|udemy|webdev|project|tutorialspoint)    
+                            rails|ruby|suspended|tutorial|udemy|webdev|project|tutorialspoint|sololearn)    
                             replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
                             tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                             ;;
@@ -271,6 +276,52 @@ function things() {
                     tree -L 1 -Cd -l "$TODAY"
                     open -g "$TODAY"
                     ;;
+                    
+                start)
+                    DAYOFWEEK=`echo $(date +"%a") | awk '{print tolower($0)}'`
+                    cd "$PROJECTS"
+                    RESULT=(`tag -m $DAYOFWEEK`)
+                    for m in "${RESULT[@]}"
+                    do 
+                      PROJECT="${m}"
+                      if [ ! -e "$TODAY/$PROJECT" ]; then 
+                          ln -sf "$PROJECTS/$PROJECT" "$TODAY/$PROJECT"
+                          TAGS=(`tag -lN $PROJECT | sed 's/,/ /g'`)
+                          PROJECTNAME=$PROJECT 
+                          for n in "${TAGS[@]}"
+                          do
+                              case $n in
+                                  tutorialspoint|sololearn|project)
+                                      PROJECTNAME=$PROJECTNAME" +"$n
+                                      #PROJECTNAME=$TEMP
+                                      ;;
+                              esac
+                          done
+                          for n in "${TAGS[@]}"
+                          do
+                              case $n in
+                                  java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix)
+                                      PROJECTNAME=$PROJECTNAME" @"$n
+                                      #PROJECTNAME=$TEMP
+                                      ;;
+                              esac
+                          done
+                          t -t add $PROJECTNAME #due:$(date +"%Y-%M-%d")
+                      fi
+                    done
+                    cd "$TODAY"
+                    tree -L 1 -Cd -l 
+                    open -g .                                
+                    ;;
+                    
+                stop)
+                    find "$TODAY" -type l -delete
+                    echo "" > $TODO_DIR/todo.txt
+                    cd "$TODAY"
+                    tree -L 1 -Cd -l 
+                    open -g .                                
+                    ;;
+                
                 *)
                     cd "$TODAY"
                     tree -L 1 -Cd -l 
