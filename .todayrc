@@ -31,12 +31,14 @@ alias tdy='things today'
 alias tdyl='things today list'
 alias tdyi='things today start'
 alias tdye='things today stop'
+alias tdyj='things today jump'
 
 alias tdp='things projects'
 alias tdpl='things projects list'
 alias tdpi='things projects start'
 alias tdpe='things projects stop'
 alias tdpn='things projects new'
+alias tdpj='things projects jump'
 
 alias tda='things areas'
 alias tdal='things areas list'
@@ -160,9 +162,33 @@ function things() {
                     PROJECT=`basename "$PWD"`
                     PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ ! -e "$TODAY/$PROJECT" ]; then ln -sf "$PWD" "$TODAY/$PROJECT"; fi
+                        if [ ! -e "$TODAY/$PROJECT" ]; then 
+                            ln -sf "$PWD" "$TODAY/$PROJECT";                             
+                            TAGS=(`tag -lN $PROJECT | sed 's/,/ /g'`)
+                            PROJECTNAME=$PROJECT 
+                            for n in "${TAGS[@]}"
+                            do
+                                case $n in
+                                    ebook|tutorialspoint|sololearn|udemy|project)
+                                        PROJECTNAME=$PROJECTNAME" +"$n
+                                        #PROJECTNAME=$TEMP
+                                        ;;
+                                esac
+                            done
+                            for n in "${TAGS[@]}"
+                            do
+                                case $n in
+                                    java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix)
+                                        PROJECTNAME=$PROJECTNAME" @"$n
+                                        #PROJECTNAME=$TEMP
+                                        ;;
+                                esac
+                            done
+                            t -t add $PROJECTNAME #due:$(date +"%Y-%M-%d")
+                        fi
                     fi
                     tree -L 1 -Cd -l "$TODAY"
+                    t list
                     open -g "$TODAY"
                     ;;
                     
@@ -180,12 +206,16 @@ function things() {
                               if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
                            fi 
                         fi
-                        if [ -L "$TODAY/$PROJECT" ]; then rm -f "$TODAY/$PROJECT"; fi 
-                        TASK=(`t list $PROJECT`)
-                        t do $TASK
+                        if [ -L "$TODAY/$PROJECT" ]; then 
+                            rm -f "$TODAY/$PROJECT";                            
+                            TASK=(`t list $PROJECT`)
+                            t do $TASK
+                        fi 
+
                     fi
                     cd "$TODAY"
                     tree -L 1 -Cd -l 
+                    t list
                     open -g . 
                     ;;
                     
@@ -263,6 +293,11 @@ function things() {
                     tag -l "$PROJECTS/$PROJECT"
                     ;;
                     
+                jump)
+                    cd "$PROJECTS"
+                    tree -L 1 -Cd -l 
+                    ;;
+                    
                 *)
                     cd "$PROJECTS"
                     tree -L 1 -Cd -l 
@@ -313,6 +348,7 @@ function things() {
                     done
                     cd "$TODAY"
                     tree -L 1 -Cd -l 
+                    t list
                     open -g .                                
                     ;;
                     
@@ -321,7 +357,13 @@ function things() {
                     echo "" > $TODO_DIR/todo.txt
                     cd "$TODAY"
                     tree -L 1 -Cd -l 
+                    t list
                     open -g .                                
+                    ;;
+                    
+                jump)
+                    cd "$TODAY"
+                    tree -L 1 -Cd -l 
                     ;;
                 
                 *)
