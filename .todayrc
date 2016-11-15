@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA02
-## Date     : 2016-11-10
+## Version  : PA03
+## Date     : 2016-11-14
 ## Project  : things-today
 ## Reference: bash
 ##
@@ -180,7 +180,9 @@ function things() {
                               if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
                            fi 
                         fi
-                        if [ -L "$TODAY/$PROJECT" ]; then rm -f "$TODAY/$PROJECT"; fi  
+                        if [ -L "$TODAY/$PROJECT" ]; then rm -f "$TODAY/$PROJECT"; fi 
+                        TASK=(`t list $PROJECT`)
+                        t do $TASK
                     fi
                     cd "$TODAY"
                     tree -L 1 -Cd -l 
@@ -291,7 +293,7 @@ function things() {
                           for n in "${TAGS[@]}"
                           do
                               case $n in
-                                  tutorialspoint|sololearn|project)
+                                  ebook|tutorialspoint|sololearn|udemy|project)
                                       PROJECTNAME=$PROJECTNAME" +"$n
                                       #PROJECTNAME=$TEMP
                                       ;;
@@ -300,7 +302,7 @@ function things() {
                           for n in "${TAGS[@]}"
                           do
                               case $n in
-                                  java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix)
+                                  java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix)
                                       PROJECTNAME=$PROJECTNAME" @"$n
                                       #PROJECTNAME=$TEMP
                                       ;;
