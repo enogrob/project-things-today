@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA03
-## Date     : 2016-11-14
+## Version  : PA04
+## Date     : 2016-11-15
 ## Project  : things-today
 ## Reference: bash
 ##
@@ -88,6 +88,28 @@ replace_icon(){
     SetFile -a V $droplet$'/Icon\r'
 }
 
+function task_name(){
+    local TASKNAME=`basename $1`
+    local TASKTAGS=(`tag -lN $1 | sed 's/,/ /g'`)
+    for n in "${TASKTAGS[@]}"
+    do
+        case $n in
+            ebook|tutorialspoint|sololearn|udemy|project)
+                TASKNAME=$TASKNAME" +"$n
+                ;;
+        esac
+    done
+    for n in "${TASKTAGS[@]}"
+    do
+        case $n in
+            java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash)
+                TASKNAME=$TASKNAME" @"$n
+                ;;
+        esac
+    done    
+    echo $TASKNAME
+}
+
 function things() {
     case $1 in
         areas)
@@ -163,28 +185,8 @@ function things() {
                     PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
                     if [ -n "$PROJECTDIR" ]; then
                         if [ ! -e "$TODAY/$PROJECT" ]; then 
-                            ln -sf "$PWD" "$TODAY/$PROJECT";                             
-                            TAGS=(`tag -lN $PROJECT | sed 's/,/ /g'`)
-                            PROJECTNAME=$PROJECT 
-                            for n in "${TAGS[@]}"
-                            do
-                                case $n in
-                                    ebook|tutorialspoint|sololearn|udemy|project)
-                                        PROJECTNAME=$PROJECTNAME" +"$n
-                                        #PROJECTNAME=$TEMP
-                                        ;;
-                                esac
-                            done
-                            for n in "${TAGS[@]}"
-                            do
-                                case $n in
-                                    java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix)
-                                        PROJECTNAME=$PROJECTNAME" @"$n
-                                        #PROJECTNAME=$TEMP
-                                        ;;
-                                esac
-                            done
-                            t -t add $PROJECTNAME #due:$(date +"%Y-%M-%d")
+                            ln -sf "$PWD" "$TODAY/$PROJECT"; 
+                            t -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")                           
                         fi
                     fi
                     tree -L 1 -Cd -l "$TODAY"
@@ -323,27 +325,7 @@ function things() {
                       PROJECT="${m}"
                       if [ ! -e "$TODAY/$PROJECT" ]; then 
                           ln -sf "$PROJECTS/$PROJECT" "$TODAY/$PROJECT"
-                          TAGS=(`tag -lN $PROJECT | sed 's/,/ /g'`)
-                          PROJECTNAME=$PROJECT 
-                          for n in "${TAGS[@]}"
-                          do
-                              case $n in
-                                  ebook|tutorialspoint|sololearn|udemy|project)
-                                      PROJECTNAME=$PROJECTNAME" +"$n
-                                      #PROJECTNAME=$TEMP
-                                      ;;
-                              esac
-                          done
-                          for n in "${TAGS[@]}"
-                          do
-                              case $n in
-                                  java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix)
-                                      PROJECTNAME=$PROJECTNAME" @"$n
-                                      #PROJECTNAME=$TEMP
-                                      ;;
-                              esac
-                          done
-                          t -t add $PROJECTNAME #due:$(date +"%Y-%M-%d")
+                          t -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
                       fi
                     done
                     cd "$TODAY"
