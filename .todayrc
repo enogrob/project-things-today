@@ -1,7 +1,7 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA05
+## Version  : PA06
 ## Date     : 2016-11-18
 ## Project  : project-things-today
 ## Reference: bash
@@ -327,8 +327,9 @@ function things() {
             shift
             case $1 in
                 list)
-                    tree -L 1 -Cd -l "$TODAY"
                     open -g "$TODAY"
+                    tree -L 1 -Cd -l "$TODAY"
+                    $TODOTXT list
                     ;;
                     
                 start)
@@ -366,6 +367,7 @@ function things() {
                 *)
                     cd "$TODAY"
                     tree -L 1 -Cd -l 
+                    $TODOTXT list
                     open -g .
             esac
             ;;
