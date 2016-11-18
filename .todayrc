@@ -11,6 +11,7 @@
 
 THINGS=$HOME/THINGS_HOME
 TODO_DIR=$HOME/.todo
+TODOTXT=$HOME/.todo/todo.sh
 
 TODAY_LINK=$HOME/Today
 PROJECTS_LINK=$HOME/Projects
@@ -60,7 +61,6 @@ alias tdil='things inbox list'
 
 alias tdgit='things git'
 
-alias t='~/.todo/todo.sh'
 
 is_Things() {
 if [ "$1" == "`readlink $THINGS`" ]
@@ -88,13 +88,28 @@ replace_icon(){
     SetFile -a V $droplet$'/Icon\r'
 }
 
+function teste10(){
+    s1="ebook\|x"
+    case $1 in
+        $s1) echo "Yes"
+        ;;
+        *) echo "No"
+        ;;
+    esac
+}
+
 function task_name(){
+    shopt -s extglob         
+    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera)'
+    TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash)'
+    
     local TASKNAME=`basename $1`
     local TASKTAGS=(`tag -lN $1 | sed 's/,/ /g'`)
+    
     for n in "${TASKTAGS[@]}"
     do
         case $n in
-            ebook|tutorialspoint|sololearn|udemy|project)
+            $TAGSPROJECTS)
                 TASKNAME=$TASKNAME" +"$n
                 ;;
         esac
@@ -102,7 +117,7 @@ function task_name(){
     for n in "${TASKTAGS[@]}"
     do
         case $n in
-            java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash)
+            $TAGSCONTEXTS)
                 TASKNAME=$TASKNAME" @"$n
                 ;;
         esac
@@ -111,6 +126,10 @@ function task_name(){
 }
 
 function things() {
+    shopt -s extglob         
+    TAGSSPECIALIZATIONS='+(job|specialization)'
+    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera)'
+    
     case $1 in
         areas)
             shift
@@ -186,11 +205,11 @@ function things() {
                     if [ -n "$PROJECTDIR" ]; then
                         if [ ! -e "$TODAY/$PROJECT" ]; then 
                             ln -sf "$PWD" "$TODAY/$PROJECT"; 
-                            t -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")                           
+                            $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")                           
                         fi
                     fi
                     tree -L 1 -Cd -l "$TODAY"
-                    t list
+                    $TODOTXT list
                     open -g "$TODAY"
                     ;;
                     
@@ -211,13 +230,13 @@ function things() {
                         if [ -L "$TODAY/$PROJECT" ]; then 
                             rm -f "$TODAY/$PROJECT";                            
                             TASK=(`t list $PROJECT`)
-                            t do $TASK
+                            $TODOTXT do $TASK
                         fi 
 
                     fi
                     cd "$TODAY"
                     tree -L 1 -Cd -l 
-                    t list
+                    $TODOTXT list
                     open -g . 
                     ;;
                     
@@ -234,12 +253,11 @@ function things() {
                         PROJECT=$1
                         PROJECT_TYPE=$2
                         case $PROJECT_TYPE in
-                            specialization) 
+                            $TAGSSPECIALIZATIONS) 
                                 replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/specialization.icns"
                                 tag -a specialization "$PROJECTS/$PROJECT"
                                 ;;
-                            codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                                rails|ruby|suspended|tutorial|udemy|webdev|project|tutorialspoint|sololearn)    
+                            $TAGSPROJECTS)    
                                 replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
                                 tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                                 ;;
@@ -257,12 +275,11 @@ function things() {
                         P2=`echo $P1 | awk '{print tolower($0)}'`
                         PROJECT=`echo $P2 | sed 's/ /-/g'` 
                         case $PROJECT_TYPE in
-                            specialization) 
+                            $TAGSSPECIALIZATIONS) 
                                 replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/specialization.icns"
                                 tag -a specialization "$PROJECTS/$PROJECT"
                                 ;;
-                            codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                                rails|ruby|suspended|tutorial|udemy|webdev|project|tutorialspoint|sololearn)    
+                            $TAGSPROJECTS)    
                                 replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
                                 tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                                 ;;
@@ -276,12 +293,11 @@ function things() {
                     fi
                     mkdir -p "$PROJECTS/$PROJECT"
                     case $PROJECT_TYPE in
-                        specialization) 
+                        $TAGSSPECIALIZATIONS) 
                             replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/specialization.icns"
                             tag -a specialization "$PROJECTS/$PROJECT"
                             ;;
-                        codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                            rails|ruby|suspended|tutorial|udemy|webdev|project|tutorialspoint|sololearn)    
+                        $TAGSPROJECTS)    
                             replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
                             tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                             ;;
@@ -325,12 +341,12 @@ function things() {
                       PROJECT="${m}"
                       if [ ! -e "$TODAY/$PROJECT" ]; then 
                           ln -sf "$PROJECTS/$PROJECT" "$TODAY/$PROJECT"
-                          t -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
+                          $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
                       fi
                     done
                     cd "$TODAY"
                     tree -L 1 -Cd -l 
-                    t list
+                    $TODOTXT list
                     open -g .                                
                     ;;
                     
@@ -339,7 +355,7 @@ function things() {
                     echo "" > $TODO_DIR/todo.txt
                     cd "$TODAY"
                     tree -L 1 -Cd -l 
-                    t list
+                    $TODOTXT list
                     open -g .                                
                     ;;
                     
