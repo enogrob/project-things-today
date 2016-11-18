@@ -1,9 +1,9 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA04
-## Date     : 2016-11-15
-## Project  : things-today
+## Version  : PA05
+## Date     : 2016-11-18
+## Project  : project-things-today
 ## Reference: bash
 ##
 ## Purpose  : Develop a system in order to help TODAY management directory
@@ -18,7 +18,7 @@ PROJECTS_LINK=$HOME/Projects
 
 AREAS=$THINGS/Areas
 PROJECTS=$THINGS/Projects
-RESOURCES=$THINGS/Resources/images
+RESOURCES=$THINGS/Resources
 INBOX=$THINGS/Inbox
 LOGBOOK=$THINGS/Logbook
 SCHEDULED=$THINGS/Scheduled
@@ -60,7 +60,7 @@ alias tdi='things inbox'
 alias tdil='things inbox list'
 
 alias tdgit='things git'
-
+alias tdgitinit='things gitinit'
 
 is_Things() {
 if [ "$1" == "`readlink $THINGS`" ]
@@ -101,7 +101,7 @@ function teste10(){
 function task_name(){
     shopt -s extglob         
     TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera)'
-    TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash)'
+    TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r)'
     
     local TASKNAME=`basename $1`
     local TASKTAGS=(`tag -lN $1 | sed 's/,/ /g'`)
@@ -125,9 +125,26 @@ function task_name(){
     echo $TASKNAME
 }
 
+function tag_contexts(){
+    shopt -s extglob         
+    local TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r)'
+    
+    local PROJECTNAME=`basename $1`
+    local PROJECTTAGS=(`echo $PROJECTNAME | sed 's/-/ /g'`)
+    
+    for n in "${PROJECTTAGS[@]}"
+    do
+        case $n in
+            $TAGSCONTEXTS)
+            tag -a $n "$1"
+            ;;
+        esac
+    done 
+    return 0
+}
+
 function things() {
     shopt -s extglob         
-    TAGSSPECIALIZATIONS='+(job|specialization)'
     TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera)'
     
     case $1 in
@@ -253,35 +270,21 @@ function things() {
                         PROJECT=$1
                         PROJECT_TYPE=$2
                         case $PROJECT_TYPE in
-                            $TAGSSPECIALIZATIONS) 
-                                replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/specialization.icns"
-                                tag -a specialization "$PROJECTS/$PROJECT"
+                            $TAGSPROJECTS)  
                                 ;;
-                            $TAGSPROJECTS)    
-                                replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
-                                tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
+                                *)  
+                                echo "Error: Bad project type!"
+                                return 1
                                 ;;
-                            *)  length=$(($#))
-                                P1=${@:1:$length}
-                                P2=`echo $P1 | awk '{print tolower($0)}'`
-                                PROJECT=`echo $P2 | sed 's/ /-/g'` 
-                                PROJECT_TYPE=project
-                                ;;
-                        esac    #
+                        esac                
                     else
-                        length=$(($#-1))
+                       length=$(($#-1))
                         P1=${@:1:$length}
                         PROJECT_TYPE=${@: -1}
                         P2=`echo $P1 | awk '{print tolower($0)}'`
-                        PROJECT=`echo $P2 | sed 's/ /-/g'` 
+                        PROJECT=`echo $P2 | sed 's/ /-/g'`                      
                         case $PROJECT_TYPE in
-                            $TAGSSPECIALIZATIONS) 
-                                replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/specialization.icns"
-                                tag -a specialization "$PROJECTS/$PROJECT"
-                                ;;
                             $TAGSPROJECTS)    
-                                replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
-                                tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
                                 ;;
                             *)  length=$(($#))
                                 P1=${@:1:$length}
@@ -291,15 +294,11 @@ function things() {
                                 ;;
                         esac                      
                     fi
-                    mkdir -p "$PROJECTS/$PROJECT"
                     case $PROJECT_TYPE in
-                        $TAGSSPECIALIZATIONS) 
-                            replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/specialization.icns"
-                            tag -a specialization "$PROJECTS/$PROJECT"
-                            ;;
-                        $TAGSPROJECTS)    
-                            replace_icon "$PROJECTS/$PROJECT" "$RESOURCES/project.icns"
-                            tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
+                        $TAGSPROJECTS)  
+                            cp -rf "$RESOURCES/project-types/$PROJECT_TYPE" "$PROJECTS/$PROJECT"
+                            tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT" 
+                            tag_contexts "$PROJECTS/$PROJECT"
                             ;;
                         *)  echo "Error: Bad project type!"
                             return 1
@@ -456,6 +455,18 @@ function things() {
                 hub browse .
             fi
             ;;
+            
+        gitinit)
+            shift
+            git init  && \
+            hub create && \ 
+            git add . && \
+            git commit -am "first commit" && \
+            git push origin master && \
+            hub browse .
+            ;;
+            
+            
             
         cloud)
             shift
