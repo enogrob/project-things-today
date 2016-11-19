@@ -221,8 +221,11 @@ function things() {
                     PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
                     if [ -n "$PROJECTDIR" ]; then
                         if [ ! -e "$TODAY/$PROJECT" ]; then 
-                            ln -sf "$PWD" "$TODAY/$PROJECT"; 
-                            $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")                           
+                            #ln -sf "$PWD" "$TODAY/$PROJECT"; 
+                            $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
+                            cd "$TODAY"
+                            touch "$($TODOTXT -@+ list $PROJECT | head -1)"
+                            ln -sf "$PROJECTS/$PROJECT" "$($TODOTXT -@+ list $PROJECT | head -1)"                        
                         fi
                     fi
                     tree -L 1 -Cd -l "$TODAY"
@@ -244,9 +247,12 @@ function things() {
                               if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
                            fi 
                         fi
-                        if [ -L "$TODAY/$PROJECT" ]; then 
-                            rm -f "$TODAY/$PROJECT";                            
-                            TASK=(`t list $PROJECT`)
+                        if [ -L "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
+                            #rm -f "$TODAY/$PROJECT";    
+                            
+                            rm -f "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"
+                                                   
+                            TASK=(`$($TODOTXT list $PROJECT`)
                             $TODOTXT do $TASK
                         fi 
 
@@ -348,8 +354,10 @@ function things() {
                     do 
                       PROJECT="${m}"
                       if [ ! -e "$TODAY/$PROJECT" ]; then 
-                          ln -sf "$PROJECTS/$PROJECT" "$TODAY/$PROJECT"
                           $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
+                          cd "$TODAY"
+                          touch "$($TODOTXT -@+ list $PROJECT | head -1)"
+                          ln -sf "$PROJECTS/$PROJECT" "$($TODOTXT -@+ list $PROJECT | head -1)"
                       fi
                     done
                     cd "$TODAY"
