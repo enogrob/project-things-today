@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA06
-## Date     : 2016-11-18
+## Version  : PA07
+## Date     : 2016-11-19
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -101,7 +101,7 @@ function teste10(){
 function task_name(){
     shopt -s extglob         
     TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera)'
-    TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r)'
+    TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs)'
     
     local TASKNAME=`basename $1`
     local TASKTAGS=(`tag -lN $1 | sed 's/,/ /g'`)
@@ -311,8 +311,16 @@ function things() {
                     ;;
                     
                 jump)
-                    cd "$PROJECTS"
-                    tree -L 1 -Cd -l 
+                    shift
+                    if [ $# -eq 0 ]; then
+                        cd "$PROJECTS"
+                    elif [ $# -eq 1 ]; then
+                        cd "$PROJECTS"
+                        cd $($TODOTXT list | grep "^$1" | awk {'print $3'})
+                    else
+                        echo "Error: Bad number of arguments!"
+                        return 1                     
+                    fi
                     ;;
                     
                 *)
