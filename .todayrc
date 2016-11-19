@@ -339,53 +339,60 @@ function things() {
             
         today)
             shift
-            case $1 in
-                list)
-                    open -g "$TODAY"
-                    tree -L 1 -Cd -l "$TODAY"
-                    $TODOTXT list
-                    ;;
+            if [ $# -eq 0 ]; then
+                cd "$TODAY"
+                $TODOTXT list
+                open -g .
+            else
+                case $1 in
+                    list)
+                        open -g "$TODAY"
+                        tree -L 1 -Cd -l "$TODAY"
+                        $TODOTXT list
+                        ;;
+                        
+                    start)
+                        DAYOFWEEK=`echo $(date +"%a") | awk '{print tolower($0)}'`
+                        cd "$PROJECTS"
+                        RESULT=(`tag -m $DAYOFWEEK`)
+                        for m in "${RESULT[@]}"
+                        do 
+                          PROJECT="${m}"
+                          if [ ! -e "$TODAY/$PROJECT" ]; then 
+                              $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
+                              cd "$TODAY"
+                              touch "$($TODOTXT -@+ list $PROJECT | head -1)"
+                              ln -sf "$PROJECTS/$PROJECT" "$($TODOTXT -@+ list $PROJECT | head -1)"
+                          fi
+                        done
+                        cd "$TODAY"
+                        tree -L 1 -Cd -l 
+                        $TODOTXT list
+                        open -g .                                
+                        ;;
+                        
+                    stop)
+                        find "$TODAY" -type l -delete
+                        echo "" > $TODO_DIR/todo.txt
+                        cd "$TODAY"
+                        tree -L 1 -Cd -l 
+                        $TODOTXT list
+                        open -g .                                
+                        ;;
+                        
+                    jump)
+                        cd "$TODAY"
+                        tree -L 1 -Cd -l 
+                        ;;
                     
-                start)
-                    DAYOFWEEK=`echo $(date +"%a") | awk '{print tolower($0)}'`
+                    *)
                     cd "$PROJECTS"
-                    RESULT=(`tag -m $DAYOFWEEK`)
-                    for m in "${RESULT[@]}"
-                    do 
-                      PROJECT="${m}"
-                      if [ ! -e "$TODAY/$PROJECT" ]; then 
-                          $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
-                          cd "$TODAY"
-                          touch "$($TODOTXT -@+ list $PROJECT | head -1)"
-                          ln -sf "$PROJECTS/$PROJECT" "$($TODOTXT -@+ list $PROJECT | head -1)"
-                      fi
-                    done
-                    cd "$TODAY"
-                    tree -L 1 -Cd -l 
-                    $TODOTXT list
-                    open -g .                                
+                    cd $($TODOTXT list | grep "^$1" | awk {'print $3'})
+                    open .
                     ;;
-                    
-                stop)
-                    find "$TODAY" -type l -delete
-                    echo "" > $TODO_DIR/todo.txt
-                    cd "$TODAY"
-                    tree -L 1 -Cd -l 
-                    $TODOTXT list
-                    open -g .                                
-                    ;;
-                    
-                jump)
-                    cd "$TODAY"
-                    tree -L 1 -Cd -l 
-                    ;;
-                
-                *)
-                    cd "$TODAY"
-                    tree -L 1 -Cd -l 
-                    $TODOTXT list
-                    open -g .
-            esac
+
+                esac
+            fi
             ;;
             
         inbox)
