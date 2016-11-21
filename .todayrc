@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA07
-## Date     : 2016-11-19
+## Version  : PA08
+## Date     : 2016-11-21
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -176,7 +176,9 @@ function things() {
                     esac
                     PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ ! -L "$AREAS/$AREA/$PROJECT" ]; then ln -sf "$PWD" "$AREAS/$AREA/$PROJECT"; fi
+                        if [ ! -L "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
+                            ln -sf "$PWD" "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)"; 
+                        fi
                         if [ ! -L "$TODAY/$AREA" ]; then ln -sf "$AREAS/$AREA" "$TODAY/$AREA" ; fi  
                     fi
                     tree -L 1 -Cd -l "$TODAY"
@@ -189,7 +191,9 @@ function things() {
                     if [ -n "$AREADIR" ]; then
                        AREADIRNAME=`dirname "$AREADIR"`
                        AREA=`basename "$AREADIRNAME"`
-                       if [ -L "$AREAS/$AREA/$PROJECT" ]; then rm -f "$AREAS/$AREA/$PROJECT"; fi
+                       if [ -L "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
+                           rm -f "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)"; 
+                       fi
                        if [ -L "$TODAY/$AREA" ]; then
                           files=("$AREAS/$AREA/*")
                           if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
@@ -220,12 +224,10 @@ function things() {
                     PROJECT=`basename "$PWD"`
                     PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ ! -e "$TODAY/$PROJECT" ]; then 
-                            #ln -sf "$PWD" "$TODAY/$PROJECT"; 
+                        if [ ! -e "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
                             $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
-                            cd "$TODAY"
-                            touch "$($TODOTXT -@+ list $PROJECT | head -1)"
-                            ln -sf "$PROJECTS/$PROJECT" "$($TODOTXT -@+ list $PROJECT | head -1)"                        
+                            #touch "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"
+                            ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"                        
                         fi
                     fi
                     tree -L 1 -Cd -l "$TODAY"
@@ -237,22 +239,21 @@ function things() {
                     PROJECT=`basename "$PWD"`
                     PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
                     if [ -n "$PROJECTDIR" ]; then
-                        AREADIR=`find "$AREAS" -name "$PROJECT"`
+                        AREADIR=`find "$AREAS" -name "$($TODOTXT -@+ list $PROJECT | head -1)"`
                         if [ -n "$AREADIR" ]; then
                            AREADIRNAME=`dirname "$AREADIR"`
                            AREA=`basename "$AREADIRNAME"`
-                           if [ -e "$AREAS/$AREA/$PROJECT" ]; then rm -f "$AREAS/$AREA/$PROJECT"; fi
+                           if [ -e "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
+                               rm -f "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)"; 
+                           fi
                            if [ -e "$TODAY/$AREA" ]; then
                               files=($AREAS/$AREA/*)
                               if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
                            fi 
                         fi
-                        if [ -L "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
-                            #rm -f "$TODAY/$PROJECT";    
-                            
-                            rm -f "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"
-                                                   
-                            TASK=(`$($TODOTXT list $PROJECT`)
+                        if [ -L "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then                               
+                            rm -f "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"   
+                            TASK=$($TODOTXT list $PROJECT)
                             $TODOTXT do $TASK
                         fi 
 
