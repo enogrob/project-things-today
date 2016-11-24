@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA08
-## Date     : 2016-11-21
+## Version  : PA09
+## Date     : 2016-11-24
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -41,6 +41,7 @@ alias tdpi='things projects start'
 alias tdpe='things projects stop'
 alias tdpn='things projects new'
 alias tdpj='things projects jump'
+alias tdps='things projects schedule'
 
 alias tda='things areas'
 alias tdal='things areas list'
@@ -101,7 +102,7 @@ function teste10(){
 
 function task_name(){
     shopt -s extglob         
-    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera)'
+    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin)'
     TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs)'
     
     local TASKNAME=`basename $1`
@@ -146,7 +147,7 @@ function tag_contexts(){
 
 function things() {
     shopt -s extglob         
-    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera)'
+    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin)'
     
     case $1 in
         areas)
@@ -327,6 +328,109 @@ function things() {
                         cd $($TODOTXT list | grep "^$1" | awk {'print $3'})
                     else
                         echo "Error: Bad number of arguments!"
+                        return 1                     
+                    fi
+                    ;;
+                    
+                schedule)
+                    shift
+                    if [ $# -eq 0 ]; then                       
+                        pushd . &>/dev/null  
+                        cd "$PROJECTS"      
+                        tag -m weekly > $PROJECTS/PROJECTS-SCHEDULED.txt
+                        tag -m weekend >> $PROJECTS/PROJECTS-SCHEDULED.txt  
+                        echo -e "\033[1;32mmon tue wed thu fri sat sun \033[0m"                     
+                        #echo "mon tue wed thu fri sat sun"
+                        while read line; do         
+                            PROJTAGS=`tag -lN $line | sed 's/,/ /g'`
+                            SCHEDULED=""
+                            if [[ "$PROJTAGS" =~ "mon" ]];  then
+                                SCHEDULED=" x |";
+                            else
+                                SCHEDULED="   |";
+                            fi
+                            if [[ "$PROJTAGS" =~ "tue" ]];  then
+                                SCHEDULED=$SCHEDULED" x |"; 
+                            else
+                                SCHEDULED=$SCHEDULED"   |"; 
+                            fi                             
+                            if [[ "$PROJTAGS" =~ "wed" ]];  then
+                                SCHEDULED=$SCHEDULED" x |"; 
+                            else
+                                SCHEDULED=$SCHEDULED"   |"; 
+                            fi                                            
+                            if [[ "$PROJTAGS" =~ "thu" ]];  then
+                                SCHEDULED=$SCHEDULED" x |"; 
+                            else
+                                SCHEDULED=$SCHEDULED"   |"; 
+                            fi                                            
+                            if [[ "$PROJTAGS" =~ "fri" ]];  then
+                                SCHEDULED=$SCHEDULED" x |"; 
+                            else
+                                SCHEDULED=$SCHEDULED"   |"; 
+                            fi                                            
+                            if [[ "$PROJTAGS" =~ "sat" ]]; then
+                                SCHEDULED=$SCHEDULED" x |"; 
+                            else
+                                SCHEDULED=$SCHEDULED"   |"; 
+                            fi                                           
+                            if [[ "$PROJTAGS" =~ "sun" ]];  then
+                                SCHEDULED=$SCHEDULED" x |"; 
+                            else
+                                SCHEDULED=$SCHEDULED"   |"; 
+                            fi                                                             
+                            echo -e "$SCHEDULED \033[1;36m$line \033[0m"
+                        done < $PROJECTS/PROJECTS-SCHEDULED.txt
+                        rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
+                        popd &>/dev/null
+                    elif [ $# -eq 1 ]; then
+                        pushd . &>/dev/null
+                        cd "$PROJECTS"   
+                        case $1 in
+                            mon)
+                            echo -e "\033[1;32mMonday: \033[0m"                     
+                            tag -m mon 
+                            echo ""
+                            ;;
+                            tue)
+                            echo -e "\033[1;32mTuesday: \033[0m"                     
+                            tag -m tue 
+                            echo ""                            
+                            ;;
+                            wed)
+                            echo -e "\033[1;32mWednesday: \033[0m"                     
+                            tag -m wed 
+                            echo ""                            
+                            ;;
+                            thu)
+                            echo -e "\033[1;32mThursday: \033[0m"                     
+                            tag -m thu 
+                            echo ""                            
+                            ;;
+                            fri)
+                            echo -e "\033[1;32mFriday: \033[0m"                     
+                            tag -m fri 
+                            echo ""                            
+                            ;;
+                            sat)
+                            echo -e "\033[1;32mSaturday: \033[0m"                     
+                            tag -m sat 
+                            echo ""                            
+                            ;;
+                            sun)
+                            echo -e "\033[1;32mSunday: \033[0m"                     
+                            tag -m sun 
+                            echo ""                            
+                            ;;
+                            *)
+                            echo -e "\033[1;32mProjects on: $1 \033[0m"                     
+                            tag -m $1 
+                            echo ""
+                            ;;
+                        esac
+                        popd &>/dev/null
+                    else
+                        echo -e "\033[1;31mError: Bad number of arguments! \033[0m"
                         return 1                     
                     fi
                     ;;
