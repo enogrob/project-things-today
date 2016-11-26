@@ -145,6 +145,61 @@ function tag_contexts(){
     return 0
 }
 
+function scheduled(){
+    local DAYOFWEEK=$1
+    pushd . &>/dev/null  
+    cd "$PROJECTS"      
+    tag -m weekly > $PROJECTS/PROJECTS-SCHEDULED.txt
+    tag -m weekend >> $PROJECTS/PROJECTS-SCHEDULED.txt  
+    echo -e "\033[1;32mmon tue wed thu fri sat sun \033[0m"                     
+    while read line; do         
+        local PROJTAGS=`tag -lN $line | sed 's/,/ /g'`
+        local SCHEDULED=""
+        if [[ "$PROJTAGS" =~ "mon" ]];  then
+            SCHEDULED=" x |";
+        else
+            SCHEDULED="   |";
+        fi
+        if [[ "$PROJTAGS" =~ "tue" ]];  then
+            SCHEDULED=$SCHEDULED" x |"; 
+        else
+            SCHEDULED=$SCHEDULED"   |"; 
+        fi                             
+        if [[ "$PROJTAGS" =~ "wed" ]];  then
+            SCHEDULED=$SCHEDULED" x |"; 
+        else
+            SCHEDULED=$SCHEDULED"   |"; 
+        fi                                            
+        if [[ "$PROJTAGS" =~ "thu" ]];  then
+            SCHEDULED=$SCHEDULED" x |"; 
+        else
+            SCHEDULED=$SCHEDULED"   |"; 
+        fi                                            
+        if [[ "$PROJTAGS" =~ "fri" ]];  then
+            SCHEDULED=$SCHEDULED" x |"; 
+        else
+            SCHEDULED=$SCHEDULED"   |"; 
+        fi                                            
+        if [[ "$PROJTAGS" =~ "sat" ]]; then
+            SCHEDULED=$SCHEDULED" x |"; 
+        else
+            SCHEDULED=$SCHEDULED"   |"; 
+        fi                                           
+        if [[ "$PROJTAGS" =~ "sun" ]];  then
+            SCHEDULED=$SCHEDULED" x |"; 
+        else
+            SCHEDULED=$SCHEDULED"   |"; 
+        fi                                                            
+        if [[ "$PROJTAGS" =~ $DAYOFWEEK ]];  then
+            echo -e "$SCHEDULED $line"
+        else
+            echo -e "$SCHEDULED \033[1;36m$line \033[0m"
+        fi
+    done < $PROJECTS/PROJECTS-SCHEDULED.txt
+    rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
+    popd &>/dev/null
+}
+
 function things() {
     shopt -s extglob         
     TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin)'
@@ -334,104 +389,13 @@ function things() {
                     
                 schedule)
                     shift
-                    if [ $# -eq 0 ]; then                       
-                        pushd . &>/dev/null  
-                        cd "$PROJECTS"      
-                        tag -m weekly > $PROJECTS/PROJECTS-SCHEDULED.txt
-                        tag -m weekend >> $PROJECTS/PROJECTS-SCHEDULED.txt  
-                        echo -e "\033[1;32mmon tue wed thu fri sat sun \033[0m"                     
-                        #echo "mon tue wed thu fri sat sun"
-                        while read line; do         
-                            PROJTAGS=`tag -lN $line | sed 's/,/ /g'`
-                            SCHEDULED=""
-                            if [[ "$PROJTAGS" =~ "mon" ]];  then
-                                SCHEDULED=" x |";
-                            else
-                                SCHEDULED="   |";
-                            fi
-                            if [[ "$PROJTAGS" =~ "tue" ]];  then
-                                SCHEDULED=$SCHEDULED" x |"; 
-                            else
-                                SCHEDULED=$SCHEDULED"   |"; 
-                            fi                             
-                            if [[ "$PROJTAGS" =~ "wed" ]];  then
-                                SCHEDULED=$SCHEDULED" x |"; 
-                            else
-                                SCHEDULED=$SCHEDULED"   |"; 
-                            fi                                            
-                            if [[ "$PROJTAGS" =~ "thu" ]];  then
-                                SCHEDULED=$SCHEDULED" x |"; 
-                            else
-                                SCHEDULED=$SCHEDULED"   |"; 
-                            fi                                            
-                            if [[ "$PROJTAGS" =~ "fri" ]];  then
-                                SCHEDULED=$SCHEDULED" x |"; 
-                            else
-                                SCHEDULED=$SCHEDULED"   |"; 
-                            fi                                            
-                            if [[ "$PROJTAGS" =~ "sat" ]]; then
-                                SCHEDULED=$SCHEDULED" x |"; 
-                            else
-                                SCHEDULED=$SCHEDULED"   |"; 
-                            fi                                           
-                            if [[ "$PROJTAGS" =~ "sun" ]];  then
-                                SCHEDULED=$SCHEDULED" x |"; 
-                            else
-                                SCHEDULED=$SCHEDULED"   |"; 
-                            fi                                                             
-                            echo -e "$SCHEDULED \033[1;36m$line \033[0m"
-                        done < $PROJECTS/PROJECTS-SCHEDULED.txt
-                        rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
-                        popd &>/dev/null
+                    if [ $# -eq 0 ]; then
+                        scheduled $(echo $(date +"%a") | awk '{print tolower($0)}') 
                     elif [ $# -eq 1 ]; then
-                        pushd . &>/dev/null
-                        cd "$PROJECTS"   
-                        case $1 in
-                            mon)
-                            echo -e "\033[1;32mMonday: \033[0m"                     
-                            tag -m mon 
-                            echo ""
-                            ;;
-                            tue)
-                            echo -e "\033[1;32mTuesday: \033[0m"                     
-                            tag -m tue 
-                            echo ""                            
-                            ;;
-                            wed)
-                            echo -e "\033[1;32mWednesday: \033[0m"                     
-                            tag -m wed 
-                            echo ""                            
-                            ;;
-                            thu)
-                            echo -e "\033[1;32mThursday: \033[0m"                     
-                            tag -m thu 
-                            echo ""                            
-                            ;;
-                            fri)
-                            echo -e "\033[1;32mFriday: \033[0m"                     
-                            tag -m fri 
-                            echo ""                            
-                            ;;
-                            sat)
-                            echo -e "\033[1;32mSaturday: \033[0m"                     
-                            tag -m sat 
-                            echo ""                            
-                            ;;
-                            sun)
-                            echo -e "\033[1;32mSunday: \033[0m"                     
-                            tag -m sun 
-                            echo ""                            
-                            ;;
-                            *)
-                            echo -e "\033[1;32mProjects on: $1 \033[0m"                     
-                            tag -m $1 
-                            echo ""
-                            ;;
-                        esac
-                        popd &>/dev/null
+                        scheduled $1
                     else
-                        echo -e "\033[1;31mError: Bad number of arguments! \033[0m"
-                        return 1                     
+                        echo "Error: Bad number of arguments!"
+                        return 1        
                     fi
                     ;;
                     
