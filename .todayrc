@@ -582,6 +582,7 @@ function things() {
                     ;;
                     
                 stop)
+                    shift
                     git add . && \
                     git commit -am "$*" && \
                     git push origin master && \
