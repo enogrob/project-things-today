@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA10
-## Date     : 2016-11-27
+## Version  : PA11
+## Date     : 2016-11-28
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -61,8 +61,10 @@ alias tdcc='things cloud copy'
 alias tdi='things inbox'
 alias tdil='things inbox list'
 
-alias tdgit='things git'
-alias tdgitinit='things gitinit'
+alias tdg='things git'
+alias tdgi='things git start'
+alias tdge='things git stop'
+
 
 is_Things() {
 if [ "$1" == "`readlink $THINGS`" ]
@@ -569,25 +571,27 @@ function things() {
  
         git)
             shift
-            if [ "$#" -gt 0 ]; then
-                git add . && \
-                git commit -am "$*" && \
-                git push origin master && \
-                hub browse .
-            fi
+            case $1 in
+                start)
+                    git init  && \
+                    hub create && \ 
+                    git add . && \
+                    git commit -am "first commit" && \
+                    git push origin master && \
+                    hub browse .
+                    ;;
+                    
+                stop)
+                    git add . && \
+                    git commit -am "$*" && \
+                    git push origin master && \
+                    hub browse .
+                    ;;
+                    
+                *)  git status -s
+                    ;;                
+            esac
             ;;
-            
-        gitinit)
-            shift
-            git init  && \
-            hub create && \ 
-            git add . && \
-            git commit -am "first commit" && \
-            git push origin master && \
-            hub browse .
-            ;;
-            
-            
             
         cloud)
             shift
