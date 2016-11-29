@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA11
-## Date     : 2016-11-28
+## Version  : PA12
+## Date     : 2016-11-29
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -32,13 +32,13 @@ alias tdy='things today'
 alias tdyl='things today list'
 alias tdyi='things today start'
 alias tdye='things today stop'
+alias tdyia='things today startall'
+alias tdyea='things today stopall'
 alias tdyj='things today jump'
 alias tdya='things today archive'
 
 alias tdp='things projects'
 alias tdpl='things projects list'
-alias tdpi='things projects start'
-alias tdpe='things projects stop'
 alias tdpn='things projects new'
 alias tdpj='things projects jump'
 alias tdps='things projects schedule'
@@ -278,50 +278,6 @@ function things() {
                     tree -L 1 -Cd -l "$PROJECTS"
                     open -g "$PROJECTS"
                     ;;
-
-                start)
-                    PROJECT=`basename "$PWD"`
-                    PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
-                    if [ -n "$PROJECTDIR" ]; then
-                        if [ ! -e "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
-                            $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
-                            #touch "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"
-                            ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"                        
-                        fi
-                    fi
-                    tree -L 1 -Cd -l "$TODAY"
-                    $TODOTXT list
-                    open -g "$TODAY"
-                    ;;
-                    
-                stop)
-                    PROJECT=`basename "$PWD"`
-                    PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
-                    if [ -n "$PROJECTDIR" ]; then
-                        AREADIR=`find "$AREAS" -name "$($TODOTXT -@+ list $PROJECT | head -1)"`
-                        if [ -n "$AREADIR" ]; then
-                           AREADIRNAME=`dirname "$AREADIR"`
-                           AREA=`basename "$AREADIRNAME"`
-                           if [ -e "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
-                               rm -f "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)"; 
-                           fi
-                           if [ -e "$TODAY/$AREA" ]; then
-                              files=($AREAS/$AREA/*)
-                              if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
-                           fi 
-                        fi
-                        if [ -L "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then                               
-                            rm -f "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"   
-                            TASK=$($TODOTXT list $PROJECT)
-                            $TODOTXT do $TASK
-                        fi 
-
-                    fi
-                    cd "$TODAY"
-                    tree -L 1 -Cd -l 
-                    $TODOTXT list
-                    open -g . 
-                    ;;
                     
                 new)
                     shift
@@ -381,18 +337,12 @@ function things() {
                     if [ $# -eq 0 ]; then
                         cd "$PROJECTS"
                     elif [ $# -eq 1 ]; then
-                        re='^[0-9]+$'
-                        if ! [[ $1 =~ $re ]] ; then
-                            if [ -e "$PROJECTS/$1" ]; then 
+                        if [ -e "$PROJECTS/$1" ]; then 
                                 cd "$PROJECTS/$1"
                             else
                                 echo "Error: Bad argument $1!"
                                 return 1  
                             fi
-                        else
-                            cd "$PROJECTS"
-                            cd $($TODOTXT list | grep "^$1" | awk {'print $3'})
-                        fi
                     else
                         echo "Error: Bad number of arguments!"
                         return 1                     
@@ -425,15 +375,53 @@ function things() {
                 cd "$TODAY"
                 $TODOTXT list
                 open -g .
-            else
+            elif [ $# -eq 1 ]; then
                 case $1 in
-                    list)
-                        open -g "$TODAY"
+                    start)
+                        PROJECT=`basename "$PWD"`
+                        PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
+                        if [ -n "$PROJECTDIR" ]; then
+                            if [ ! -e "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
+                                $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
+                                #touch "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"
+                                ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"                        
+                            fi
+                        fi
                         tree -L 1 -Cd -l "$TODAY"
                         $TODOTXT list
+                        open -g "$TODAY"
+                        ;;
+                   
+                    stop)
+                        PROJECT=`basename "$PWD"`
+                        PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
+                        if [ -n "$PROJECTDIR" ]; then
+                            AREADIR=`find "$AREAS" -name "$($TODOTXT -@+ list $PROJECT | head -1)"`
+                            if [ -n "$AREADIR" ]; then
+                               AREADIRNAME=`dirname "$AREADIR"`
+                               AREA=`basename "$AREADIRNAME"`
+                               if [ -e "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
+                                   rm -f "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)"; 
+                               fi
+                               if [ -e "$TODAY/$AREA" ]; then
+                                  files=($AREAS/$AREA/*)
+                                  if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
+                               fi 
+                            fi
+                            if [ -L "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then                               
+                                rm -f "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"   
+                                TASK=$($TODOTXT list $PROJECT)
+                                $TODOTXT do $TASK
+                            fi 
+
+                        fi
+                        cd "$TODAY"
+                        tree -L 1 -Cd -l 
+                        $TODOTXT list
+                        open -g . 
                         ;;
                         
-                    start)
+                    startall)
                         DAYOFWEEK=`echo $(date +"%a") | awk '{print tolower($0)}'`
                         cd "$PROJECTS"
                         RESULT=(`tag -m $DAYOFWEEK`)
@@ -450,8 +438,8 @@ function things() {
                         $TODOTXT list
                         open -g .                                
                         ;;
-                        
-                    stop)
+                    
+                    stopall)
                         find "$TODAY" -type l -delete
                         echo "" > $TODO_DIR/todo.txt
                         cd "$TODAY"
@@ -460,10 +448,16 @@ function things() {
                         open -g .                                
                         ;;
                         
+                    list)
+                        open -g "$TODAY"
+                        tree -L 1 -Cd -l "$TODAY"
+                        $TODOTXT list
+                        ;;
+                       
                     jump)
                         cd "$TODAY"
-                        tree -L 1 -Cd -l 
                         ;;
+                        
                     archive)
                         find "$TODAY" -type l -delete
                         $TODOTXT archive
@@ -482,14 +476,29 @@ function things() {
                         $TODOTXT list
                         open -g .   
                         ;;
-                    
-                    *)
-                    cd "$PROJECTS"
-                    cd $($TODOTXT list | grep "^$1" | awk {'print $3'})
-                    open .
-                    ;;
-
-                esac
+                esac 
+            elif [ $# -eq 2 ]; then
+                case $1 in
+                    jump)
+                        shift
+                        if [ $# -eq 1 ]; then
+                            re='^[0-9]+$'
+                            if [[ $1 =~ $re ]] ; then
+                                cd "$PROJECTS"
+                                cd $($TODOTXT list | grep "^$1" | awk {'print $3'})
+                            else
+                                echo "Error: Bad argument $1!"
+                                return 1  
+                            fi
+                        else
+                            echo "Error: Bad number of arguments!"
+                            return 1                     
+                        fi
+                        ;;
+                esac                           
+            else
+                echo "Error: Bad number of arguments!"
+                return 1
             fi
             ;;
             

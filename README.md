@@ -13,19 +13,11 @@ Solution Integrator Experienced - Certified by Ericsson
 Table of Contents
 
 Done recently
-[x] Understood Google Drive issue
-[x] Implemented things cloud feature tdpi tdpe
-[x] Implemented partial feature 'things cloud"
-[x] Implemented tests for features tdp, tda and tdl
-[x] Implemented complete feature 'things logbook'
-[x] Implemented complete feature 'things areas'
-[x] Implemented complete feature 'things projects'
-[ ]
+[x] tdpj # shall be moved to tdyj # and tdpj shall handle only project name jumps
+[x] 2016-11-29 tdpi tdpe shall be moved to tdyi tdye and then they be renamed to to tdyia tdyea 
+[x] 2016-11-28 Improved Git Integration
 :
 
 Still to do
-[ ] Implemented tests for features tdi, tds and tdd using bats
-[ ] Implemented complete feature 'things someday'
-[ ] Implemented complete feature 'things scheduled'
-[ ] Implemented complete feature 'things inbox'
+[ ] tdps shall be moved to tds domain
 ```
