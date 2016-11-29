@@ -65,6 +65,12 @@ alias tdg='things git'
 alias tdgi='things git start'
 alias tdge='things git stop'
 
+alias tds='things scheduled'
+alias tdsl='things scheduled list'
+alias tdsi='things scheduled start'
+alias tdse='things scheduled stop'
+alias tdsia='things scheduled startall'
+alias tdsea='things scheduled stopall'
 
 is_Things() {
 if [ "$1" == "`readlink $THINGS`" ]
@@ -556,6 +562,26 @@ function things() {
                 list)
                     tree -L 1 -Cd -l "$SCHEDULED"
                     open -g "$SCHEDULED"
+                    ;;
+                    
+                startall)
+                    pushd . &>/dev/null  
+                    cd "$PROJECTS"      
+                    tag -m weekly > $PROJECTS/PROJECTS-SCHEDULED.txt
+                    tag -m weekend >> $PROJECTS/PROJECTS-SCHEDULED.txt  
+                    while read line; do         
+                        ln -sf "$PROJECTS/$line" "$SCHEDULED/$line"
+                    done < $PROJECTS/PROJECTS-SCHEDULED.txt
+                    rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
+                    popd &>/dev/null
+                    tree -L 1 -Cd -l "$SCHEDULED"
+                    open -g "$SCHEDULED"                              
+                    ;;
+                
+                stopall)
+                    find "$SCHEDULED" -type l -delete
+                    tree -L 1 -Cd -l "$SCHEDULED"
+                    open -g "$SCHEDULED"                                
                     ;;
                 *)
                     cd "$SCHEDULED"
