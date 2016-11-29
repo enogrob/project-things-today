@@ -1,7 +1,7 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA12
+## Version  : PA13
 ## Date     : 2016-11-29
 ## Project  : project-things-today
 ## Reference: bash
@@ -562,6 +562,108 @@ function things() {
                 list)
                     tree -L 1 -Cd -l "$SCHEDULED"
                     open -g "$SCHEDULED"
+                    ;;
+                    
+                start)
+                    shift
+                    if [ $# -eq 0 ]; then
+                        PROJECT=`basename "$PWD"`
+                        PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
+                        if [ -n "$PROJECTDIR" ]; then
+                            if [ ! -e ""$SCHEDULED"/$PROJECT" ]; then 
+                                ln -sf "$PWD" "$SCHEDULED/$PROJECT"; 
+                            fi
+                            DAYOFWEEK=`echo $(date +"%a") | awk '{print tolower($0)}'`
+                            case $DAYOFWEEK in
+                                mon|tue|wed|thu|fri)
+                                tag -a "weekly,$DAYOFWEEK" "$PROJECTS/$PROJECT"
+                                ;;
+                                sat|sun)
+                                tag -a "weekend,$DAYOFWEEK" "$PROJECTS/$PROJECT"
+                                ;;
+                            esac
+                        fi
+                        tree -L 1 -Cd -l "$SCHEDULED"
+                        open -g "$SCHEDULED"
+                    elif [ $# -eq 1 ]; then
+                        PROJECT=`basename "$PWD"`
+                        PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
+                        if [ -n "$PROJECTDIR" ]; then
+                            if [ ! -e "$SCHEDULED/$PROJECT" ]; then 
+                                ln -sf "$PWD" "$SCHEDULED/$PROJECT"; 
+                            fi
+                            local PROJTAGS=`echo $1 | sed 's/,/ /g'`
+                            if [[ "$PROJTAGS" =~ "mon" ]];  then
+                                tag -a mon,weekly "$PROJECTS/$PROJECT"
+                            fi
+                            if [[ "$PROJTAGS" =~ "tue" ]];  then
+                                tag -a tue,weekly "$PROJECTS/$PROJECT"
+                            fi                             
+                            if [[ "$PROJTAGS" =~ "wed" ]];  then
+                                tag -a wed,weekly "$PROJECTS/$PROJECT"
+                            fi                                            
+                            if [[ "$PROJTAGS" =~ "thu" ]];  then
+                                tag -a thu,weekly "$PROJECTS/$PROJECT"
+                            fi                                            
+                            if [[ "$PROJTAGS" =~ "fri" ]];  then
+                                tag -a fri,weekly "$PROJECTS/$PROJECT"
+                            fi                                            
+                            if [[ "$PROJTAGS" =~ "sat" ]]; then
+                                tag -a sat,weekend "$PROJECTS/$PROJECT"
+                            fi                                           
+                            if [[ "$PROJTAGS" =~ "sun" ]];  then
+                                tag -a sun,weekend "$PROJECTS/$PROJECT"
+                            fi                                                             
+                        fi
+                        tree -L 1 -Cd -l "$SCHEDULED"
+                        open -g "$SCHEDULED"
+                    else
+                        echo "Error: Bad number of arguments!"
+                        return 1
+                    fi
+                    ;;
+                    
+                stop)
+                    shift
+                    if [ $# -eq 0 ]; then
+                        PROJECT=`basename "$PWD"`
+                        PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
+                        if [ -n "$PROJECTDIR" ]; then
+                            if [ -e ""$SCHEDULED"/$PROJECT" ]; then 
+                                rm -f "$SCHEDULED/$PROJECT"; 
+                            fi
+                            local PROJTAGS=`tag -lN $PROJECTS/$PROJECT | sed 's/,/ /g'`
+                            if [[ "$PROJTAGS" =~ "mon" ]];  then
+                                tag -r mon "$PROJECTS/$PROJECT"
+                            fi
+                            if [[ "$PROJTAGS" =~ "tue" ]];  then
+                                tag -r tue "$PROJECTS/$PROJECT"
+                            fi                             
+                            if [[ "$PROJTAGS" =~ "wed" ]];  then
+                                tag -r wed "$PROJECTS/$PROJECT"
+                            fi                                            
+                            if [[ "$PROJTAGS" =~ "thu" ]];  then
+                                tag -r thu "$PROJECTS/$PROJECT"
+                            fi                                            
+                            if [[ "$PROJTAGS" =~ "fri" ]];  then
+                                tag -r fri "$PROJECTS/$PROJECT"
+                            fi                                            
+                            if [[ "$PROJTAGS" =~ "sat" ]]; then
+                                tag -r sat "$PROJECTS/$PROJECT"
+                            fi                                           
+                            if [[ "$PROJTAGS" =~ "sun" ]];  then
+                                tag -r sun "$PROJECTS/$PROJECT"
+                            fi   
+                            if [[ "$PROJTAGS" =~ "weekly" ]]; then
+                                tag -r weekly "$PROJECTS/$PROJECT"
+                            fi                                           
+                            if [[ "$PROJTAGS" =~ "weekend" ]];  then
+                                tag -r weekend "$PROJECTS/$PROJECT"
+                            fi   
+                            tree -L 1 -Cd -l "$SCHEDULED"
+                            open -g "$SCHEDULED"
+                        fi
+                    fi
                     ;;
                     
                 startall)
