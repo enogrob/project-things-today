@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA14
-## Date     : 2016-11-29
+## Version  : PA16
+## Date     : 2016-12-02
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -248,12 +248,12 @@ function scheduled(){
                 SCHEDULED=$SCHEDULED" x |"; 
             else
                 SCHEDULED=$SCHEDULED"   |"; 
-            fi                                                            
+            fi             
             if [[ "$PROJTAGS" =~ $DAYOFWEEK ]];  then
                 echo -e "$SCHEDULED $line"
             else
                 echo -e "$SCHEDULED \033[1;36m$line \033[0m"
-            fi
+            fi       
         done < $PROJECTS/PROJECTS-SCHEDULED.txt        
     fi
     rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
@@ -298,7 +298,6 @@ function things() {
                         fi
                         if [ ! -L "$TODAY/$AREA" ]; then ln -sf "$AREAS/$AREA" "$TODAY/$AREA" ; fi  
                     fi
-                    tree -L 1 -Cd -l "$TODAY"
                     open -g "$TODAY" 
                     ;;
                     
@@ -317,13 +316,11 @@ function things() {
                        fi 
                     fi
                     cd "$TODAY"
-                    tree -L 1 -Cd -l 
                     open -g . 
                     ;;
                     
                 *)
                     cd "$AREAS"
-                    tree -L 1 -Cd -l 
                     open -g .
                     ;;
             esac
@@ -385,7 +382,6 @@ function things() {
                             ;;
                     esac
                     cd "$PROJECTS/$PROJECT"
-                    tree -L 1 -Cd -l 
                     open -g . 
                     tag -l "$PROJECTS/$PROJECT"
                     ;;
@@ -409,7 +405,6 @@ function things() {
                     
                 *)
                     cd "$PROJECTS"
-                    tree -L 1 -Cd -l 
                     open -g .
                     ;;
             esac
@@ -425,12 +420,12 @@ function things() {
                 case $1 in
                     start)
                         PROJECT=`basename "$PWD"`
-                        PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
+                        PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$PROJECT"`
                         if [ -n "$PROJECTDIR" ]; then
-                            if [ ! -e "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
+                            PROJECTDIR=`find "$TODAY" -maxdepth 1 -lname "$PROJECTS/$PROJECT"`
+                            if [ -z "$PROJECTDIR" ]; then 
                                 $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
-                                #touch "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"
-                                ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"                        
+                                ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"         
                             fi
                         fi
                         tree -L 1 -Cd -l "$TODAY"
@@ -440,29 +435,28 @@ function things() {
                    
                     stop)
                         PROJECT=`basename "$PWD"`
-                        PROJECTDIR=`find "$PROJECTS" -name "$PROJECT"`
+                        PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$PROJECT"`
                         if [ -n "$PROJECTDIR" ]; then
                             AREADIR=`find "$AREAS" -name "$($TODOTXT -@+ list $PROJECT | head -1)"`
                             if [ -n "$AREADIR" ]; then
                                AREADIRNAME=`dirname "$AREADIR"`
                                AREA=`basename "$AREADIRNAME"`
-                               if [ -e "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
-                                   rm -f "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)"; 
+                               if [ -e "$AREAS/$AREA/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then 
+                                   rm -f "$AREAS/$AREA/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"; 
                                fi
                                if [ -e "$TODAY/$AREA" ]; then
                                   files=($AREAS/$AREA/*)
                                   if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
                                fi 
                             fi
-                            if [ -L "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then                               
-                                rm -f "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"   
+                            if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then                               
+                                rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"   
                                 TASK=$($TODOTXT list $PROJECT)
                                 $TODOTXT do $TASK
                             fi 
 
                         fi
                         cd "$TODAY"
-                        tree -L 1 -Cd -l 
                         $TODOTXT list
                         open -g . 
                         ;;
@@ -476,11 +470,10 @@ function things() {
                           PROJECT="${m}"
                           if [ ! -e "$TODAY/$PROJECT" ]; then 
                               $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
-                              ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list $PROJECT | head -1)"
+                              ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
                           fi
                         done
                         cd "$TODAY"
-                        tree -L 1 -Cd -l 
                         $TODOTXT list
                         open -g .                                
                         ;;
@@ -489,7 +482,6 @@ function things() {
                         find "$TODAY" -type l -delete
                         echo "" > $TODO_DIR/todo.txt
                         cd "$TODAY"
-                        tree -L 1 -Cd -l 
                         $TODOTXT list
                         open -g .                                
                         ;;
@@ -518,7 +510,6 @@ function things() {
                         done < $TODAY/TODOLIST.txt
                         rm -f $TODAY/TODOLIST.txt
                         cd "$TODAY"
-                        tree -L 1 -Cd -l 
                         $TODOTXT list
                         open -g .   
                         ;;
@@ -557,7 +548,6 @@ function things() {
                     ;;
                 *)
                     cd "$INBOX"
-                    tree -L 1 -Cd -l 
                     open -g .
             esac
             ;;
@@ -572,11 +562,10 @@ function things() {
                     
                 start)
                      PROJECT=`basename "$PWD"`
-                     PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
+                     PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                      if [ -n "$PROJECTDIR" ]; then
                          if [ ! -e "$LOGBOOK/$PROJECT" ]; then ln -sf "$PWD" "$LOGBOOK/$PROJECT"; fi
                      fi
-                     tree -L 1 -Cd -l "$LOGBOOK"
                      open -g "$LOGBOOK"
                      ;;
                     
@@ -586,12 +575,10 @@ function things() {
                      if [ -n "$PROJECTDIR" ]; then
                          if [ -e "$LOGBOOK/$PROJECT" ]; then rm -f "$LOGBOOK/$PROJECT"; fi
                      fi
-                     tree -L 1 -Cd -l "$LOGBOOK"
                      open -g "$LOGBOOK"
                      ;;
                 *)
                     cd "$LOGBOOK"
-                    tree -L 1 -Cd -l 
                     open -g .
             esac
             ;;
@@ -620,7 +607,7 @@ function things() {
                     shift
                     if [ $# -eq 0 ]; then
                         PROJECT=`basename "$PWD"`
-                        PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
+                        PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                         if [ -n "$PROJECTDIR" ]; then
                             if [ ! -e ""$SCHEDULED"/$PROJECT" ]; then 
                                 ln -sf "$PWD" "$SCHEDULED/$PROJECT"; 
@@ -639,7 +626,7 @@ function things() {
                         open -g "$SCHEDULED"
                     elif [ $# -eq 1 ]; then
                         PROJECT=`basename "$PWD"`
-                        PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
+                        PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                         if [ -n "$PROJECTDIR" ]; then
                             if [ ! -e "$SCHEDULED/$PROJECT" ]; then 
                                 ln -sf "$PWD" "$SCHEDULED/$PROJECT"; 
@@ -667,7 +654,6 @@ function things() {
                                 tag -a sun,weekend "$PROJECTS/$PROJECT"
                             fi                                                             
                         fi
-                        tree -L 1 -Cd -l "$SCHEDULED"
                         open -g "$SCHEDULED"
                     else
                         echo "Error: Bad number of arguments!"
@@ -679,7 +665,7 @@ function things() {
                     shift
                     if [ $# -eq 0 ]; then
                         PROJECT=`basename "$PWD"`
-                        PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
+                        PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                         if [ -n "$PROJECTDIR" ]; then
                             if [ -e ""$SCHEDULED"/$PROJECT" ]; then 
                                 rm -f "$SCHEDULED/$PROJECT"; 
@@ -712,7 +698,6 @@ function things() {
                             if [[ "$PROJTAGS" =~ "weekend" ]];  then
                                 tag -r weekend "$PROJECTS/$PROJECT"
                             fi   
-                            tree -L 1 -Cd -l "$SCHEDULED"
                             open -g "$SCHEDULED"
                         fi
                     fi
@@ -728,18 +713,15 @@ function things() {
                     done < $PROJECTS/PROJECTS-SCHEDULED.txt
                     rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
                     popd &>/dev/null
-                    tree -L 1 -Cd -l "$SCHEDULED"
                     open -g "$SCHEDULED"                              
                     ;;
                 
                 stopall)
                     find "$SCHEDULED" -type l -delete
-                    tree -L 1 -Cd -l "$SCHEDULED"
                     open -g "$SCHEDULED"                                
                     ;;
                 *)
                     cd "$SCHEDULED"
-                    tree -L 1 -Cd -l 
                     open -g .
             esac
             ;;
@@ -753,7 +735,6 @@ function things() {
                     ;;
                 *)
                     cd "$SOMEDAY"
-                    tree -L 1 -Cd -l 
                     open -g .
             esac
             ;;        
@@ -824,13 +805,12 @@ function things() {
                     ;;
                 copy)
                     PROJECT=`basename $PWD`
-                    PROJECTDIR=`find $PROJECTS -name $PROJECT`
+                    PROJECTDIR=`find $PROJECTS -maxdepth 1 -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
                         if [ ! -e "$CLOUD/Projects/$PROJECT" ]; then 
                             rsync -avErL $PWD "$CLOUD/Projects"
                         fi
                     fi
-                    tree -L 1 -Cd -l "$CLOUD/Projects/$PROJECT"
                     open -g "$CLOUD/Projects/"
                     ;;
                 *) 
@@ -855,7 +835,6 @@ function things() {
                 ln -sf "$LOCAL/Projects" $PROJECTS_LINK
             fi
             cd "$THINGS"
-            tree -L 1 -Cd -l 
             open -g .
             ;;
     esac

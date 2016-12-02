@@ -13,7 +13,7 @@ Solution Integrator Experienced - Certified by Ericsson
 Table of Contents
 
 Done recently
-[x] 2016-11-29 perform tdps move to tds domain
+[x] 2016-11-29 performed tdps move to tds domain
 [x] 2016-11-29 performed tdsi-tdse
 [x] 2016-11-29 performed tdsia-tdsea 
 [x] 2016-11-29 tdpj # -> tdyj # and tdpj shall handle only project name jumps
@@ -23,4 +23,5 @@ Done recently
 
 Still to do
 [ ] perform tdse with parameter
+[ ] improve things someday e.g. tdsd-tdsdi-tdsde-tdsdl
 ```
