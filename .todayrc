@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA16
-## Date     : 2016-12-02
+## Version  : PA17
+## Date     : 2016-12-03
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -347,8 +347,35 @@ function things() {
             shift
             case $1 in
                 list)
-                    tree -L 1 -Cd -l "$PROJECTS"
-                    open -g "$PROJECTS"
+                    shift
+                    if [ $# -eq 0 ]; then
+                        tree -L 1 -Cd -l "$PROJECTS"
+                        open -g "$PROJECTS"
+                    elif [ $# -eq 1 ]; then                        
+                        local PROJTAGS=$1
+                        pushd . &>/dev/null  
+                        cd "$PROJECTS" 
+                        PROJTAGS=(`echo $PROJTAGS | sed 's/,/ /g'`)
+        
+                        for m in "${PROJTAGS[@]}"
+                        do
+                            tag -m "${m}" >> $PROJECTS/PROJECTS.txt 
+                        done
+        
+                        cat $PROJECTS/PROJECTS.txt | sort | uniq > $PROJECTS/PROJECTS_TEMP.txt
+                        rm -f $PROJECTS/PROJECTS.txt
+                        mv $PROJECTS/PROJECTS_TEMP.txt $PROJECTS/PROJECTS.txt 
+        
+                        echo -e "==> Projects with tag(s):\033[1;32m $1 \033[0m"                     
+                        while read line; do         
+                                echo -e "\033[1;36m$line \033[0m"    
+                        done < $PROJECTS/PROJECTS.txt        
+                        rm -f $PROJECTS/PROJECTS.txt
+                        popd &>/dev/null
+                    else
+                        echo "Error: Bad number of arguments!"
+                        return 1
+                    fi
                     ;;
                     
                 new)
