@@ -208,8 +208,25 @@ function scheduled(){
     else
         local DAYOFWEEK=$1
         pushd . &>/dev/null  
-        cd "$PROJECTS"     
-        tag -m $DAYOFWEEK > $PROJECTS/PROJECTS-SCHEDULED.txt 
+        cd "$PROJECTS" 
+        DAYOFWEEK=(`echo $DAYOFWEEK | sed 's/,/ /g'`)
+        
+        for m in "${DAYOFWEEK[@]}"
+        do
+          case $m in
+              mon|tue|wed|thu|fri|sat|sun|weekly|weekend)
+                  tag -m "${m}" >> $PROJECTS/PROJECTS-SCHEDULED.txt 
+                  ;;
+              *)  tag -m "${m},weekly" >> $PROJECTS/PROJECTS-SCHEDULED.txt 
+                  tag -m "${m},weekend" >> $PROJECTS/PROJECTS-SCHEDULED.txt 
+                  ;;
+          esac 
+        done
+        
+        cat $PROJECTS/PROJECTS-SCHEDULED.txt | sort | uniq > $PROJECTS/PROJECTS-SCHEDULED_TEMP.txt
+        rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
+        mv $PROJECTS/PROJECTS-SCHEDULED_TEMP.txt $PROJECTS/PROJECTS-SCHEDULED.txt 
+        
         echo -e "\033[1;32mmon tue wed thu fri sat sun \033[0m"                     
         while read line; do         
             local PROJTAGS=`tag -lN $line | sed 's/,/ /g'`
