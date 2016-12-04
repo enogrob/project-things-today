@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA17
-## Date     : 2016-12-03
+## Version  : PA18
+## Date     : 2016-12-04
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -71,6 +71,64 @@ alias tdsi='things scheduled start'
 alias tdse='things scheduled stop'
 alias tdsia='things scheduled startall'
 alias tdsea='things scheduled stopall'
+
+print(){
+    if [ $# -eq 0 ]; then
+        echo -e ""
+    elif [ $# -eq 1 ]; then
+        echo -e "\033[1;39m$1 \033[0m"
+    elif [ $# -eq 2 ]; then
+        case $2 in
+            red)
+                echo -e "\033[31m$1 \033[0m"
+                ;;
+            green)
+                echo -e "\033[32m$1 \033[0m"
+                ;;
+            yellow)
+                echo -e "\033[33m$1 \033[0m"
+                ;; 
+            blue)
+                echo -e "\033[34m$1 \033[0m"
+                ;; 
+            magenta)
+                echo -e "\033[35m$1 \033[0m"
+                ;; 
+            cyan)
+                echo -e "\033[36m$1 \033[0m"
+                ;; 
+            lightred)
+                echo -e "\033[1;91m$1 \033[0m"
+                ;;
+            lightgreen)
+                echo -e "\033[1;92m$1 \033[0m"
+                ;;
+            lightyellow)
+                echo -e "\033[1;93m$1 \033[0m"
+                ;; 
+            lightblue)
+                echo -e "\033[1;94m$1 \033[0m"
+                ;; 
+            lightmagenta)
+                echo -e "\033[1;95m$1 \033[0m"
+                ;; 
+            lightcyan)
+                echo -e "\033[1;96m$1 \033[0m"
+                ;;            
+            *)
+                echo -e "\033[1;39m$1 \033[0m"
+                ;;   
+        esac        
+    else
+        printerr "=> Error: Bad number of arguments."
+        print
+        return 1
+    fi
+}
+
+printerr(){
+    echo -e "\033[31m$1 \033[0m"
+}
 
 is_Things() {
 if [ "$1" == "`readlink $THINGS`" ]
@@ -160,7 +218,7 @@ function scheduled(){
         cd "$PROJECTS"      
         tag -m weekly > $PROJECTS/PROJECTS-SCHEDULED.txt
         tag -m weekend >> $PROJECTS/PROJECTS-SCHEDULED.txt  
-        echo -e "\033[1;32mmon tue wed thu fri sat sun \033[0m"                     
+        print "mon tue wed thu fri sat sun" green                     
         while read line; do         
             local PROJTAGS=`tag -lN $line | sed 's/,/ /g'`
             local SCHEDULED=""
@@ -200,9 +258,9 @@ function scheduled(){
                 SCHEDULED=$SCHEDULED"   |"; 
             fi                                                            
             if [[ "$PROJTAGS" =~ $DAYOFWEEK ]];  then
-                echo -e "$SCHEDULED $line"
-            else
-                echo -e "$SCHEDULED \033[1;36m$line \033[0m"
+                print "$SCHEDULED $line"
+            else 
+                print "$SCHEDULED $line" cyan
             fi
         done < $PROJECTS/PROJECTS-SCHEDULED.txt
     else
@@ -227,7 +285,7 @@ function scheduled(){
         rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
         mv $PROJECTS/PROJECTS-SCHEDULED_TEMP.txt $PROJECTS/PROJECTS-SCHEDULED.txt 
         
-        echo -e "\033[1;32mmon tue wed thu fri sat sun \033[0m"                     
+        print "mon tue wed thu fri sat sun" green                     
         while read line; do         
             local PROJTAGS=`tag -lN $line | sed 's/,/ /g'`
             local SCHEDULED=""
@@ -267,9 +325,10 @@ function scheduled(){
                 SCHEDULED=$SCHEDULED"   |"; 
             fi             
             if [[ "$PROJTAGS" =~ $DAYOFWEEK ]];  then
-                echo -e "$SCHEDULED $line"
+                print "$SCHEDULED $line"
             else
-                echo -e "$SCHEDULED \033[1;36m$line \033[0m"
+                printf "$SCHEDULED" 
+                print $line cyan
             fi       
         done < $PROJECTS/PROJECTS-SCHEDULED.txt        
     fi
@@ -296,7 +355,8 @@ function things() {
                         PROJECT=`basename "$PWD"`
                         AREA=$1
                     else
-                        echo "Error: Bad number of arguments!"
+                        printerr "==> Error: Bad number of arguments."
+                        print
                         return 1
                     fi
                     case $AREA in
@@ -304,7 +364,8 @@ function things() {
                          rails|ruby|specialization|suspended|tutorial|udemy|webdev|tutorialspoint|sololearn)
                          ;;
                          *)  
-                         echo "Error: Bad project type!"
+                         printerr "==> Error: Bad project type."
+                         print
                          return 1
                          ;;
                     esac
@@ -366,14 +427,16 @@ function things() {
                         rm -f $PROJECTS/PROJECTS.txt
                         mv $PROJECTS/PROJECTS_TEMP.txt $PROJECTS/PROJECTS.txt 
         
-                        echo -e "==> Projects with tag(s):\033[1;32m $1 \033[0m"                     
+                        printf "==> Projects with tag(s): "
+                        print $1 green                     
                         while read line; do         
-                                echo -e "\033[1;36m$line \033[0m"    
+                                print $line cyan    
                         done < $PROJECTS/PROJECTS.txt        
                         rm -f $PROJECTS/PROJECTS.txt
                         popd &>/dev/null
                     else
-                        echo "Error: Bad number of arguments!"
+                        printerr "==> Error: Bad number of arguments."
+                        print
                         return 1
                     fi
                     ;;
@@ -382,7 +445,8 @@ function things() {
                     shift
                     
                     if [ $# -eq 0 ]; then
-                        echo "Error: Bad number of arguments!"
+                        printerr "==> Error: Bad number of arguments."
+                        print
                         return 1
                     elif [ $# -eq 1 ]; then
                         PROJECT=$1
@@ -394,7 +458,8 @@ function things() {
                             $TAGSPROJECTS)  
                                 ;;
                                 *)  
-                                echo "Error: Bad project type!"
+                                printerr "==> Error: Bad project type."
+                                print
                                 return 1
                                 ;;
                         esac                
@@ -421,7 +486,8 @@ function things() {
                             tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT" 
                             tag_contexts "$PROJECTS/$PROJECT"
                             ;;
-                        *)  echo "Error: Bad project type!"
+                        *)  printerr "==> Error: Bad project type."
+                            print
                             return 1
                             ;;
                     esac
@@ -438,11 +504,13 @@ function things() {
                         if [ -e "$PROJECTS/$1" ]; then 
                                 cd "$PROJECTS/$1"
                             else
-                                echo "Error: Bad argument $1!"
+                                printerr "==> Error: Bad argument $1."
+                                print
                                 return 1  
                             fi
                     else
-                        echo "Error: Bad number of arguments!"
+                        printerr "==> Error: Bad number of arguments."
+                        print
                         return 1                     
                     fi
                     ;;
@@ -568,17 +636,20 @@ function things() {
                                 cd "$PROJECTS"
                                 cd $($TODOTXT list | grep "^$1" | awk {'print $3'})
                             else
-                                echo "Error: Bad argument $1!"
+                                printerr "==> Error: Bad argument $1."
+                                print
                                 return 1  
                             fi
                         else
-                            echo "Error: Bad number of arguments!"
+                            printerr "==> Error: Bad number of arguments."
+                            print
                             return 1                     
                         fi
                         ;;
                 esac                           
             else
-                echo "Error: Bad number of arguments!"
+                printerr "==> Error: Bad number of arguments."
+                print
                 return 1
             fi
             ;;
@@ -642,7 +713,8 @@ function things() {
                     elif [ $# -eq 1 ]; then
                         scheduled $1
                     else
-                        echo "Error: Bad number of arguments!"
+                        printerr "==> Error: Bad number of arguments."
+                        print
                         return 1        
                     fi
                     ;;
@@ -700,7 +772,8 @@ function things() {
                         fi
                         open -g "$SCHEDULED"
                     else
-                        echo "Error: Bad number of arguments!"
+                        printerr "==> Error: Bad number of arguments."
+                        print
                         return 1
                     fi
                     ;;
@@ -813,38 +886,38 @@ function things() {
             case $1 in
                 start)
                     if is_Things "$CLOUD"; then
-                        echo "=> THINGS already to CLOUD!"
-                        echo ""
+                        print "=> THINGS already to CLOUD."
+                        print
                     else
-                        echo "=> Configuring THINGS to CLOUD..."
-                        echo ""
+                        print "=> Configuring THINGS to CLOUD..."
+                        print 
                         unlink $TODAY_LINK
                         unlink $PROJECTS_LINK
                         ln -sf "$CLOUD/Today" $TODAY_LINK
                         ln -sf "$CLOUD/Projects" $PROJECTS_LINK
                         unlink $THINGS
                         ln -sf "$CLOUD" $THINGS
-                        echo "-- THINGS  :"
+                        print "-- THINGS  :"
                         ls -l $THINGS
-                        echo ""
+                        print
                     fi
                     ;;
                 stop)
                     if is_Things $LOCAL; then
-                        echo "=> THINGS already to LOCAL!"
-                        echo ""
+                        print "=> THINGS already to LOCAL."
+                        print 
                     else
-                        echo "=> Configuring THINGS to LOCAL..."
-                        echo ""
+                        print "=> Configuring THINGS to LOCAL..."
+                        print
                         unlink $TODAY_LINK
                         unlink $PROJECTS_LINK
                         ln -sf "$LOCAL/Today" $TODAY_LINK
                         ln -sf "$LOCAL/Projects" $PROJECTS_LINK                     
                         unlink $THINGS
                         ln -sf "$LOCAL" $THINGS
-                        echo "-- THINGS  :"
+                        print "-- THINGS  :"
                         ls -l $THINGS
-                        echo ""
+                        print 
                     fi
                     ;;
                 copy)
@@ -858,15 +931,15 @@ function things() {
                     open -g "$CLOUD/Projects/"
                     ;;
                 *) 
-                    echo "=> Listing TODAY configuration..."
-                    echo ""
-                    echo "-- THINGS  :"
+                    print "=> Listing TODAY configuration..."
+                    print 
+                    print "-- THINGS  :"
                     if [ ! -L $THINGS ]; then 
-                      echo "THINGS do not exist !"
-                      echo ""
+                      print "THINGS do not exist."
+                      print 
                     else  
                       ls -l $THINGS
-                      echo ""
+                      print 
                     fi
                     ;;
             esac
