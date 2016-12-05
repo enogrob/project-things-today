@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA18
-## Date     : 2016-12-04
+## Version  : PA19
+## Date     : 2016-12-05
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -216,8 +216,7 @@ function scheduled(){
         local DAYOFWEEK=$(echo $(date +"%a") | awk '{print tolower($0)}') 
         pushd . &>/dev/null  
         cd "$PROJECTS"      
-        tag -m weekly > $PROJECTS/PROJECTS-SCHEDULED.txt
-        tag -m weekend >> $PROJECTS/PROJECTS-SCHEDULED.txt  
+        tag -m scheduled > $PROJECTS/PROJECTS-SCHEDULED.txt
         print "mon tue wed thu fri sat sun" green                     
         while read line; do         
             local PROJTAGS=`tag -lN $line | sed 's/,/ /g'`
@@ -272,11 +271,10 @@ function scheduled(){
         for m in "${DAYOFWEEK[@]}"
         do
           case $m in
-              mon|tue|wed|thu|fri|sat|sun|weekly|weekend)
+              mon|tue|wed|thu|fri|sat|sun|scheduled)
                   tag -m "${m}" >> $PROJECTS/PROJECTS-SCHEDULED.txt 
                   ;;
-              *)  tag -m "${m},weekly" >> $PROJECTS/PROJECTS-SCHEDULED.txt 
-                  tag -m "${m},weekend" >> $PROJECTS/PROJECTS-SCHEDULED.txt 
+              *)  tag -m "${m},scheduled" >> $PROJECTS/PROJECTS-SCHEDULED.txt 
                   ;;
           esac 
         done
@@ -731,10 +729,10 @@ function things() {
                             DAYOFWEEK=`echo $(date +"%a") | awk '{print tolower($0)}'`
                             case $DAYOFWEEK in
                                 mon|tue|wed|thu|fri)
-                                tag -a "weekly,$DAYOFWEEK" "$PROJECTS/$PROJECT"
+                                tag -a "scheduled,weekday,$DAYOFWEEK" "$PROJECTS/$PROJECT"
                                 ;;
                                 sat|sun)
-                                tag -a "weekend,$DAYOFWEEK" "$PROJECTS/$PROJECT"
+                                tag -a "scheduled,weekend,$DAYOFWEEK" "$PROJECTS/$PROJECT"
                                 ;;
                             esac
                         fi
@@ -749,25 +747,25 @@ function things() {
                             fi
                             local PROJTAGS=`echo $1 | sed 's/,/ /g'`
                             if [[ "$PROJTAGS" =~ "mon" ]];  then
-                                tag -a mon,weekly "$PROJECTS/$PROJECT"
+                                tag -a mon,weekday,scheduled "$PROJECTS/$PROJECT"
                             fi
                             if [[ "$PROJTAGS" =~ "tue" ]];  then
-                                tag -a tue,weekly "$PROJECTS/$PROJECT"
+                                tag -a tue,weekday,scheduled "$PROJECTS/$PROJECT"
                             fi                             
                             if [[ "$PROJTAGS" =~ "wed" ]];  then
-                                tag -a wed,weekly "$PROJECTS/$PROJECT"
+                                tag -a wed,weekday,scheduled "$PROJECTS/$PROJECT"
                             fi                                            
                             if [[ "$PROJTAGS" =~ "thu" ]];  then
-                                tag -a thu,weekly "$PROJECTS/$PROJECT"
+                                tag -a thu,weekday,scheduled "$PROJECTS/$PROJECT"
                             fi                                            
                             if [[ "$PROJTAGS" =~ "fri" ]];  then
-                                tag -a fri,weekly "$PROJECTS/$PROJECT"
+                                tag -a fri,weekday,scheduled "$PROJECTS/$PROJECT"
                             fi                                            
                             if [[ "$PROJTAGS" =~ "sat" ]]; then
-                                tag -a sat,weekend "$PROJECTS/$PROJECT"
+                                tag -a sat,weekend,scheduled "$PROJECTS/$PROJECT"
                             fi                                           
                             if [[ "$PROJTAGS" =~ "sun" ]];  then
-                                tag -a sun,weekend "$PROJECTS/$PROJECT"
+                                tag -a sun,weekend,scheduled "$PROJECTS/$PROJECT"
                             fi                                                             
                         fi
                         open -g "$SCHEDULED"
@@ -789,32 +787,29 @@ function things() {
                             fi
                             local PROJTAGS=`tag -lN $PROJECTS/$PROJECT | sed 's/,/ /g'`
                             if [[ "$PROJTAGS" =~ "mon" ]];  then
-                                tag -r mon "$PROJECTS/$PROJECT"
+                                tag -r mon,weekday "$PROJECTS/$PROJECT"
                             fi
                             if [[ "$PROJTAGS" =~ "tue" ]];  then
-                                tag -r tue "$PROJECTS/$PROJECT"
+                                tag -r tue,weekday "$PROJECTS/$PROJECT"
                             fi                             
                             if [[ "$PROJTAGS" =~ "wed" ]];  then
-                                tag -r wed "$PROJECTS/$PROJECT"
+                                tag -r wed,weekday "$PROJECTS/$PROJECT"
                             fi                                            
                             if [[ "$PROJTAGS" =~ "thu" ]];  then
-                                tag -r thu "$PROJECTS/$PROJECT"
+                                tag -r thu,weekday "$PROJECTS/$PROJECT"
                             fi                                            
                             if [[ "$PROJTAGS" =~ "fri" ]];  then
-                                tag -r fri "$PROJECTS/$PROJECT"
+                                tag -r fri,weekday "$PROJECTS/$PROJECT"
                             fi                                            
                             if [[ "$PROJTAGS" =~ "sat" ]]; then
-                                tag -r sat "$PROJECTS/$PROJECT"
+                                tag -r sat,weekend "$PROJECTS/$PROJECT"
                             fi                                           
                             if [[ "$PROJTAGS" =~ "sun" ]];  then
-                                tag -r sun "$PROJECTS/$PROJECT"
+                                tag -r sun,weekend "$PROJECTS/$PROJECT"
                             fi   
-                            if [[ "$PROJTAGS" =~ "weekly" ]]; then
-                                tag -r weekly "$PROJECTS/$PROJECT"
-                            fi                                           
-                            if [[ "$PROJTAGS" =~ "weekend" ]];  then
-                                tag -r weekend "$PROJECTS/$PROJECT"
-                            fi   
+                            if [[ "$PROJTAGS" =~ "scheduled" ]]; then
+                                tag -r scheduled "$PROJECTS/$PROJECT"
+                            fi                                            
                             open -g "$SCHEDULED"
                         fi
                     fi
@@ -823,8 +818,7 @@ function things() {
                 startall)
                     pushd . &>/dev/null  
                     cd "$PROJECTS"      
-                    tag -m weekly > $PROJECTS/PROJECTS-SCHEDULED.txt
-                    tag -m weekend >> $PROJECTS/PROJECTS-SCHEDULED.txt  
+                    tag -m scheduled > $PROJECTS/PROJECTS-SCHEDULED.txt
                     while read line; do         
                         ln -sf "$PROJECTS/$line" "$SCHEDULED/$line"
                     done < $PROJECTS/PROJECTS-SCHEDULED.txt
