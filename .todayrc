@@ -679,28 +679,55 @@ function things() {
                     ;;
                     
                 start)
-                     PROJECT=`basename "$PWD"`
-                     PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
-                     if [ -n "$PROJECTDIR" ]; then
-                         if [ ! -e "$LOGBOOK/$PROJECT" ]; then 
-                             ln -sf "$PWD" "$LOGBOOK/$PROJECT"; 
-                             tag -a logbook "$LOGBOOK/$PROJECT"
-                         fi
-                     fi
-                     open -g "$LOGBOOK"
-                     ;;
+                    shift                
+                    if [ $# -eq 0 ]; then
+                        PROJECT=`basename "$PWD"`
+                    elif [ $# -eq 1 ]; then
+                        PROJECT=$1
+                    else
+                        printerr "==> Error: Bad number of arguments."
+                        print
+                        return 1   
+                    fi
+                    PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
+                    if [ -n "$PROJECTDIR" ]; then
+                        if [ ! -e "$LOGBOOK/$PROJECT" ]; then 
+                            ln -sf "$PWD" "$LOGBOOK/$PROJECT"; 
+                            tag -a logbook "$LOGBOOK/$PROJECT"
+                        fi
+                    else
+                        printerr "==> Error: Bad argument $PROJECT."
+                        print
+                        return 1  
+                    fi
+                    open -g "$LOGBOOK"
+                    ;;
                     
                 stop)
-                     PROJECT=`basename "$PWD"`
-                     PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
-                     if [ -n "$PROJECTDIR" ]; then
-                         if [ -e "$LOGBOOK/$PROJECT" ]; then 
-                             tag -r logbook "$LOGBOOK/$PROJECT"
-                             rm -f "$LOGBOOK/$PROJECT";                              
-                         fi
-                     fi
-                     open -g "$LOGBOOK"
-                     ;;
+                    shift                
+                    if [ $# -eq 0 ]; then
+                        PROJECT=`basename "$PWD"`
+                    elif [ $# -eq 1 ]; then
+                        PROJECT=$1
+                    else
+                        printerr "==> Error: Bad number of arguments."
+                        print
+                        return 1   
+                    fi
+                    PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
+                    if [ -n "$PROJECTDIR" ]; then
+                        if [ -e "$LOGBOOK/$PROJECT" ]; then 
+                            tag -r logbook "$LOGBOOK/$PROJECT"
+                            rm -f "$LOGBOOK/$PROJECT";   
+                        fi
+                    else
+                        printerr "==> Error: Bad argument $PROJECT."
+                        print
+                        return 1  
+                    fi
+                    open -g "$LOGBOOK"
+                    ;;
+
                 *)
                     cd "$LOGBOOK"
                     open -g .
