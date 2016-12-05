@@ -1,7 +1,7 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA19
+## Version  : PA20
 ## Date     : 2016-12-05
 ## Project  : project-things-today
 ## Reference: bash
@@ -51,6 +51,11 @@ alias tdl='things logbook'
 alias tdll='things logbook list'
 alias tdli='things logbook start'
 alias tdle='things logbook stop'
+
+alias tdsd='things someday'
+alias tdsdl='things someday list'
+alias tdsdi='things someday start'
+alias tdsde='things someday stop'
 
 alias tdc='things cloud'
 alias tdci='things cloud start'
@@ -169,7 +174,7 @@ function teste10(){
 function task_name(){
     shopt -s extglob         
     TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin)'
-    TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs)'
+    TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm)'
     
     local TASKNAME=`basename $1`
     local TASKTAGS=(`tag -lN $1 | sed 's/,/ /g'`)
@@ -195,7 +200,7 @@ function task_name(){
 
 function tag_contexts(){
     shopt -s extglob         
-    local TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r)'
+    local TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm)'
     
     local PROJECTNAME=`basename $1`
     local PROJECTTAGS=(`echo $PROJECTNAME | sed 's/-/ /g'`)
@@ -677,7 +682,10 @@ function things() {
                      PROJECT=`basename "$PWD"`
                      PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                      if [ -n "$PROJECTDIR" ]; then
-                         if [ ! -e "$LOGBOOK/$PROJECT" ]; then ln -sf "$PWD" "$LOGBOOK/$PROJECT"; fi
+                         if [ ! -e "$LOGBOOK/$PROJECT" ]; then 
+                             ln -sf "$PWD" "$LOGBOOK/$PROJECT"; 
+                             tag -a logbook "$LOGBOOK/$PROJECT"
+                         fi
                      fi
                      open -g "$LOGBOOK"
                      ;;
@@ -686,7 +694,10 @@ function things() {
                      PROJECT=`basename "$PWD"`
                      PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
                      if [ -n "$PROJECTDIR" ]; then
-                         if [ -e "$LOGBOOK/$PROJECT" ]; then rm -f "$LOGBOOK/$PROJECT"; fi
+                         if [ -e "$LOGBOOK/$PROJECT" ]; then 
+                             tag -r logbook "$LOGBOOK/$PROJECT"
+                             rm -f "$LOGBOOK/$PROJECT";                              
+                         fi
                      fi
                      open -g "$LOGBOOK"
                      ;;
@@ -844,6 +855,30 @@ function things() {
                     tree -L 1 -Cd -l "$SOMEDAY"
                     open -g "$SOMEDAY"
                     ;;
+                    
+                start)
+                     PROJECT=`basename "$PWD"`
+                     PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
+                     if [ -n "$PROJECTDIR" ]; then
+                         if [ ! -e "$SOMEDAY/$PROJECT" ]; then 
+                             ln -sf "$PWD" "$SOMEDAY/$PROJECT"; 
+                             tag -a someday "$SOMEDAY/$PROJECT"
+                         fi
+                     fi
+                     open -g "$SOMEDAY"
+                     ;;
+                
+                stop)
+                     PROJECT=`basename "$PWD"`
+                     PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
+                     if [ -n "$PROJECTDIR" ]; then
+                         if [ -e "$SOMEDAY/$PROJECT" ]; then 
+                             tag -r someday "$SOMEDAY/$PROJECT"
+                             rm -f "$SOMEDAY/$PROJECT";                              
+                         fi
+                     fi
+                     open -g "$SOMEDAY"
+                     ;;
                 *)
                     cd "$SOMEDAY"
                     open -g .

@@ -13,6 +13,7 @@ Solution Integrator Experienced - Certified by Ericsson
 Table of Contents
 
 Done recently
+[x] 2016-12-05 performed things someday e.g. tdsd-tdsdl-tdsdi-tdsde
 [x] 2016-11-29 performed tdps move to tds domain
 [x] 2016-11-29 performed tdsi-tdse
 [x] 2016-11-29 performed tdsia-tdsea 
@@ -23,5 +24,4 @@ Done recently
 
 Still to do
 [ ] perform tdse with parameter
-[ ] improve things someday e.g. tdsd-tdsdi-tdsde-tdsdl
 ```
