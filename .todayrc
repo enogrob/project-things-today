@@ -756,100 +756,83 @@ function things() {
                     ;;
                     
                 start)
-                    shift
+                    shift         
                     if [ $# -eq 0 ]; then
                         PROJECT=`basename "$PWD"`
-                        PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
-                        if [ -n "$PROJECTDIR" ]; then
-                            if [ ! -e ""$SCHEDULED"/$PROJECT" ]; then 
-                                ln -sf "$PWD" "$SCHEDULED/$PROJECT"; 
-                            fi
-                            DAYOFWEEK=`echo $(date +"%a") | awk '{print tolower($0)}'`
-                            case $DAYOFWEEK in
-                                mon|tue|wed|thu|fri)
-                                tag -a "scheduled,weekday,$DAYOFWEEK" "$PROJECTS/$PROJECT"
-                                ;;
-                                sat|sun)
-                                tag -a "scheduled,weekend,$DAYOFWEEK" "$PROJECTS/$PROJECT"
-                                ;;
-                            esac
-                        fi
-                        tree -L 1 -Cd -l "$SCHEDULED"
-                        open -g "$SCHEDULED"
+                        DAYOFWEEK=(`echo $(date +"%a") | awk '{print tolower($0)}'`)
                     elif [ $# -eq 1 ]; then
-                        PROJECT=`basename "$PWD"`
-                        PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
+                        PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $1`
                         if [ -n "$PROJECTDIR" ]; then
-                            if [ ! -e "$SCHEDULED/$PROJECT" ]; then 
-                                ln -sf "$PWD" "$SCHEDULED/$PROJECT"; 
-                            fi
-                            local PROJTAGS=`echo $1 | sed 's/,/ /g'`
-                            if [[ "$PROJTAGS" =~ "mon" ]];  then
-                                tag -a mon,weekday,scheduled "$PROJECTS/$PROJECT"
-                            fi
-                            if [[ "$PROJTAGS" =~ "tue" ]];  then
-                                tag -a tue,weekday,scheduled "$PROJECTS/$PROJECT"
-                            fi                             
-                            if [[ "$PROJTAGS" =~ "wed" ]];  then
-                                tag -a wed,weekday,scheduled "$PROJECTS/$PROJECT"
-                            fi                                            
-                            if [[ "$PROJTAGS" =~ "thu" ]];  then
-                                tag -a thu,weekday,scheduled "$PROJECTS/$PROJECT"
-                            fi                                            
-                            if [[ "$PROJTAGS" =~ "fri" ]];  then
-                                tag -a fri,weekday,scheduled "$PROJECTS/$PROJECT"
-                            fi                                            
-                            if [[ "$PROJTAGS" =~ "sat" ]]; then
-                                tag -a sat,weekend,scheduled "$PROJECTS/$PROJECT"
-                            fi                                           
-                            if [[ "$PROJTAGS" =~ "sun" ]];  then
-                                tag -a sun,weekend,scheduled "$PROJECTS/$PROJECT"
-                            fi                                                             
-                        fi
-                        open -g "$SCHEDULED"
+                            PROJECT=$1
+                            DAYOFWEEK=(`echo $(date +"%a") | awk '{print tolower($0)}'`)
+                        else
+                            PROJECT=`basename "$PWD"`
+                            DAYOFWEEK=(`echo $1 | sed 's/,/ /g'`)
+                        fi   
+                    elif [ $# -eq 2 ]; then
+                        PROJECT=$2
+                        DAYOFWEEK=(`echo $1 | sed 's/,/ /g'`)
                     else
                         printerr "==> Error: Bad number of arguments."
                         print
-                        return 1
+                        return 1   
+                    fi                        
+                    PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
+                    if [ -n "$PROJECTDIR" ]; then
+                        if [ ! -e ""$SCHEDULED"/$PROJECT" ]; then 
+                            ln -sf "$PWD" "$SCHEDULED/$PROJECT"; 
+                        fi
+                        for m in "${DAYOFWEEK[@]}"
+                        do
+                          case $m in
+                              mon|tue|wed|thu|fri)
+                                tag -a "scheduled,weekday,$m" "$PROJECTS/$PROJECT"
+                                ;;
+                              sat|sun)
+                                tag -a "scheduled,weekend,$m" "$PROJECTS/$PROJECT"
+                                ;;
+                              *) 
+                                printerr "==> Error: Bad day: $m"
+                                print
+                                return 1   
+                                ;;
+                          esac 
+                        done                      
                     fi
                     ;;
                     
                 stop)
-                    shift
+                    shift         
                     if [ $# -eq 0 ]; then
                         PROJECT=`basename "$PWD"`
-                        PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
-                        if [ -n "$PROJECTDIR" ]; then
-                            if [ -e ""$SCHEDULED"/$PROJECT" ]; then 
-                                rm -f "$SCHEDULED/$PROJECT"; 
-                            fi
-                            local PROJTAGS=`tag -lN $PROJECTS/$PROJECT | sed 's/,/ /g'`
-                            if [[ "$PROJTAGS" =~ "mon" ]];  then
-                                tag -r mon,weekday "$PROJECTS/$PROJECT"
-                            fi
-                            if [[ "$PROJTAGS" =~ "tue" ]];  then
-                                tag -r tue,weekday "$PROJECTS/$PROJECT"
-                            fi                             
-                            if [[ "$PROJTAGS" =~ "wed" ]];  then
-                                tag -r wed,weekday "$PROJECTS/$PROJECT"
-                            fi                                            
-                            if [[ "$PROJTAGS" =~ "thu" ]];  then
-                                tag -r thu,weekday "$PROJECTS/$PROJECT"
-                            fi                                            
-                            if [[ "$PROJTAGS" =~ "fri" ]];  then
-                                tag -r fri,weekday "$PROJECTS/$PROJECT"
-                            fi                                            
-                            if [[ "$PROJTAGS" =~ "sat" ]]; then
-                                tag -r sat,weekend "$PROJECTS/$PROJECT"
-                            fi                                           
-                            if [[ "$PROJTAGS" =~ "sun" ]];  then
-                                tag -r sun,weekend "$PROJECTS/$PROJECT"
-                            fi   
-                            if [[ "$PROJTAGS" =~ "scheduled" ]]; then
-                                tag -r scheduled "$PROJECTS/$PROJECT"
-                            fi                                            
-                            open -g "$SCHEDULED"
+                        DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
+                    elif [ $# -eq 1 ]; then
+                        PROJECT=$1
+                        DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
+                    else
+                        printerr "==> Error: Bad number of arguments."
+                        print
+                        return 1   
+                    fi                        
+                    PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
+                    if [ -n "$PROJECTDIR" ]; then
+                        if [ -e "$SCHEDULED/$PROJECT" ]; then 
+                            rm -f "$SCHEDULED/$PROJECT"; 
                         fi
+                        for m in "${DAYOFWEEK[@]}"
+                        do
+                          case $m in
+                              mon|tue|wed|thu|fri|weekday)
+                                tag -r $m "$PROJECTS/$PROJECT"
+                                ;;
+                              sat|sun|weekend)
+                                tag -r $m "$PROJECTS/$PROJECT"
+                                ;;
+                              scheduled)
+                                tag -r $m "$PROJECTS/$PROJECT"
+                                ;;
+                          esac 
+                        done                                               
                     fi
                     ;;
                     
