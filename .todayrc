@@ -567,7 +567,8 @@ function things() {
                             if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then                               
                                 rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"   
                                 TASK=$($TODOTXT list $PROJECT)
-                                $TODOTXT do $TASK
+                                TASK=$(echo $TASK | grep -o -E '^[0-9]+')
+                                $TODOTXT -a do $TASK 
                             fi 
 
                         fi
