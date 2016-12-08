@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA20
-## Date     : 2016-12-05
+## Version  : PA21
+## Date     : 2016-12-08
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -329,10 +329,9 @@ function scheduled(){
             fi             
             if [[ "$PROJTAGS" =~ $DAYOFWEEK ]];  then
                 print "$SCHEDULED $line"
-            else
-                printf "$SCHEDULED" 
-                print $line cyan
-            fi       
+            else 
+                print "$SCHEDULED $line" cyan
+            fi
         done < $PROJECTS/PROJECTS-SCHEDULED.txt        
     fi
     rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
@@ -798,7 +797,11 @@ function things() {
                                 return 1   
                                 ;;
                           esac 
-                        done                      
+                        done 
+                        if [ -e "$SOMEDAY/$PROJECT" ]; then 
+                            tag -r someday "$SOMEDAY/$PROJECT"
+                            rm -f "$SOMEDAY/$PROJECT";                              
+                        fi               
                     fi
                     ;;
                     
@@ -868,28 +871,64 @@ function things() {
                     ;;
                     
                 start)
-                     PROJECT=`basename "$PWD"`
-                     PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
-                     if [ -n "$PROJECTDIR" ]; then
-                         if [ ! -e "$SOMEDAY/$PROJECT" ]; then 
-                             ln -sf "$PWD" "$SOMEDAY/$PROJECT"; 
-                             tag -a someday "$SOMEDAY/$PROJECT"
-                         fi
-                     fi
-                     open -g "$SOMEDAY"
-                     ;;
+                    shift         
+                    if [ $# -eq 0 ]; then
+                        PROJECT=`basename "$PWD"`
+                    elif [ $# -eq 1 ]; then
+                        PROJECT=$1
+                    else
+                        printerr "==> Error: Bad number of arguments."
+                        print
+                        return 1   
+                    fi      
+                    PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
+                    if [ -n "$PROJECTDIR" ]; then
+                        if [ ! -e "$SOMEDAY/$PROJECT" ]; then 
+                            ln -sf "$PROJECTS/$PROJECT" "$SOMEDAY/$PROJECT"; 
+                            tag -a someday "$PROJECTS/$PROJECT"
+                        fi
+                        if [ -e "$SCHEDULED/$PROJECT" ]; then 
+                            rm -f "$SCHEDULED/$PROJECT"; 
+                        fi
+                        DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
+                        for m in "${DAYOFWEEK[@]}"
+                        do
+                          case $m in
+                              mon|tue|wed|thu|fri|weekday)
+                                tag -r $m "$PROJECTS/$PROJECT"
+                                ;;
+                              sat|sun|weekend)
+                                tag -r $m "$PROJECTS/$PROJECT"
+                                ;;
+                              scheduled)
+                                tag -r $m "$PROJECTS/$PROJECT"
+                                ;;
+                          esac 
+                        done     
+                    fi
+                    open -g "$SOMEDAY"
+                    ;;
                 
                 stop)
-                     PROJECT=`basename "$PWD"`
-                     PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
-                     if [ -n "$PROJECTDIR" ]; then
-                         if [ -e "$SOMEDAY/$PROJECT" ]; then 
-                             tag -r someday "$SOMEDAY/$PROJECT"
-                             rm -f "$SOMEDAY/$PROJECT";                              
-                         fi
-                     fi
-                     open -g "$SOMEDAY"
-                     ;;
+                    shift         
+                    if [ $# -eq 0 ]; then
+                        PROJECT=`basename "$PWD"`
+                    elif [ $# -eq 1 ]; then
+                        PROJECT=$1
+                    else
+                        printerr "==> Error: Bad number of arguments."
+                        print
+                        return 1   
+                    fi   
+                    PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
+                    if [ -n "$PROJECTDIR" ]; then
+                        if [ -e "$SOMEDAY/$PROJECT" ]; then 
+                            tag -r someday "$PROJECTS/$PROJECT"
+                            rm -f "$SOMEDAY/$PROJECT";                              
+                        fi
+                    fi
+                    open -g "$SOMEDAY"
+                    ;;
                 *)
                     cd "$SOMEDAY"
                     open -g .
