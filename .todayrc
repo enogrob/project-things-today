@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA21
-## Date     : 2016-12-08
+## Version  : PA22
+## Date     : 2016-12-10
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -695,6 +695,24 @@ function things() {
                             ln -sf "$PWD" "$LOGBOOK/$PROJECT"; 
                             tag -a logbook "$LOGBOOK/$PROJECT"
                         fi
+                        DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
+                        if [ -e "$SCHEDULED/$PROJECT" ]; then 
+                            rm -f "$SCHEDULED/$PROJECT"; 
+                        fi
+                        for m in "${DAYOFWEEK[@]}"
+                        do
+                          case $m in
+                              mon|tue|wed|thu|fri|weekday)
+                                tag -r $m "$PROJECTS/$PROJECT"
+                                ;;
+                              sat|sun|weekend)
+                                tag -r $m "$PROJECTS/$PROJECT"
+                                ;;
+                              scheduled)
+                                tag -r $m "$PROJECTS/$PROJECT"
+                                ;;
+                          esac 
+                        done     
                     else
                         printerr "==> Error: Bad argument $PROJECT."
                         print
@@ -719,7 +737,7 @@ function things() {
                         if [ -e "$LOGBOOK/$PROJECT" ]; then 
                             tag -r logbook "$LOGBOOK/$PROJECT"
                             rm -f "$LOGBOOK/$PROJECT";   
-                        fi
+                        fi 
                     else
                         printerr "==> Error: Bad argument $PROJECT."
                         print
@@ -801,7 +819,11 @@ function things() {
                         if [ -e "$SOMEDAY/$PROJECT" ]; then 
                             tag -r someday "$SOMEDAY/$PROJECT"
                             rm -f "$SOMEDAY/$PROJECT";                              
-                        fi               
+                        fi  
+                        if [ -e "$LOGBOOK/$PROJECT" ]; then 
+                            tag -r logbook "$LOGBOOK/$PROJECT"
+                            rm -f "$LOGBOOK/$PROJECT";   
+                        fi              
                     fi
                     ;;
                     
