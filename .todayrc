@@ -725,7 +725,14 @@ function things() {
                                 tag -r $m "$PROJECTS/$PROJECT"
                                 ;;
                           esac 
-                        done     
+                        done 
+                        # tdye
+                        if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then                               
+                            rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"   
+                            TASK=$($TODOTXT list $PROJECT)
+                            TASK=$(echo $TASK | grep -o -E '^[0-9]+')
+                            $TODOTXT -a do $TASK 
+                        fi     
                     else
                         printerr "==> Error: Bad argument $PROJECT."
                         print
