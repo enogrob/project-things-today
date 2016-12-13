@@ -1,8 +1,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc
-## Version  : PA22
-## Date     : 2016-12-10
+## Version  : PA23
+## Date     : 2016-12-13
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -76,6 +76,19 @@ alias tdsi='things scheduled start'
 alias tdse='things scheduled stop'
 alias tdsia='things scheduled startall'
 alias tdsea='things scheduled stopall'
+
+function __contains() {
+    local n=$#
+    local value=${!n}
+    for ((i=1;i < $#;i++)) {
+        if [ "${!i}" == "${value}" ]; then
+            echo "y"
+            return 0
+        fi
+    }
+    echo "n"
+    return 1
+}
 
 print(){
     if [ $# -eq 0 ]; then
@@ -224,47 +237,47 @@ function scheduled(){
         tag -m scheduled > $PROJECTS/PROJECTS-SCHEDULED.txt
         print "mon tue wed thu fri sat sun" green                     
         while read line; do         
-            local PROJTAGS=`tag -lN $line | sed 's/,/ /g'`
-            local SCHEDULED=""
-            if [[ "$PROJTAGS" =~ "mon" ]];  then
+            local PROJTAGS=(`tag -lN $line | sed 's/,/ /g'`)
+            local SCHEDULED="" 
+            if [ $(__contains "${PROJTAGS[@]}" "mon") == "y" ]; then
                 SCHEDULED=" x |";
             else
-                SCHEDULED="   |";
+                SCHEDULED="   |";               
             fi
-            if [[ "$PROJTAGS" =~ "tue" ]];  then
-                SCHEDULED=$SCHEDULED" x |"; 
+            if [ $(__contains "${PROJTAGS[@]}" "tue") == "y" ]; then
+                SCHEDULED=$SCHEDULED" x |";
             else
-                SCHEDULED=$SCHEDULED"   |"; 
-            fi                             
-            if [[ "$PROJTAGS" =~ "wed" ]];  then
-                SCHEDULED=$SCHEDULED" x |"; 
+                SCHEDULED=$SCHEDULED"   |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" "wed") == "y" ]; then
+                SCHEDULED=$SCHEDULED" x |";
             else
-                SCHEDULED=$SCHEDULED"   |"; 
-            fi                                            
-            if [[ "$PROJTAGS" =~ "thu" ]];  then
-                SCHEDULED=$SCHEDULED" x |"; 
+                SCHEDULED=$SCHEDULED"   |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" "thu") == "y" ]; then
+                SCHEDULED=$SCHEDULED" x |";
             else
-                SCHEDULED=$SCHEDULED"   |"; 
-            fi                                            
-            if [[ "$PROJTAGS" =~ "fri" ]];  then
-                SCHEDULED=$SCHEDULED" x |"; 
+                SCHEDULED=$SCHEDULED"   |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" "fri") == "y" ]; then
+                SCHEDULED=$SCHEDULED" x |";
             else
-                SCHEDULED=$SCHEDULED"   |"; 
-            fi                                            
-            if [[ "$PROJTAGS" =~ "sat" ]]; then
-                SCHEDULED=$SCHEDULED" x |"; 
+                SCHEDULED=$SCHEDULED"   |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" "sat") == "y" ]; then
+                SCHEDULED=$SCHEDULED" x |";
             else
-                SCHEDULED=$SCHEDULED"   |"; 
-            fi                                           
-            if [[ "$PROJTAGS" =~ "sun" ]];  then
-                SCHEDULED=$SCHEDULED" x |"; 
+                SCHEDULED=$SCHEDULED"   |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" "sun") == "y" ]; then
+                SCHEDULED=$SCHEDULED" x |";
             else
-                SCHEDULED=$SCHEDULED"   |"; 
-            fi                                                            
-            if [[ "$PROJTAGS" =~ $DAYOFWEEK ]];  then
+                SCHEDULED=$SCHEDULED"   |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
                 print "$SCHEDULED $line"
-            else 
-                print "$SCHEDULED $line" cyan
+            else
+                print "$SCHEDULED $line" cyan          
             fi
         done < $PROJECTS/PROJECTS-SCHEDULED.txt
     else
@@ -290,47 +303,47 @@ function scheduled(){
         
         print "mon tue wed thu fri sat sun" green                     
         while read line; do         
-            local PROJTAGS=`tag -lN $line | sed 's/,/ /g'`
-            local SCHEDULED=""
-            if [[ "$PROJTAGS" =~ "mon" ]];  then
+            local PROJTAGS=(`tag -lN $line | sed 's/,/ /g'`)
+            local SCHEDULED=""           
+            if [ $(__contains "${PROJTAGS[@]}" "mon") == "y" ]; then
                 SCHEDULED=" x |";
             else
-                SCHEDULED="   |";
+                SCHEDULED="   |";               
             fi
-            if [[ "$PROJTAGS" =~ "tue" ]];  then
-                SCHEDULED=$SCHEDULED" x |"; 
+            if [ $(__contains "${PROJTAGS[@]}" "tue") == "y" ]; then
+                SCHEDULED=$SCHEDULED" x |";
             else
-                SCHEDULED=$SCHEDULED"   |"; 
-            fi                             
-            if [[ "$PROJTAGS" =~ "wed" ]];  then
-                SCHEDULED=$SCHEDULED" x |"; 
+                SCHEDULED=$SCHEDULED"   |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" "wed") == "y" ]; then
+                SCHEDULED=$SCHEDULED" x |";
             else
-                SCHEDULED=$SCHEDULED"   |"; 
-            fi                                            
-            if [[ "$PROJTAGS" =~ "thu" ]];  then
-                SCHEDULED=$SCHEDULED" x |"; 
+                SCHEDULED=$SCHEDULED"   |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" "thu") == "y" ]; then
+                SCHEDULED=$SCHEDULED" x |";
             else
-                SCHEDULED=$SCHEDULED"   |"; 
-            fi                                            
-            if [[ "$PROJTAGS" =~ "fri" ]];  then
-                SCHEDULED=$SCHEDULED" x |"; 
+                SCHEDULED=$SCHEDULED"   |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" "fri") == "y" ]; then
+                SCHEDULED=$SCHEDULED" x |";
             else
-                SCHEDULED=$SCHEDULED"   |"; 
-            fi                                            
-            if [[ "$PROJTAGS" =~ "sat" ]]; then
-                SCHEDULED=$SCHEDULED" x |"; 
+                SCHEDULED=$SCHEDULED"   |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" "sat") == "y" ]; then
+                SCHEDULED=$SCHEDULED" x |";
             else
-                SCHEDULED=$SCHEDULED"   |"; 
-            fi                                           
-            if [[ "$PROJTAGS" =~ "sun" ]];  then
-                SCHEDULED=$SCHEDULED" x |"; 
+                SCHEDULED=$SCHEDULED"   |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" "sun") == "y" ]; then
+                SCHEDULED=$SCHEDULED" x |";
             else
-                SCHEDULED=$SCHEDULED"   |"; 
-            fi             
-            if [[ "$PROJTAGS" =~ $DAYOFWEEK ]];  then
+                SCHEDULED=$SCHEDULED"   |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
                 print "$SCHEDULED $line"
-            else 
-                print "$SCHEDULED $line" cyan
+            else
+                print "$SCHEDULED $line" cyan          
             fi
         done < $PROJECTS/PROJECTS-SCHEDULED.txt        
     fi
