@@ -1,8 +1,9 @@
+#!/bin/bash
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
-## File     : .todayrc
-## Version  : PA23
-## Date     : 2016-12-13
+## File     : things-today.sh
+## Version  : PA24
+## Date     : 2016-12-23
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -77,7 +78,7 @@ alias tdse='things scheduled stop'
 alias tdsia='things scheduled startall'
 alias tdsea='things scheduled stopall'
 
-function __contains() {
+__contains() {
     local n=$#
     local value=${!n}
     for ((i=1;i < $#;i++)) {
@@ -90,7 +91,7 @@ function __contains() {
     return 1
 }
 
-print(){
+__print(){
     if [ $# -eq 0 ]; then
         echo -e ""
     elif [ $# -eq 1 ]; then
@@ -105,16 +106,16 @@ print(){
                 ;;
             yellow)
                 echo -e "\033[33m$1 \033[0m"
-                ;; 
+                ;;
             blue)
                 echo -e "\033[34m$1 \033[0m"
-                ;; 
+                ;;
             magenta)
                 echo -e "\033[35m$1 \033[0m"
-                ;; 
+                ;;
             cyan)
                 echo -e "\033[36m$1 \033[0m"
-                ;; 
+                ;;
             lightred)
                 echo -e "\033[1;91m$1 \033[0m"
                 ;;
@@ -123,43 +124,43 @@ print(){
                 ;;
             lightyellow)
                 echo -e "\033[1;93m$1 \033[0m"
-                ;; 
+                ;;
             lightblue)
                 echo -e "\033[1;94m$1 \033[0m"
-                ;; 
+                ;;
             lightmagenta)
                 echo -e "\033[1;95m$1 \033[0m"
-                ;; 
+                ;;
             lightcyan)
                 echo -e "\033[1;96m$1 \033[0m"
-                ;;            
+                ;;
             *)
                 echo -e "\033[1;39m$1 \033[0m"
-                ;;   
-        esac        
+                ;;
+        esac
     else
-        printerr "=> Error: Bad number of arguments."
-        print
+        __printerr "=> Error: Bad number of arguments."
+        __print
         return 1
     fi
 }
 
-printerr(){
+__printerr(){
     echo -e "\033[31m$1 \033[0m"
 }
 
-is_Things() {
+__is_Things() {
 if [ "$1" == "`readlink $THINGS`" ]
   then
     # 0 = true
-    return 0 
+    return 0
   else
     # 1 = false
     return 1
   fi
 }
 
-replace_icon(){
+__replace_icon(){
     droplet=$1
     icon=$2
     if [[ $icon =~ ^https?:// ]]; then
@@ -174,24 +175,14 @@ replace_icon(){
     SetFile -a V $droplet$'/Icon\r'
 }
 
-function teste10(){
-    s1="ebook\|x"
-    case $1 in
-        $s1) echo "Yes"
-        ;;
-        *) echo "No"
-        ;;
-    esac
-}
-
-function task_name(){
-    shopt -s extglob         
+__task_name(){
+    shopt -s extglob
     TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin)'
-    TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm)'
-    
+    TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm|devops|unix|postgresql|mysql|mongodb|oracle)'
+
     local TASKNAME=`basename $1`
     local TASKTAGS=(`tag -lN $1 | sed 's/,/ /g'`)
-    
+
     for n in "${TASKTAGS[@]}"
     do
         case $n in
@@ -207,17 +198,17 @@ function task_name(){
                 TASKNAME=$TASKNAME" @"$n
                 ;;
         esac
-    done    
+    done
     echo $TASKNAME
 }
 
-function tag_contexts(){
-    shopt -s extglob         
+__tag_contexts(){
+    shopt -s extglob
     local TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm)'
-    
+
     local PROJECTNAME=`basename $1`
     local PROJECTTAGS=(`echo $PROJECTNAME | sed 's/-/ /g'`)
-    
+
     for n in "${PROJECTTAGS[@]}"
     do
         case $n in
@@ -225,24 +216,24 @@ function tag_contexts(){
             tag -a $n "$1"
             ;;
         esac
-    done 
+    done
     return 0
 }
 
-function scheduled(){
+__scheduled(){
     if [ $# -eq 0 ]; then
-        local DAYOFWEEK=$(echo $(date +"%a") | awk '{print tolower($0)}') 
-        pushd . &>/dev/null  
-        cd "$PROJECTS"      
+        local DAYOFWEEK=$(echo $(date +"%a") | awk '{print tolower($0)}')
+        pushd . &>/dev/null
+        cd "$PROJECTS"
         tag -m scheduled > $PROJECTS/PROJECTS-SCHEDULED.txt
-        print "mon tue wed thu fri sat sun" green                     
-        while read line; do         
+        print "mon tue wed thu fri sat sun" green
+        while read line; do
             local PROJTAGS=(`tag -lN $line | sed 's/,/ /g'`)
-            local SCHEDULED="" 
+            local SCHEDULED=""
             if [ $(__contains "${PROJTAGS[@]}" "mon") == "y" ]; then
                 SCHEDULED=" x |";
             else
-                SCHEDULED="   |";               
+                SCHEDULED="   |";
             fi
             if [ $(__contains "${PROJTAGS[@]}" "tue") == "y" ]; then
                 SCHEDULED=$SCHEDULED" x |";
@@ -275,40 +266,40 @@ function scheduled(){
                 SCHEDULED=$SCHEDULED"   |";
             fi
             if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
-                print "$SCHEDULED $line"
+                __print "$SCHEDULED $line"
             else
-                print "$SCHEDULED $line" cyan          
+                __print "$SCHEDULED $line" cyan
             fi
         done < $PROJECTS/PROJECTS-SCHEDULED.txt
     else
         local DAYOFWEEK=$1
-        pushd . &>/dev/null  
-        cd "$PROJECTS" 
+        pushd . &>/dev/null
+        cd "$PROJECTS"
         DAYOFWEEK=(`echo $DAYOFWEEK | sed 's/,/ /g'`)
-        
+
         for m in "${DAYOFWEEK[@]}"
         do
           case $m in
               mon|tue|wed|thu|fri|sat|sun|scheduled)
-                  tag -m "${m}" >> $PROJECTS/PROJECTS-SCHEDULED.txt 
+                  tag -m "${m}" >> $PROJECTS/PROJECTS-SCHEDULED.txt
                   ;;
-              *)  tag -m "${m},scheduled" >> $PROJECTS/PROJECTS-SCHEDULED.txt 
+              *)  tag -m "${m},scheduled" >> $PROJECTS/PROJECTS-SCHEDULED.txt
                   ;;
-          esac 
+          esac
         done
-        
+
         cat $PROJECTS/PROJECTS-SCHEDULED.txt | sort | uniq > $PROJECTS/PROJECTS-SCHEDULED_TEMP.txt
         rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
-        mv $PROJECTS/PROJECTS-SCHEDULED_TEMP.txt $PROJECTS/PROJECTS-SCHEDULED.txt 
-        
-        print "mon tue wed thu fri sat sun" green                     
-        while read line; do         
+        mv $PROJECTS/PROJECTS-SCHEDULED_TEMP.txt $PROJECTS/PROJECTS-SCHEDULED.txt
+
+        __print "mon tue wed thu fri sat sun" green
+        while read line; do
             local PROJTAGS=(`tag -lN $line | sed 's/,/ /g'`)
-            local SCHEDULED=""           
+            local SCHEDULED=""
             if [ $(__contains "${PROJTAGS[@]}" "mon") == "y" ]; then
                 SCHEDULED=" x |";
             else
-                SCHEDULED="   |";               
+                SCHEDULED="   |";
             fi
             if [ $(__contains "${PROJTAGS[@]}" "tue") == "y" ]; then
                 SCHEDULED=$SCHEDULED" x |";
@@ -341,20 +332,20 @@ function scheduled(){
                 SCHEDULED=$SCHEDULED"   |";
             fi
             if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
-                print "$SCHEDULED $line"
+                __print "$SCHEDULED $line"
             else
-                print "$SCHEDULED $line" cyan          
+                __print "$SCHEDULED $line" cyan
             fi
-        done < $PROJECTS/PROJECTS-SCHEDULED.txt        
+        done < $PROJECTS/PROJECTS-SCHEDULED.txt
     fi
     rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
     popd &>/dev/null
 }
 
-function things() {
-    shopt -s extglob         
+things() {
+    shopt -s extglob
     TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin)'
-    
+
     case $1 in
         areas)
             shift
@@ -370,55 +361,54 @@ function things() {
                         PROJECT=`basename "$PWD"`
                         AREA=$1
                     else
-                        printerr "==> Error: Bad number of arguments."
-                        print
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
                         return 1
                     fi
                     case $AREA in
-                         codewars|course|coursera|catabases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|\
-                         rails|ruby|specialization|suspended|tutorial|udemy|webdev|tutorialspoint|sololearn)
+                         codewars|course|coursera|databases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|rails|ruby|specialization|suspended|tutorial|udemy|webdev|tutorialspoint|sololearn)
                          ;;
-                         *)  
-                         printerr "==> Error: Bad project type."
-                         print
+                         *)
+                         __printerr "==> Error: Bad project type."
+                         __print
                          return 1
                          ;;
                     esac
                     PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ ! -L "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
-                            ln -sf "$PWD" "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)"; 
+                        if [ ! -L "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then
+                            ln -sf "$PWD" "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)";
                         fi
-                        if [ ! -L "$TODAY/$AREA" ]; then ln -sf "$AREAS/$AREA" "$TODAY/$AREA" ; fi  
+                        if [ ! -L "$TODAY/$AREA" ]; then ln -sf "$AREAS/$AREA" "$TODAY/$AREA" ; fi
                     fi
-                    open -g "$TODAY" 
+                    open -g "$TODAY"
                     ;;
-                    
+
                 stop)
                     PROJECT=`basename "$PWD"`
                     AREADIR=`find "$AREAS" -name $PROJECT`
                     if [ -n "$AREADIR" ]; then
                        AREADIRNAME=`dirname "$AREADIR"`
                        AREA=`basename "$AREADIRNAME"`
-                       if [ -L "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then 
-                           rm -f "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)"; 
+                       if [ -L "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then
+                           rm -f "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)";
                        fi
                        if [ -L "$TODAY/$AREA" ]; then
                           files=("$AREAS/$AREA/*")
                           if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
-                       fi 
+                       fi
                     fi
                     cd "$TODAY"
-                    open -g . 
+                    open -g .
                     ;;
-                    
+
                 *)
                     cd "$AREAS"
                     open -g .
                     ;;
             esac
             ;;
-            
+
         projects)
             shift
             case $1 in
@@ -427,41 +417,41 @@ function things() {
                     if [ $# -eq 0 ]; then
                         tree -L 1 -Cd -l "$PROJECTS"
                         open -g "$PROJECTS"
-                    elif [ $# -eq 1 ]; then                        
+                    elif [ $# -eq 1 ]; then
                         local PROJTAGS=$1
-                        pushd . &>/dev/null  
-                        cd "$PROJECTS" 
+                        pushd . &>/dev/null
+                        cd "$PROJECTS"
                         PROJTAGS=(`echo $PROJTAGS | sed 's/,/ /g'`)
-        
+
                         for m in "${PROJTAGS[@]}"
                         do
-                            tag -m "${m}" >> $PROJECTS/PROJECTS.txt 
+                            tag -m "${m}" >> $PROJECTS/PROJECTS.txt
                         done
-        
+
                         cat $PROJECTS/PROJECTS.txt | sort | uniq > $PROJECTS/PROJECTS_TEMP.txt
                         rm -f $PROJECTS/PROJECTS.txt
-                        mv $PROJECTS/PROJECTS_TEMP.txt $PROJECTS/PROJECTS.txt 
-        
-                        printf "==> Projects with tag(s): "
-                        print $1 green                     
-                        while read line; do         
-                                print $line cyan    
-                        done < $PROJECTS/PROJECTS.txt        
+                        mv $PROJECTS/PROJECTS_TEMP.txt $PROJECTS/PROJECTS.txt
+
+                        __printf "==> Projects with tag(s): "
+                        __print $1 green
+                        while read line; do
+                                __print $line cyan
+                        done < $PROJECTS/PROJECTS.txt
                         rm -f $PROJECTS/PROJECTS.txt
                         popd &>/dev/null
                     else
-                        printerr "==> Error: Bad number of arguments."
-                        print
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
                         return 1
                     fi
                     ;;
-                    
+
                 new)
                     shift
-                    
+
                     if [ $# -eq 0 ]; then
-                        printerr "==> Error: Bad number of arguments."
-                        print
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
                         return 1
                     elif [ $# -eq 1 ]; then
                         PROJECT=$1
@@ -470,73 +460,73 @@ function things() {
                         PROJECT=$1
                         PROJECT_TYPE=$2
                         case $PROJECT_TYPE in
-                            $TAGSPROJECTS)  
+                            $TAGSPROJECTS)
                                 ;;
-                                *)  
-                                printerr "==> Error: Bad project type."
-                                print
+                                *)
+                                __printerr "==> Error: Bad project type."
+                                __print
                                 return 1
                                 ;;
-                        esac                
+                        esac
                     else
                        length=$(($#-1))
                         P1=${@:1:$length}
                         PROJECT_TYPE=${@: -1}
                         P2=`echo $P1 | awk '{print tolower($0)}'`
-                        PROJECT=`echo $P2 | sed 's/ /-/g'`                      
+                        PROJECT=`echo $P2 | sed 's/ /-/g'`
                         case $PROJECT_TYPE in
-                            $TAGSPROJECTS)    
+                            $TAGSPROJECTS)
                                 ;;
                             *)  length=$(($#))
                                 P1=${@:1:$length}
                                 P2=`echo $P1 | awk '{print tolower($0)}'`
-                                PROJECT=`echo $P2 | sed 's/ /-/g'` 
+                                PROJECT=`echo $P2 | sed 's/ /-/g'`
                                 PROJECT_TYPE=project
                                 ;;
-                        esac                      
+                        esac
                     fi
                     case $PROJECT_TYPE in
-                        $TAGSPROJECTS)  
+                        $TAGSPROJECTS)
                             cp -rf "$RESOURCES/project-types/$PROJECT_TYPE" "$PROJECTS/$PROJECT"
-                            tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT" 
-                            tag_contexts "$PROJECTS/$PROJECT"
+                            tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
+                            __tag_contexts "$PROJECTS/$PROJECT"
                             ;;
-                        *)  printerr "==> Error: Bad project type."
-                            print
+                        *)  __printerr "==> Error: Bad project type."
+                            __print
                             return 1
                             ;;
                     esac
                     cd "$PROJECTS/$PROJECT"
-                    open -g . 
+                    open -g .
                     tag -l "$PROJECTS/$PROJECT"
                     ;;
-                    
+
                 jump)
                     shift
                     if [ $# -eq 0 ]; then
                         cd "$PROJECTS"
                     elif [ $# -eq 1 ]; then
-                        if [ -e "$PROJECTS/$1" ]; then 
+                        if [ -e "$PROJECTS/$1" ]; then
                                 cd "$PROJECTS/$1"
                             else
-                                printerr "==> Error: Bad argument $1."
-                                print
-                                return 1  
+                                __printerr "==> Error: Bad argument $1."
+                                __print
+                                return 1
                             fi
                     else
-                        printerr "==> Error: Bad number of arguments."
-                        print
-                        return 1                     
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
+                        return 1
                     fi
                     ;;
-                    
+
                 *)
                     cd "$PROJECTS"
                     open -g .
                     ;;
             esac
             ;;
-            
+
         today)
             shift
             if [ $# -eq 0 ]; then
@@ -550,16 +540,16 @@ function things() {
                         PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$PROJECT"`
                         if [ -n "$PROJECTDIR" ]; then
                             PROJECTDIR=`find "$TODAY" -maxdepth 1 -lname "$PROJECTS/$PROJECT"`
-                            if [ -z "$PROJECTDIR" ]; then 
-                                $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
-                                ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"         
+                            if [ -z "$PROJECTDIR" ]; then
+                                $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
+                                ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
                             fi
                         fi
                         tree -L 1 -Cd -l "$TODAY"
                         $TODOTXT list
                         open -g "$TODAY"
                         ;;
-                   
+
                     stop)
                         PROJECT=`basename "$PWD"`
                         PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$PROJECT"`
@@ -568,70 +558,70 @@ function things() {
                             if [ -n "$AREADIR" ]; then
                                AREADIRNAME=`dirname "$AREADIR"`
                                AREA=`basename "$AREADIRNAME"`
-                               if [ -e "$AREAS/$AREA/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then 
-                                   rm -f "$AREAS/$AREA/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"; 
+                               if [ -e "$AREAS/$AREA/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then
+                                   rm -f "$AREAS/$AREA/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)";
                                fi
                                if [ -e "$TODAY/$AREA" ]; then
                                   files=($AREAS/$AREA/*)
                                   if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
-                               fi 
+                               fi
                             fi
-                            if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then                               
-                                rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"   
+                            if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then
+                                rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
                                 TASK=$($TODOTXT list $PROJECT)
                                 TASK=$(echo $TASK | grep -o -E '^[0-9]+')
-                                $TODOTXT -a do $TASK 
-                            fi 
+                                $TODOTXT -a do $TASK
+                            fi
 
                         fi
                         cd "$TODAY"
                         $TODOTXT list
-                        open -g . 
+                        open -g .
                         ;;
-                        
+
                     startall)
                         DAYOFWEEK=`echo $(date +"%a") | awk '{print tolower($0)}'`
                         cd "$PROJECTS"
                         RESULT=(`tag -m $DAYOFWEEK`)
                         for m in "${RESULT[@]}"
-                        do 
+                        do
                           PROJECT="${m}"
-                          if [ ! -e "$TODAY/$PROJECT" ]; then 
-                              $TODOTXT -t add $(task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
+                          if [ ! -e "$TODAY/$PROJECT" ]; then
+                              $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
                               ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
                           fi
                         done
                         cd "$TODAY"
                         $TODOTXT list
-                        open -g .                                
+                        open -g .
                         ;;
-                    
+
                     stopall)
                         find "$TODAY" -type l -delete
                         echo "" > $TODO_DIR/todo.txt
                         cd "$TODAY"
                         $TODOTXT list
-                        open -g .                                
+                        open -g .
                         ;;
-                        
+
                     list)
                         open -g "$TODAY"
                         tree -L 1 -Cd -l "$TODAY"
                         $TODOTXT list
                         ;;
-                       
+
                     jump)
                         cd "$TODAY"
                         ;;
-                        
+
                     archive)
                         find "$TODAY" -type l -delete
                         $TODOTXT archive
                         $TODOTXT -p+@ list > $TODAY/TODOLIST.txt
-                        while read line; do 
+                        while read line; do
                             PROJECT=`echo $line | awk '{print  $3}'`
-                            if [ ! -e "$TODAY/$PROJECT" ]; then 
-                                if [ -e "$PROJECTS/$PROJECT" ]; then 
+                            if [ ! -e "$TODAY/$PROJECT" ]; then
+                                if [ -e "$PROJECTS/$PROJECT" ]; then
                                     ln -sf "$PROJECTS/$PROJECT" "$TODAY/$line"
                                 fi
                             fi
@@ -639,9 +629,9 @@ function things() {
                         rm -f $TODAY/TODOLIST.txt
                         cd "$TODAY"
                         $TODOTXT list
-                        open -g .   
+                        open -g .
                         ;;
-                esac 
+                esac
             elif [ $# -eq 2 ]; then
                 case $1 in
                     jump)
@@ -652,24 +642,24 @@ function things() {
                                 cd "$PROJECTS"
                                 cd $($TODOTXT list | grep "^$1" | awk {'print $3'})
                             else
-                                printerr "==> Error: Bad argument $1."
-                                print
-                                return 1  
+                                __printerr "==> Error: Bad argument $1."
+                                __print
+                                return 1
                             fi
                         else
-                            printerr "==> Error: Bad number of arguments."
-                            print
-                            return 1                     
+                            __printerr "==> Error: Bad number of arguments."
+                            __print
+                            return 1
                         fi
                         ;;
-                esac                           
+                esac
             else
-                printerr "==> Error: Bad number of arguments."
-                print
+                __printerr "==> Error: Bad number of arguments."
+                __print
                 return 1
             fi
             ;;
-            
+
         inbox)
             shift
             case $1 in
@@ -682,7 +672,7 @@ function things() {
                     open -g .
             esac
             ;;
-            
+
         logbook)
             shift
             case $1 in
@@ -690,27 +680,27 @@ function things() {
                     tree -L 1 -Cd -l "$LOGBOOK"
                     open -g "$LOGBOOK"
                     ;;
-                    
+
                 start)
-                    shift                
+                    shift
                     if [ $# -eq 0 ]; then
                         PROJECT=`basename "$PWD"`
                     elif [ $# -eq 1 ]; then
                         PROJECT=$1
                     else
-                        printerr "==> Error: Bad number of arguments."
-                        print
-                        return 1   
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
+                        return 1
                     fi
                     PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ ! -e "$LOGBOOK/$PROJECT" ]; then 
-                            ln -sf "$PWD" "$LOGBOOK/$PROJECT"; 
+                        if [ ! -e "$LOGBOOK/$PROJECT" ]; then
+                            ln -sf "$PWD" "$LOGBOOK/$PROJECT";
                             tag -a logbook "$LOGBOOK/$PROJECT"
                         fi
                         DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
-                        if [ -e "$SCHEDULED/$PROJECT" ]; then 
-                            rm -f "$SCHEDULED/$PROJECT"; 
+                        if [ -e "$SCHEDULED/$PROJECT" ]; then
+                            rm -f "$SCHEDULED/$PROJECT";
                         fi
                         for m in "${DAYOFWEEK[@]}"
                         do
@@ -724,44 +714,44 @@ function things() {
                               scheduled)
                                 tag -r $m "$PROJECTS/$PROJECT"
                                 ;;
-                          esac 
-                        done 
+                          esac
+                        done
                         # tdye
-                        if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then                               
-                            rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"   
+                        if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then
+                            rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
                             TASK=$($TODOTXT list $PROJECT)
                             TASK=$(echo $TASK | grep -o -E '^[0-9]+')
-                            $TODOTXT -a do $TASK 
-                        fi     
+                            $TODOTXT -a do $TASK
+                        fi
                     else
-                        printerr "==> Error: Bad argument $PROJECT."
-                        print
-                        return 1  
+                        __printerr "==> Error: Bad argument $PROJECT."
+                        __print
+                        return 1
                     fi
                     open -g "$LOGBOOK"
                     ;;
-                    
+
                 stop)
-                    shift                
+                    shift
                     if [ $# -eq 0 ]; then
                         PROJECT=`basename "$PWD"`
                     elif [ $# -eq 1 ]; then
                         PROJECT=$1
                     else
-                        printerr "==> Error: Bad number of arguments."
-                        print
-                        return 1   
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
+                        return 1
                     fi
                     PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ -e "$LOGBOOK/$PROJECT" ]; then 
+                        if [ -e "$LOGBOOK/$PROJECT" ]; then
                             tag -r logbook "$LOGBOOK/$PROJECT"
-                            rm -f "$LOGBOOK/$PROJECT";   
-                        fi 
+                            rm -f "$LOGBOOK/$PROJECT";
+                        fi
                     else
-                        printerr "==> Error: Bad argument $PROJECT."
-                        print
-                        return 1  
+                        __printerr "==> Error: Bad argument $PROJECT."
+                        __print
+                        return 1
                     fi
                     open -g "$LOGBOOK"
                     ;;
@@ -771,7 +761,7 @@ function things() {
                     open -g .
             esac
             ;;
-            
+
         scheduled)
             shift
             case $1 in
@@ -779,22 +769,22 @@ function things() {
                     tree -L 1 -Cd -l "$SCHEDULED"
                     open -g "$SCHEDULED"
                     ;;
-                    
+
                 summary)
                     shift
                     if [ $# -eq 0 ]; then
-                        scheduled 
+                        __scheduled
                     elif [ $# -eq 1 ]; then
-                        scheduled $1
+                        __scheduled $1
                     else
-                        printerr "==> Error: Bad number of arguments."
-                        print
-                        return 1        
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
+                        return 1
                     fi
                     ;;
-                    
+
                 start)
-                    shift         
+                    shift
                     if [ $# -eq 0 ]; then
                         PROJECT=`basename "$PWD"`
                         DAYOFWEEK=(`echo $(date +"%a") | awk '{print tolower($0)}'`)
@@ -806,19 +796,19 @@ function things() {
                         else
                             PROJECT=`basename "$PWD"`
                             DAYOFWEEK=(`echo $1 | sed 's/,/ /g'`)
-                        fi   
+                        fi
                     elif [ $# -eq 2 ]; then
                         PROJECT=$2
                         DAYOFWEEK=(`echo $1 | sed 's/,/ /g'`)
                     else
-                        printerr "==> Error: Bad number of arguments."
-                        print
-                        return 1   
-                    fi                        
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
+                        return 1
+                    fi
                     PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ ! -e ""$SCHEDULED"/$PROJECT" ]; then 
-                            ln -sf "$PWD" "$SCHEDULED/$PROJECT"; 
+                        if [ ! -e ""$SCHEDULED"/$PROJECT" ]; then
+                            ln -sf "$PWD" "$SCHEDULED/$PROJECT";
                         fi
                         for m in "${DAYOFWEEK[@]}"
                         do
@@ -829,26 +819,26 @@ function things() {
                               sat|sun)
                                 tag -a "scheduled,weekend,$m" "$PROJECTS/$PROJECT"
                                 ;;
-                              *) 
-                                printerr "==> Error: Bad day: $m"
-                                print
-                                return 1   
+                              *)
+                                __printerr "==> Error: Bad day: $m"
+                                __print
+                                return 1
                                 ;;
-                          esac 
-                        done 
-                        if [ -e "$SOMEDAY/$PROJECT" ]; then 
+                          esac
+                        done
+                        if [ -e "$SOMEDAY/$PROJECT" ]; then
                             tag -r someday "$SOMEDAY/$PROJECT"
-                            rm -f "$SOMEDAY/$PROJECT";                              
-                        fi  
-                        if [ -e "$LOGBOOK/$PROJECT" ]; then 
+                            rm -f "$SOMEDAY/$PROJECT";
+                        fi
+                        if [ -e "$LOGBOOK/$PROJECT" ]; then
                             tag -r logbook "$LOGBOOK/$PROJECT"
-                            rm -f "$LOGBOOK/$PROJECT";   
-                        fi              
+                            rm -f "$LOGBOOK/$PROJECT";
+                        fi
                     fi
                     ;;
-                    
+
                 stop)
-                    shift         
+                    shift
                     if [ $# -eq 0 ]; then
                         PROJECT=`basename "$PWD"`
                         DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
@@ -856,14 +846,14 @@ function things() {
                         PROJECT=$1
                         DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
                     else
-                        printerr "==> Error: Bad number of arguments."
-                        print
-                        return 1   
-                    fi                        
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
+                        return 1
+                    fi
                     PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ -e "$SCHEDULED/$PROJECT" ]; then 
-                            rm -f "$SCHEDULED/$PROJECT"; 
+                        if [ -e "$SCHEDULED/$PROJECT" ]; then
+                            rm -f "$SCHEDULED/$PROJECT";
                         fi
                         for m in "${DAYOFWEEK[@]}"
                         do
@@ -877,33 +867,33 @@ function things() {
                               scheduled)
                                 tag -r $m "$PROJECTS/$PROJECT"
                                 ;;
-                          esac 
-                        done                                               
+                          esac
+                        done
                     fi
                     ;;
-                    
+
                 startall)
-                    pushd . &>/dev/null  
-                    cd "$PROJECTS"      
+                    pushd . &>/dev/null
+                    cd "$PROJECTS"
                     tag -m scheduled > $PROJECTS/PROJECTS-SCHEDULED.txt
-                    while read line; do         
+                    while read line; do
                         ln -sf "$PROJECTS/$line" "$SCHEDULED/$line"
                     done < $PROJECTS/PROJECTS-SCHEDULED.txt
                     rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
                     popd &>/dev/null
-                    open -g "$SCHEDULED"                              
+                    open -g "$SCHEDULED"
                     ;;
-                
+
                 stopall)
                     find "$SCHEDULED" -type l -delete
-                    open -g "$SCHEDULED"                                
+                    open -g "$SCHEDULED"
                     ;;
                 *)
                     cd "$SCHEDULED"
                     open -g .
             esac
             ;;
-            
+
         someday)
             shift
             case $1 in
@@ -911,26 +901,26 @@ function things() {
                     tree -L 1 -Cd -l "$SOMEDAY"
                     open -g "$SOMEDAY"
                     ;;
-                    
+
                 start)
-                    shift         
+                    shift
                     if [ $# -eq 0 ]; then
                         PROJECT=`basename "$PWD"`
                     elif [ $# -eq 1 ]; then
                         PROJECT=$1
                     else
-                        printerr "==> Error: Bad number of arguments."
-                        print
-                        return 1   
-                    fi      
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
+                        return 1
+                    fi
                     PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ ! -e "$SOMEDAY/$PROJECT" ]; then 
-                            ln -sf "$PROJECTS/$PROJECT" "$SOMEDAY/$PROJECT"; 
+                        if [ ! -e "$SOMEDAY/$PROJECT" ]; then
+                            ln -sf "$PROJECTS/$PROJECT" "$SOMEDAY/$PROJECT";
                             tag -a someday "$PROJECTS/$PROJECT"
                         fi
-                        if [ -e "$SCHEDULED/$PROJECT" ]; then 
-                            rm -f "$SCHEDULED/$PROJECT"; 
+                        if [ -e "$SCHEDULED/$PROJECT" ]; then
+                            rm -f "$SCHEDULED/$PROJECT";
                         fi
                         DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
                         for m in "${DAYOFWEEK[@]}"
@@ -945,28 +935,28 @@ function things() {
                               scheduled)
                                 tag -r $m "$PROJECTS/$PROJECT"
                                 ;;
-                          esac 
-                        done     
+                          esac
+                        done
                     fi
                     open -g "$SOMEDAY"
                     ;;
-                
+
                 stop)
-                    shift         
+                    shift
                     if [ $# -eq 0 ]; then
                         PROJECT=`basename "$PWD"`
                     elif [ $# -eq 1 ]; then
                         PROJECT=$1
                     else
-                        printerr "==> Error: Bad number of arguments."
-                        print
-                        return 1   
-                    fi   
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
+                        return 1
+                    fi
                     PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ -e "$SOMEDAY/$PROJECT" ]; then 
+                        if [ -e "$SOMEDAY/$PROJECT" ]; then
                             tag -r someday "$PROJECTS/$PROJECT"
-                            rm -f "$SOMEDAY/$PROJECT";                              
+                            rm -f "$SOMEDAY/$PROJECT";
                         fi
                     fi
                     open -g "$SOMEDAY"
@@ -975,20 +965,20 @@ function things() {
                     cd "$SOMEDAY"
                     open -g .
             esac
-            ;;        
- 
+            ;;
+
         git)
             shift
             case $1 in
                 start)
                     git init  && \
-                    hub create && \ 
+                    hub create && \
                     git add . && \
                     git commit -am "first commit" && \
                     git push origin master && \
                     hub browse .
                     ;;
-                    
+
                 stop)
                     shift
                     git add . && \
@@ -996,76 +986,76 @@ function things() {
                     git push origin master && \
                     hub browse .
                     ;;
-                    
+
                 *)  git status -s
-                    ;;                
+                    ;;
             esac
             ;;
-            
+
         cloud)
             shift
             case $1 in
                 start)
-                    if is_Things "$CLOUD"; then
-                        print "=> THINGS already to CLOUD."
-                        print
+                    if __is_Things "$CLOUD"; then
+                        __print "=> THINGS already to CLOUD."
+                        __print
                     else
-                        print "=> Configuring THINGS to CLOUD..."
-                        print 
+                        __print "=> Configuring THINGS to CLOUD..."
+                        __print
                         unlink $TODAY_LINK
                         unlink $PROJECTS_LINK
                         ln -sf "$CLOUD/Today" $TODAY_LINK
                         ln -sf "$CLOUD/Projects" $PROJECTS_LINK
                         unlink $THINGS
                         ln -sf "$CLOUD" $THINGS
-                        print "-- THINGS  :"
+                        __print "-- THINGS  :"
                         ls -l $THINGS
-                        print
+                        __print
                     fi
                     ;;
                 stop)
-                    if is_Things $LOCAL; then
-                        print "=> THINGS already to LOCAL."
-                        print 
+                    if __is_Things $LOCAL; then
+                        __print "=> THINGS already to LOCAL."
+                        __print
                     else
-                        print "=> Configuring THINGS to LOCAL..."
-                        print
+                        __print "=> Configuring THINGS to LOCAL..."
+                        __print
                         unlink $TODAY_LINK
                         unlink $PROJECTS_LINK
                         ln -sf "$LOCAL/Today" $TODAY_LINK
-                        ln -sf "$LOCAL/Projects" $PROJECTS_LINK                     
+                        ln -sf "$LOCAL/Projects" $PROJECTS_LINK
                         unlink $THINGS
                         ln -sf "$LOCAL" $THINGS
-                        print "-- THINGS  :"
+                        __print "-- THINGS  :"
                         ls -l $THINGS
-                        print 
+                        __print
                     fi
                     ;;
                 copy)
                     PROJECT=`basename $PWD`
                     PROJECTDIR=`find $PROJECTS -maxdepth 1 -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ ! -e "$CLOUD/Projects/$PROJECT" ]; then 
+                        if [ ! -e "$CLOUD/Projects/$PROJECT" ]; then
                             rsync -avErL $PWD "$CLOUD/Projects"
                         fi
                     fi
                     open -g "$CLOUD/Projects/"
                     ;;
-                *) 
-                    print "=> Listing TODAY configuration..."
-                    print 
-                    print "-- THINGS  :"
-                    if [ ! -L $THINGS ]; then 
-                      print "THINGS do not exist."
-                      print 
-                    else  
+                *)
+                    __print "=> Listing TODAY configuration..."
+                    __print
+                    __print "-- THINGS  :"
+                    if [ ! -L $THINGS ]; then
+                      __print "THINGS do not exist."
+                      __print
+                    else
                       ls -l $THINGS
-                      print 
+                      __print
                     fi
                     ;;
             esac
             ;;
-            
+
         *)
             if [ ! -L "$THINGS" ]; then
                 ln -sf "$LOCAL" $THINGS
