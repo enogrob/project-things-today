@@ -1,9 +1,9 @@
 #!/bin/bash
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
-## File     : things-today.sh
-## Version  : PA24
-## Date     : 2016-12-23
+## File     : .todayrc.sh
+## Version  : PA26
+## Date     : 2016-12-30
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -204,7 +204,7 @@ __task_name(){
 
 __tag_contexts(){
     shopt -s extglob
-    local TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm)'
+    local TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm|sql|unix)'
 
     local PROJECTNAME=`basename $1`
     local PROJECTTAGS=(`echo $PROJECTNAME | sed 's/-/ /g'`)
@@ -226,7 +226,7 @@ __scheduled(){
         pushd . &>/dev/null
         cd "$PROJECTS"
         tag -m scheduled > $PROJECTS/PROJECTS-SCHEDULED.txt
-        print "mon tue wed thu fri sat sun" green
+        __print "mon tue wed thu fri sat sun" green
         while read line; do
             local PROJTAGS=(`tag -lN $line | sed 's/,/ /g'`)
             local SCHEDULED=""
@@ -341,6 +341,48 @@ __scheduled(){
     rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
     popd &>/dev/null
 }
+__remove_from_Someday() {
+  if [ -e "$SOMEDAY/$PROJECT" ]; then
+      tag -r someday "$SOMEDAY/$PROJECT"
+      rm -f "$SOMEDAY/$PROJECT";
+  fi
+}
+__remove_from_LogBook() {
+  if [ -e "$LOGBOOK/$PROJECT" ]; then
+      tag -r logbook "$LOGBOOK/$PROJECT"
+      rm -f "$LOGBOOK/$PROJECT";
+    fi
+}
+
+__remove_from_Scheduled() {
+  if [ -e "$SCHEDULED/$PROJECT" ]; then
+      rm -f "$SCHEDULED/$PROJECT";
+  fi
+  DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
+  for m in "${DAYOFWEEK[@]}"
+  do
+    case $m in
+      mon|tue|wed|thu|fri|weekday)
+          tag -r $m "$PROJECTS/$PROJECT"
+          ;;
+      sat|sun|weekend)
+          tag -r $m "$PROJECTS/$PROJECT"
+          ;;
+      scheduled)
+          tag -r $m "$PROJECTS/$PROJECT"
+          ;;
+    esac
+  done
+}
+
+__remove_from_Today(){
+if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then
+    rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
+    TASK=$($TODOTXT list $PROJECT)
+    TASK=$(echo $TASK | grep -o -E '^[0-9]+')
+    $TODOTXT -a do $TASK
+fi
+}
 
 things() {
     shopt -s extglob
@@ -366,7 +408,7 @@ things() {
                         return 1
                     fi
                     case $AREA in
-                         codewars|course|coursera|databases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|rails|ruby|specialization|suspended|tutorial|udemy|webdev|tutorialspoint|sololearn)
+                         codewars|course|coursera|databases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|rails|ruby|specialization|suspended|tutorial|udemy|webdev|tutorialspoint|sololearn|linkedin)
                          ;;
                          *)
                          __printerr "==> Error: Bad project type."
@@ -432,7 +474,7 @@ things() {
                         rm -f $PROJECTS/PROJECTS.txt
                         mv $PROJECTS/PROJECTS_TEMP.txt $PROJECTS/PROJECTS.txt
 
-                        __printf "==> Projects with tag(s): "
+                        printf "==> Projects with tag(s): "
                         __print $1 green
                         while read line; do
                                 __print $line cyan
@@ -698,31 +740,9 @@ things() {
                             ln -sf "$PWD" "$LOGBOOK/$PROJECT";
                             tag -a logbook "$LOGBOOK/$PROJECT"
                         fi
-                        DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
-                        if [ -e "$SCHEDULED/$PROJECT" ]; then
-                            rm -f "$SCHEDULED/$PROJECT";
-                        fi
-                        for m in "${DAYOFWEEK[@]}"
-                        do
-                          case $m in
-                              mon|tue|wed|thu|fri|weekday)
-                                tag -r $m "$PROJECTS/$PROJECT"
-                                ;;
-                              sat|sun|weekend)
-                                tag -r $m "$PROJECTS/$PROJECT"
-                                ;;
-                              scheduled)
-                                tag -r $m "$PROJECTS/$PROJECT"
-                                ;;
-                          esac
-                        done
-                        # tdye
-                        if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then
-                            rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
-                            TASK=$($TODOTXT list $PROJECT)
-                            TASK=$(echo $TASK | grep -o -E '^[0-9]+')
-                            $TODOTXT -a do $TASK
-                        fi
+                        __remove_from_Scheduled
+                        __remove_from_Someday
+                        __remove_from_Today
                     else
                         __printerr "==> Error: Bad argument $PROJECT."
                         __print
@@ -744,10 +764,7 @@ things() {
                     fi
                     PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ -e "$LOGBOOK/$PROJECT" ]; then
-                            tag -r logbook "$LOGBOOK/$PROJECT"
-                            rm -f "$LOGBOOK/$PROJECT";
-                        fi
+                        __remove_from_LogBook
                     else
                         __printerr "==> Error: Bad argument $PROJECT."
                         __print
@@ -826,14 +843,8 @@ things() {
                                 ;;
                           esac
                         done
-                        if [ -e "$SOMEDAY/$PROJECT" ]; then
-                            tag -r someday "$SOMEDAY/$PROJECT"
-                            rm -f "$SOMEDAY/$PROJECT";
-                        fi
-                        if [ -e "$LOGBOOK/$PROJECT" ]; then
-                            tag -r logbook "$LOGBOOK/$PROJECT"
-                            rm -f "$LOGBOOK/$PROJECT";
-                        fi
+                        __remove_from_Someday
+                        __remove_from_LogBook
                     fi
                     ;;
 
@@ -841,10 +852,8 @@ things() {
                     shift
                     if [ $# -eq 0 ]; then
                         PROJECT=`basename "$PWD"`
-                        DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
                     elif [ $# -eq 1 ]; then
                         PROJECT=$1
-                        DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
                     else
                         __printerr "==> Error: Bad number of arguments."
                         __print
@@ -852,23 +861,7 @@ things() {
                     fi
                     PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ -e "$SCHEDULED/$PROJECT" ]; then
-                            rm -f "$SCHEDULED/$PROJECT";
-                        fi
-                        for m in "${DAYOFWEEK[@]}"
-                        do
-                          case $m in
-                              mon|tue|wed|thu|fri|weekday)
-                                tag -r $m "$PROJECTS/$PROJECT"
-                                ;;
-                              sat|sun|weekend)
-                                tag -r $m "$PROJECTS/$PROJECT"
-                                ;;
-                              scheduled)
-                                tag -r $m "$PROJECTS/$PROJECT"
-                                ;;
-                          esac
-                        done
+                        __remove_from_Scheduled
                     fi
                     ;;
 
@@ -919,24 +912,9 @@ things() {
                             ln -sf "$PROJECTS/$PROJECT" "$SOMEDAY/$PROJECT";
                             tag -a someday "$PROJECTS/$PROJECT"
                         fi
-                        if [ -e "$SCHEDULED/$PROJECT" ]; then
-                            rm -f "$SCHEDULED/$PROJECT";
-                        fi
-                        DAYOFWEEK=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
-                        for m in "${DAYOFWEEK[@]}"
-                        do
-                          case $m in
-                              mon|tue|wed|thu|fri|weekday)
-                                tag -r $m "$PROJECTS/$PROJECT"
-                                ;;
-                              sat|sun|weekend)
-                                tag -r $m "$PROJECTS/$PROJECT"
-                                ;;
-                              scheduled)
-                                tag -r $m "$PROJECTS/$PROJECT"
-                                ;;
-                          esac
-                        done
+                        __remove_from_Scheduled
+                        __remove_from_LogBook
+                        __remove_from_Today
                     fi
                     open -g "$SOMEDAY"
                     ;;
@@ -952,13 +930,12 @@ things() {
                         __print
                         return 1
                     fi
+
                     PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
-                        if [ -e "$SOMEDAY/$PROJECT" ]; then
-                            tag -r someday "$PROJECTS/$PROJECT"
-                            rm -f "$SOMEDAY/$PROJECT";
-                        fi
+                      __remove_from_Someday
                     fi
+
                     open -g "$SOMEDAY"
                     ;;
                 *)
