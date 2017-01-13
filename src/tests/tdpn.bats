@@ -6,7 +6,7 @@ load 'libs/bats-assert/load'
 
 source ~/.todayrc
 
-__setup() {
+__rm_if_exists() {
   if [ -d "$PROJECTS/$1" ]; then
     rm -Rf "$PROJECTS/$1";
   fi
@@ -19,33 +19,35 @@ __setup() {
 }
 
 @test "02 - tdpn with one argument" {
-  __setup project-test
+  __rm_if_exists project-test
   run things projects new project-test
   [ "$status" -eq 0 ]
   assert [ -e "$PROJECTS/project-test" ]
-  assert_equal "$(tag -l $PROJECTS/project-test)" "$PROJECTS/project-test	project"
+  assert_line "$PROJECTS/project-test	project"
 }
 
 @test "03 - tdpn with two arguments" {
-  __setup project-test
+  __rm_if_exists project-test
   run things projects new project-test udemy > /dev/null
   [ "$status" -eq 0 ]
   assert [ -e "$PROJECTS/project-test" ]
-  assert_equal "$(tag -l $PROJECTS/project-test)" "$PROJECTS/project-test	udemy"
+  assert_line "$PROJECTS/project-test	udemy"
 }
 
 @test "04 - tdpn with three arguments one type" {
-  __setup project-test
+  __rm_if_exists project-test
   run things projects new Project Test udemy > /dev/null
   [ "$status" -eq 0 ]
   assert [ -e "$PROJECTS/project-test" ]
-  assert_equal "$(tag -l $PROJECTS/project-test)" "$PROJECTS/project-test	udemy"
+  assert_line "$PROJECTS/project-test	udemy"
+  __rm_if_exists project-test
 }
 
 @test "05 - tdpn with three arguments no type" {
-  __setup project-test-notype
+  __rm_if_exists project-test-notype
   run things projects new Project Test NoType > /dev/null
   [ "$status" -eq 0 ]
   assert [ -e "$PROJECTS/project-test-notype" ]
-  assert_equal "$(tag -l $PROJECTS/project-test-notype)" "$PROJECTS/project-test-notype	project"
+  assert_line "$PROJECTS/project-test-notype	project"
+  __rm_if_exists project-test-notype
 }

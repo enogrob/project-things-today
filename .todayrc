@@ -1035,4 +1035,6 @@ things() {
             open -g .
             ;;
     esac
+    export PROJECT
+    export PROJECT_TYPE
 }
