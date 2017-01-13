@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA27
-## Date     : 2016-01-04
+## Version  : PA28
+## Date     : 2016-01-13
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -500,20 +500,8 @@ things() {
                         __print
                         return 1
                     elif [ $# -eq 1 ]; then
-                        PROJECT=$1
+                        PROJECT=`echo $1 | awk '{print tolower($0)}'`
                         PROJECT_TYPE=project
-                    elif [ $# -eq 2 ]; then
-                        PROJECT=$1
-                        PROJECT_TYPE=$2
-                        case $PROJECT_TYPE in
-                            $TAGSPROJECTS)
-                                ;;
-                                *)
-                                __printerr "==> Error: Bad project type."
-                                __print
-                                return 1
-                                ;;
-                        esac
                     else
                        length=$(($#-1))
                         P1=${@:1:$length}

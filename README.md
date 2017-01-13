@@ -13,6 +13,7 @@ Solution Integrator Experienced - Certified by Ericsson
 Table of Contents
 
 Done recently
+[x] 2017-01-13 performed tdpn tests with bats
 [x] 2017-01-06 performed tests test_tdp upto 10
 [x] 2016-12-30 performed refactoring in favor of functions
 [x] 2016-12-23 performed functions as private
@@ -26,5 +27,6 @@ Done recently
 :
 
 Still to do
-[ ] improve project name when there is capital letters
+[ ] perform other tdp tests with bats
+[ ] perform other commands tests with bats such as tdy, tdsd, tdl, tds etc...
 ```
