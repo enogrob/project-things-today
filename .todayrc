@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA28
-## Date     : 2016-01-13
+## Version  : PA29
+## Date     : 2016-01-18
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -500,14 +500,14 @@ things() {
                         __print
                         return 1
                     elif [ $# -eq 1 ]; then
-                        PROJECT=`echo $1 | awk '{print tolower($0)}'`
-                        PROJECT_TYPE=project
+                        export PROJECT=`echo $1 | awk '{print tolower($0)}'`
+                        export PROJECT_TYPE=project
                     else
                        length=$(($#-1))
                         P1=${@:1:$length}
-                        PROJECT_TYPE=${@: -1}
+                        export PROJECT_TYPE=${@: -1}
                         P2=`echo $P1 | awk '{print tolower($0)}'`
-                        PROJECT=`echo $P2 | sed 's/ /-/g'`
+                        export PROJECT=`echo $P2 | sed 's/ /-/g'`
                         case $PROJECT_TYPE in
                             $TAGSPROJECTS)
                                 ;;
@@ -552,11 +552,13 @@ things() {
                         __print
                         return 1
                     fi
+                    pwd
                     ;;
 
                 *)
                     cd "$PROJECTS"
                     open -g .
+                    pwd
                     ;;
             esac
             ;;
@@ -854,6 +856,7 @@ things() {
                     PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
                         __remove_from_Scheduled
+                        __remove_from_Today
                     fi
                     ;;
 
@@ -1035,6 +1038,4 @@ things() {
             open -g .
             ;;
     esac
-    export PROJECT
-    export PROJECT_TYPE
 }
