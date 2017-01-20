@@ -10,7 +10,9 @@ __setup() {
 
 __rm_if_exists() {
   if [ -d "$PROJECTS/$1" ]; then
-    rm -Rf "$PROJECTS/$1";
+    if [ -n "$1"  ]; then
+      rm -Rf "$PROJECTS/$1";
+    fi
   fi
 }
 
@@ -52,7 +54,7 @@ __rm_if_exists() {
 @test "06 - tdpn with one argument" {
   __setup
   __rm_if_exists project-test
-  run things projects new project-test
+  run things projects new project-test > /dev/null
   [ "$status" -eq 0 ]
   assert [ -e "$PROJECTS/project-test" ]
   assert_line "$PROJECTS/project-test	project"

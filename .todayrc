@@ -567,8 +567,8 @@ things() {
             shift
             if [ $# -eq 0 ]; then
                 cd "$TODAY"
-                $TODOTXT list
                 open -g .
+                pwd
             elif [ $# -eq 1 ]; then
                 case $1 in
                     start)
