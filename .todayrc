@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA29
-## Date     : 2016-01-18
+## Version  : PA30
+## Date     : 2016-01-21
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -77,6 +77,8 @@ alias tdsi='things scheduled start'
 alias tdse='things scheduled stop'
 alias tdsia='things scheduled startall'
 alias tdsea='things scheduled stopall'
+
+alias tdei='exercism configure --dir=$PWD'
 
 mdread(){
     pandoc "$1" -f markdown -t html | lynx -stdin
@@ -181,8 +183,8 @@ __replace_icon(){
 
 __task_name(){
     shopt -s extglob
-    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn)'
-    TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm|devops|unix|postgresql|mysql|mongodb|oracle)'
+    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn|exercism)'
+    TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|python|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm|devops|sql|unix)'
 
     local TASKNAME=`basename $1`
     local TASKTAGS=(`tag -lN $1 | sed 's/,/ /g'`)
@@ -208,7 +210,7 @@ __task_name(){
 
 __tag_contexts(){
     shopt -s extglob
-    local TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm|sql|unix)'
+    local TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|python|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm|devops|sql|unix)'
 
     local PROJECTNAME=`basename $1`
     local PROJECTTAGS=(`echo $PROJECTNAME | sed 's/-/ /g'`)
@@ -390,7 +392,7 @@ fi
 
 things() {
     shopt -s extglob
-    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn)'
+    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn|exercism)'
 
     case $1 in
         areas)
@@ -412,7 +414,7 @@ things() {
                         return 1
                     fi
                     case $AREA in
-                         codewars|course|coursera|databases|datascience|devops|ebook|iot|job|krishnamurti|phoenix|rails|ruby|specialization|suspended|tutorial|udemy|webdev|tutorialspoint|sololearn|linkedin|futurelearn)
+                         ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn|exercism)
                          ;;
                          *)
                          __printerr "==> Error: Bad project type."
