@@ -13,6 +13,7 @@ Solution Integrator Experienced - Certified by Ericsson
 Table of Contents
 
 Done recently
+[x] 2017-01-21 implemented tdphi and tdph
 [x] 2017-01-18 perform other tdp tests with bats
 [x] 2017-01-13 check tdse with no parameter fails removing link in Today.
 [x] 2017-01-13 performed tdpn tests with bats

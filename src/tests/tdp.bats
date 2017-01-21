@@ -125,3 +125,27 @@ __rm_if_exists() {
   echo "$output" | grep "Error: Bad number of arguments"
   __rm_if_exists project-test
 }
+
+@test "14 - tdphi with no parameter" {
+  __setup
+  __rm_if_exists project-test
+  things projects new project-test > /dev/null
+  run things projects home start > /dev/null
+  [ "$status" -eq 0 ]
+  echo "$output" | grep "$PROJECTS/project-test"
+  __rm_if_exists project-test
+}
+
+@test "15 - tdph with no parameter" {
+  __setup
+  __rm_if_exists project-test
+  things projects new project-test > /dev/null
+  things projects home start > /dev/null
+  run things today > /dev/null
+  [ "$status" -eq 0 ]
+  echo "$output" | grep "$TODAY"
+  run things projects home > /dev/null
+  [ "$status" -eq 0 ]
+  echo "$output" | grep "$PROJECTS/project-test"
+  __rm_if_exists project-test
+}

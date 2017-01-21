@@ -42,6 +42,8 @@ alias tdp='things projects'
 alias tdpl='things projects list'
 alias tdpn='things projects new'
 alias tdpj='things projects jump'
+alias tdph='things projects home'
+alias tdphi='things projects home init'
 
 alias tda='things areas'
 alias tdal='things areas list'
@@ -553,6 +555,30 @@ things() {
                         __printerr "==> Error: Bad number of arguments."
                         __print
                         return 1
+                    fi
+                    pwd
+                    ;;
+
+                home)
+                    shift
+                    if [ $# -eq 0 ]; then
+                        cd "$PROJECTS/$PROJECT"
+                    elif [ $# -eq 1 ]; then
+                      case $1 in
+                        start)
+                          export PROJECT=`basename "$PWD"`
+                          ;;
+
+                        *)
+                          __printerr "==> Error: Bad argument $1."
+                          __print
+                          return 1
+                          ;;
+                      esac
+                    else
+                      __printerr "==> Error: Bad number of arguments."
+                      __print
+                      return 1
                     fi
                     pwd
                     ;;
