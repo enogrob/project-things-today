@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA30
-## Date     : 2016-01-21
+## Version  : PA31
+## Date     : 2016-01-27
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -28,6 +28,7 @@ TODAY=$THINGS/Today
 
 CLOUD=$HOME/Google\ Drive/Things
 LOCAL=$HOME/Things
+DEBUG=false
 
 alias tdy='things today'
 alias tdyl='things today list'
@@ -43,7 +44,7 @@ alias tdpl='things projects list'
 alias tdpn='things projects new'
 alias tdpj='things projects jump'
 alias tdph='things projects home'
-alias tdphi='things projects home init'
+alias tdphi='things projects home start'
 
 alias tda='things areas'
 alias tdal='things areas list'
@@ -402,7 +403,7 @@ things() {
             case $1 in
                 list)
                     tree -L 1 -Cd -l "$AREAS"
-                    open -g "$AREAS"
+                    #open -g "$AREAS"
                     ;;
 
                 start)
@@ -431,7 +432,7 @@ things() {
                         fi
                         if [ ! -L "$TODAY/$AREA" ]; then ln -sf "$AREAS/$AREA" "$TODAY/$AREA" ; fi
                     fi
-                    open -g "$TODAY"
+                    #open -g "$TODAY"
                     ;;
 
                 stop)
@@ -449,12 +450,12 @@ things() {
                        fi
                     fi
                     cd "$TODAY"
-                    open -g .
+                    #open -g .
                     ;;
 
                 *)
                     cd "$AREAS"
-                    open -g .
+                    #open -g .
                     ;;
             esac
             ;;
@@ -466,7 +467,7 @@ things() {
                     shift
                     if [ $# -eq 0 ]; then
                         tree -L 1 -Cd -l "$PROJECTS"
-                        open -g "$PROJECTS"
+                        #open -g "$PROJECTS"
                     elif [ $# -eq 1 ]; then
                         local PROJTAGS=$1
                         pushd . &>/dev/null
@@ -535,7 +536,7 @@ things() {
                             ;;
                     esac
                     cd "$PROJECTS/$PROJECT"
-                    open -g .
+                    #open -g .
                     tag -l "$PROJECTS/$PROJECT"
                     ;;
 
@@ -585,7 +586,7 @@ things() {
 
                 *)
                     cd "$PROJECTS"
-                    open -g .
+                    #open -g .
                     pwd
                     ;;
             esac
@@ -595,7 +596,7 @@ things() {
             shift
             if [ $# -eq 0 ]; then
                 cd "$TODAY"
-                open -g .
+               #open -g .
                 pwd
             elif [ $# -eq 1 ]; then
                 case $1 in
@@ -611,7 +612,7 @@ things() {
                         fi
                         tree -L 1 -Cd -l "$TODAY"
                         $TODOTXT list
-                        open -g "$TODAY"
+                        #open -g "$TODAY"
                         ;;
 
                     stop)
@@ -640,7 +641,7 @@ things() {
                         fi
                         cd "$TODAY"
                         $TODOTXT list
-                        open -g .
+                        #open -g .
                         ;;
 
                     startall)
@@ -657,7 +658,7 @@ things() {
                         done
                         cd "$TODAY"
                         $TODOTXT list
-                        open -g .
+                        #open -g .
                         ;;
 
                     stopall)
@@ -665,11 +666,11 @@ things() {
                         echo "" > $TODO_DIR/todo.txt
                         cd "$TODAY"
                         $TODOTXT list
-                        open -g .
+                        #open -g .
                         ;;
 
                     list)
-                        open -g "$TODAY"
+                        #open -g "$TODAY"
                         tree -L 1 -Cd -l "$TODAY"
                         $TODOTXT list
                         ;;
@@ -693,7 +694,7 @@ things() {
                         rm -f $TODAY/TODOLIST.txt
                         cd "$TODAY"
                         $TODOTXT list
-                        open -g .
+                        #open -g .
                         ;;
                 esac
             elif [ $# -eq 2 ]; then
@@ -729,11 +730,11 @@ things() {
             case $1 in
                 list)
                     tree -L 1 -Cd -l "$INBOX"
-                    open -g "$INBOX"
+                    #open -g "$INBOX"
                     ;;
                 *)
                     cd "$INBOX"
-                    open -g .
+                    #open -g .
             esac
             ;;
 
@@ -742,7 +743,7 @@ things() {
             case $1 in
                 list)
                     tree -L 1 -Cd -l "$LOGBOOK"
-                    open -g "$LOGBOOK"
+                    #open -g "$LOGBOOK"
                     ;;
 
                 start)
@@ -770,7 +771,7 @@ things() {
                         __print
                         return 1
                     fi
-                    open -g "$LOGBOOK"
+                    #open -g "$LOGBOOK"
                     ;;
 
                 stop)
@@ -792,12 +793,12 @@ things() {
                         __print
                         return 1
                     fi
-                    open -g "$LOGBOOK"
+                    #open -g "$LOGBOOK"
                     ;;
 
                 *)
                     cd "$LOGBOOK"
-                    open -g .
+                    #open -g .
             esac
             ;;
 
@@ -806,7 +807,7 @@ things() {
             case $1 in
                 list)
                     tree -L 1 -Cd -l "$SCHEDULED"
-                    open -g "$SCHEDULED"
+                    #open -g "$SCHEDULED"
                     ;;
 
                 summary)
@@ -897,16 +898,16 @@ things() {
                     done < $PROJECTS/PROJECTS-SCHEDULED.txt
                     rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
                     popd &>/dev/null
-                    open -g "$SCHEDULED"
+                    #open -g "$SCHEDULED"
                     ;;
 
                 stopall)
                     find "$SCHEDULED" -type l -delete
-                    open -g "$SCHEDULED"
+                    #open -g "$SCHEDULED"
                     ;;
                 *)
                     cd "$SCHEDULED"
-                    open -g .
+                    #open -g .
             esac
             ;;
 
@@ -915,7 +916,7 @@ things() {
             case $1 in
                 list)
                     tree -L 1 -Cd -l "$SOMEDAY"
-                    open -g "$SOMEDAY"
+                    #open -g "$SOMEDAY"
                     ;;
 
                 start)
@@ -939,7 +940,7 @@ things() {
                         __remove_from_LogBook
                         __remove_from_Today
                     fi
-                    open -g "$SOMEDAY"
+                    #open -g "$SOMEDAY"
                     ;;
 
                 stop)
@@ -959,11 +960,11 @@ things() {
                       __remove_from_Someday
                     fi
 
-                    open -g "$SOMEDAY"
+                    #open -g "$SOMEDAY"
                     ;;
                 *)
                     cd "$SOMEDAY"
-                    open -g .
+                    #open -g .
             esac
             ;;
 
@@ -1039,7 +1040,7 @@ things() {
                             rsync -avErL $PWD "$CLOUD/Projects"
                         fi
                     fi
-                    open -g "$CLOUD/Projects/"
+                    #open -g "$CLOUD/Projects/"
                     ;;
                 *)
                     __print "=> Listing TODAY configuration..."
@@ -1063,7 +1064,7 @@ things() {
                 ln -sf "$LOCAL/Projects" $PROJECTS_LINK
             fi
             cd "$THINGS"
-            open -g .
+            #open -g .
             ;;
     esac
 }

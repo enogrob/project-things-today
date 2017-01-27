@@ -30,5 +30,5 @@ Done recently
 :
 
 Still to do
-[ ] perform other commands tests with bats such as tdy, tdsd, tdl, tds etc...
+[~] performing tdy tests with bats framework.
 ```
