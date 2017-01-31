@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA31
-## Date     : 2016-01-27
+## Version  : PA32
+## Date     : 2016-01-30
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -186,7 +186,7 @@ __replace_icon(){
 
 __task_name(){
     shopt -s extglob
-    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn|exercism)'
+    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn|exercism|linuxacademy)'
     TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|python|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm|devops|sql|unix)'
 
     local TASKNAME=`basename $1`
@@ -395,7 +395,7 @@ fi
 
 things() {
     shopt -s extglob
-    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn|exercism)'
+    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn|exercism|linuxacademy)'
 
     case $1 in
         areas)
@@ -417,7 +417,7 @@ things() {
                         return 1
                     fi
                     case $AREA in
-                         ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn|exercism)
+                         ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn|exercism|linuxacademy)
                          ;;
                          *)
                          __printerr "==> Error: Bad project type."
@@ -663,7 +663,7 @@ things() {
 
                     stopall)
                         find "$TODAY" -type l -delete
-                        echo "" > $TODO_DIR/todo.txt
+                        > $TODO_DIR/todo.txt
                         cd "$TODAY"
                         $TODOTXT list
                         #open -g .
@@ -677,6 +677,7 @@ things() {
 
                     jump)
                         cd "$TODAY"
+                        pwd
                         ;;
 
                     archive)
@@ -706,6 +707,7 @@ things() {
                             if [[ $1 =~ $re ]] ; then
                                 cd "$PROJECTS"
                                 cd $($TODOTXT list | grep "^$1" | awk {'print $3'})
+                                pwd
                             else
                                 __printerr "==> Error: Bad argument $1."
                                 __print
