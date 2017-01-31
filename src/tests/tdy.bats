@@ -16,7 +16,23 @@ __rm_if_exists() {
   fi
 }
 
+__save_today_and_tasks(){
+  if [ ! -e "/tmp/Today" ]; then
+    mkdir -p /tmp/Today
+  fi
+  cp -R "$TODAY/." /tmp/Today/
+  cp "$TODO_DIR/todo.txt" /tmp
+}
+
+__restore_today_and_tasks(){
+  cp -R /tmp/Today/. "$TODAY/"
+  cp /tmp/todo.txt "$TODO_DIR/todo.txt"
+  rm -f /tmp/todo.txt
+  rm -rf /tmp/Today
+}
+
 @test "01 - tdy" {
+  skip
   __setup
   run things today > /dev/null
   [ "$status" -eq 0 ]
@@ -24,6 +40,7 @@ __rm_if_exists() {
 }
 
 @test "02 - tdyi and tdye" {
+  skip
   __setup
   __rm_if_exists project-test
 
@@ -61,15 +78,18 @@ __rm_if_exists() {
   skip
   __setup
   run things today startall > /dev/null
-
 }
 
 @test "04 - tdyea" {
   __setup
+  __save_today_and_tasks
+
   run things today stopall > /dev/null
   [ "$status" -eq 0 ]
   assert_line "TODO: 0 of 0 tasks shown"
   [ ! -s "$TODO_DIR/todo.txt" ]
+
+__restore_today_and_tasks
 }
 
 @test "05 - tdyl" {
@@ -78,6 +98,7 @@ __rm_if_exists() {
 }
 
 @test "06 - tdyj" {
+  skip
   __setup
   run things today jump > /dev/null
   [ "$status" -eq 0 ]
@@ -85,6 +106,7 @@ __rm_if_exists() {
 }
 
 @test "07 - tdyj <task>" {
+  skip
   __setup
   __rm_if_exists project-test
 
