@@ -3,7 +3,7 @@
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
 ## Version  : PA33
-## Date     : 2016-01-31
+## Date     : 2016-02-01
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -672,6 +672,7 @@ things() {
                     list)
                         #open -g "$TODAY"
                         tree -L 1 -Cd -l "$TODAY"
+                        pwd
                         $TODOTXT list
                         ;;
 
@@ -739,6 +740,7 @@ things() {
             case $1 in
                 list)
                     tree -L 1 -Cd -l "$LOGBOOK"
+                    pwd
                     #open -g "$LOGBOOK"
                     ;;
 
@@ -794,6 +796,7 @@ things() {
 
                 *)
                     cd "$LOGBOOK"
+                    pwd
                     #open -g .
             esac
             ;;
