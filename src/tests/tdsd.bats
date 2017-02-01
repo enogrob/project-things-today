@@ -57,7 +57,7 @@ __restore_today_and_tasks(){
 
   #checking sucessful execution
   things projects new project-test > /dev/null
-  run things projects someday start > /dev/null
+  run things someday start > /dev/null
   [ "$status" -eq 0 ]
 
   #checking existence project symlink in Someday
@@ -83,7 +83,7 @@ __restore_today_and_tasks(){
 
   #checking sucessful execution
   things projects new project-test > /dev/null
-  run things projects someday start project-test > /dev/null
+  run things someday start project-test > /dev/null
   [ "$status" -eq 0 ]
 
   #checking existence project symlink in Someday

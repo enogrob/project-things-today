@@ -33,107 +33,120 @@ __restore_today_and_tasks(){
   rm -rf /tmp/Today
 }
 
-@test "01 - tdsd" {
+@test "01 - tds" {
   # skip
   __setup
-  run things someday > /dev/null
+  run things scheduled > /dev/null
   [ "$status" -eq 0 ]
-  assert_line "$SOMEDAY"
+  assert_line "$SCHEDULED"
 }
 
-@test "02 - tdsdl" {
+@test "02 - tdsl" {
   # skip
   __setup
-  run things someday list > /dev/null
+  run things scheduled list > /dev/null
   [ "$status" -eq 0 ]
-  assert_line --partial "$SOMEDAY"
+  assert_line --partial "$SCHEDULED"
   assert_line "$PWD"
 }
 
-@test "03 - tdsdi and tdsde" {
+@test "03 - tdsi and tdse" {
   # skip
   __setup
   __rm_if_exists project-test
 
   #checking sucessful execution
   things projects new project-test > /dev/null
-  run things projects someday start > /dev/null
+  run things scheduled start > /dev/null
   [ "$status" -eq 0 ]
 
   #checking existence project symlink in Someday
-  PROJECTDIR=`find "$SOMEDAY" -maxdepth 1 -name "*project-test"`
+  PROJECTDIR=`find "$SCHEDULED" -maxdepth 1 -name "*project-test"`
   [ -n "$PROJECTDIR" ] && readlink "$PROJECTDIR"
   [ "$status" -eq 0 ]
 
   #checking sucessful execution
-  run things someday stop > /dev/null
+  run things scheduled stop > /dev/null
   [ "$status" -eq 0 ]
 
   #checking non-existence project symlink in Someday
-  PROJECTDIR=`find "$SOMEDAY" -maxdepth 1 -name "*project-test"`
+  PROJECTDIR=`find "$SCHEDULED" -maxdepth 1 -name "*project-test"`
   [ -z "$PROJECTDIR" ]
 
   __rm_if_exists project-test
 }
 
-@test "04 - tdsdi and tdsde <project>" {
+@test "04 - tdsi and tdse <project>" {
   # skip
   __setup
   __rm_if_exists project-test
 
   #checking sucessful execution
   things projects new project-test > /dev/null
-  run things projects someday start project-test > /dev/null
+  run things scheduled start project-test > /dev/null
   [ "$status" -eq 0 ]
 
   #checking existence project symlink in Someday
-  PROJECTDIR=`find "$SOMEDAY" -maxdepth 1 -name "*project-test"`
+  PROJECTDIR=`find "$SCHEDULED" -maxdepth 1 -name "*project-test"`
   [ -n "$PROJECTDIR" ] && readlink "$PROJECTDIR"
   [ "$status" -eq 0 ]
 
   #checking sucessful execution
-  run things someday stop project-test > /dev/null
+  run things scheduled stop project-test > /dev/null
   [ "$status" -eq 0 ]
 
   #checking non-existence project symlink in Someday
-  PROJECTDIR=`find "$SOMEDAY" -maxdepth 1 -name "*project-test"`
+  PROJECTDIR=`find "$SCHEDULED" -maxdepth 1 -name "*project-test"`
   [ -z "$PROJECTDIR" ]
 
   __rm_if_exists project-test
 }
 
-@test "05 - tdsdi bad number of args" {
+@test "05 - tdsi bad number of args" {
   # skip
   __setup
 
-  run things someday start project-test project > /dev/null
+  run things scheduled start mon tue project-test > /dev/null
   [ "$status" -eq 1 ]
   echo "$output" | grep "Error: Bad number of arguments"
 }
 
-@test "06 - tdsde bad number of args" {
+@test "06 - tdse bad number of args" {
   # skip
   __setup
 
-  run things someday stop project-test project > /dev/null
+  run things scheduled stop mon tue project-test  > /dev/null
   [ "$status" -eq 1 ]
   echo "$output" | grep "Error: Bad number of arguments"
 }
 
-@test "07 - tdsdi bad arg" {
+@test "07 - tdsi bad day" {
+  # skip
+  __setup
+  __rm_if_exists project-test
+
+  things projects new project-test > /dev/null
+  run things scheduled start xxx project-test > /dev/null
+  [ "$status" -eq 1 ]
+  echo "$output" | grep "Error: Bad day"
+  
+  __rm_if_exists project-test
+}
+
+@test "08 - tdsi bad arg" {
   # skip
   __setup
 
-  run things someday start project-test > /dev/null
+  run things scheduled start mon project-test > /dev/null
   [ "$status" -eq 1 ]
   echo "$output" | grep "Error: Bad argument"
 }
 
-@test "08 - tdsde bad arg" {
+@test "08 - tdse bad arg" {
   # skip
   __setup
 
-  run things someday stop project-test > /dev/null
+  run things scheduled stop project-test > /dev/null
   [ "$status" -eq 1 ]
   echo "$output" | grep "Error: Bad argument"
 }
