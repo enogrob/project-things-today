@@ -915,6 +915,7 @@ things() {
             case $1 in
                 list)
                     tree -L 1 -Cd -l "$SOMEDAY"
+                    pwd
                     #open -g "$SOMEDAY"
                     ;;
 
@@ -938,6 +939,10 @@ things() {
                         __remove_from_Scheduled
                         __remove_from_LogBook
                         __remove_from_Today
+                    else
+                        __printerr "==> Error: Bad argument $PROJECT."
+                        __print
+                        return 1
                     fi
                     #open -g "$SOMEDAY"
                     ;;
@@ -957,12 +962,16 @@ things() {
                     PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
                     if [ -n "$PROJECTDIR" ]; then
                       __remove_from_Someday
+                    else
+                      __printerr "==> Error: Bad argument $PROJECT."
+                      __print
+                      return 1
                     fi
-
                     #open -g "$SOMEDAY"
                     ;;
                 *)
                     cd "$SOMEDAY"
+                    pwd
                     #open -g .
             esac
             ;;
