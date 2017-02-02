@@ -33,107 +33,32 @@ __restore_today_and_tasks(){
   rm -rf /tmp/Today
 }
 
-@test "01 - tdsd" {
-  # skip
-  __setup
-  run things someday > /dev/null
-  [ "$status" -eq 0 ]
-  assert_line "$SOMEDAY"
-}
-
-@test "02 - tdsdl" {
-  # skip
-  __setup
-  run things someday list > /dev/null
-  [ "$status" -eq 0 ]
-  assert_line --partial "$SOMEDAY"
-  assert_line "$PWD"
-}
-
-@test "03 - tdsdi and tdsde" {
+@test "01 - tdgi, tdg and tdge" {
   # skip
   __setup
   __rm_if_exists project-test
 
-  #checking sucessful execution
   things projects new project-test > /dev/null
-  run things projects someday start > /dev/null
+  run things git start > /dev/null
   [ "$status" -eq 0 ]
+  assert_line --partial "Initialized empty Git repository in /Users/enogrob/Things/Projects/project-test/.git/"
+  assert_line --partial "Updating origin"
+  assert_line --partial "created repository: enogrob/project-test"
+  assert_line --partial "first commit"
+  assert_line --partial "To git@github.com:enogrob/project-test.git"
+  assert_line --partial "* [new branch]      master -> master"
 
-  #checking existence project symlink in Someday
-  PROJECTDIR=`find "$SOMEDAY" -maxdepth 1 -name "*project-test"`
-  [ -n "$PROJECTDIR" ] && readlink "$PROJECTDIR"
+  rm -f README.md
+
+  run things git > /dev/null
   [ "$status" -eq 0 ]
+  assert_line " D README.md"
 
-  #checking sucessful execution
-  run things someday stop > /dev/null
+  run things git stop performed update > /dev/null
   [ "$status" -eq 0 ]
-
-  #checking non-existence project symlink in Someday
-  PROJECTDIR=`find "$SOMEDAY" -maxdepth 1 -name "*project-test"`
-  [ -z "$PROJECTDIR" ]
+  assert_line --partial "performed update"
+  assert_line --partial "1 file changed"
+  assert_line --partial "To git@github.com:enogrob/project-test.git"
 
   __rm_if_exists project-test
-}
-
-@test "04 - tdsdi and tdsde <project>" {
-  # skip
-  __setup
-  __rm_if_exists project-test
-
-  #checking sucessful execution
-  things projects new project-test > /dev/null
-  run things projects someday start project-test > /dev/null
-  [ "$status" -eq 0 ]
-
-  #checking existence project symlink in Someday
-  PROJECTDIR=`find "$SOMEDAY" -maxdepth 1 -name "*project-test"`
-  [ -n "$PROJECTDIR" ] && readlink "$PROJECTDIR"
-  [ "$status" -eq 0 ]
-
-  #checking sucessful execution
-  run things someday stop project-test > /dev/null
-  [ "$status" -eq 0 ]
-
-  #checking non-existence project symlink in Someday
-  PROJECTDIR=`find "$SOMEDAY" -maxdepth 1 -name "*project-test"`
-  [ -z "$PROJECTDIR" ]
-
-  __rm_if_exists project-test
-}
-
-@test "05 - tdsdi bad number of args" {
-  # skip
-  __setup
-
-  run things someday start project-test project > /dev/null
-  [ "$status" -eq 1 ]
-  echo "$output" | grep "Error: Bad number of arguments"
-}
-
-@test "06 - tdsde bad number of args" {
-  # skip
-  __setup
-
-  run things someday stop project-test project > /dev/null
-  [ "$status" -eq 1 ]
-  echo "$output" | grep "Error: Bad number of arguments"
-}
-
-@test "07 - tdsdi bad arg" {
-  # skip
-  __setup
-
-  run things someday start project-test > /dev/null
-  [ "$status" -eq 1 ]
-  echo "$output" | grep "Error: Bad argument"
-}
-
-@test "08 - tdsde bad arg" {
-  # skip
-  __setup
-
-  run things someday stop project-test > /dev/null
-  [ "$status" -eq 1 ]
-  echo "$output" | grep "Error: Bad argument"
 }

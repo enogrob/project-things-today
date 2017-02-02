@@ -403,6 +403,7 @@ things() {
             case $1 in
                 list)
                     tree -L 1 -Cd -l "$AREAS"
+                    pwd
                     #open -g "$AREAS"
                     ;;
 
@@ -425,12 +426,16 @@ things() {
                          return 1
                          ;;
                     esac
-                    PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
+                    PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$PROJECT"`
                     if [ -n "$PROJECTDIR" ]; then
                         if [ ! -L "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then
-                            ln -sf "$PWD" "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)";
+                            ln -sf "$PWD" "$AREAS/$AREA/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)";
                         fi
                         if [ ! -L "$TODAY/$AREA" ]; then ln -sf "$AREAS/$AREA" "$TODAY/$AREA" ; fi
+                    else
+                        __printerr "==> Error: Bad argument $PROJECT."
+                        __print
+                        return 1
                     fi
                     #open -g "$TODAY"
                     ;;
@@ -441,13 +446,17 @@ things() {
                     if [ -n "$AREADIR" ]; then
                        AREADIRNAME=`dirname "$AREADIR"`
                        AREA=`basename "$AREADIRNAME"`
-                       if [ -L "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)" ]; then
-                           rm -f "$AREAS/$AREA/$($TODOTXT -@+ list $PROJECT | head -1)";
+                       if [ -L "$AREAS/$AREA/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then
+                           rm -f "$AREAS/$AREA/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)";
                        fi
                        if [ -L "$TODAY/$AREA" ]; then
                           files=("$AREAS/$AREA/*")
                           if [ ${#files[@]} -lt 2 ]; then rm -f "$TODAY/$AREA"; fi
                        fi
+                    else
+                      __printerr "==> Error: Bad argument $PROJECT."
+                      __print
+                      return 1
                     fi
                     cd "$TODAY"
                     #open -g .
@@ -455,6 +464,7 @@ things() {
 
                 *)
                     cd "$AREAS"
+                    pwd
                     #open -g .
                     ;;
             esac
@@ -727,10 +737,12 @@ things() {
             case $1 in
                 list)
                     tree -L 1 -Cd -l "$INBOX"
+                    pwd
                     #open -g "$INBOX"
                     ;;
                 *)
                     cd "$INBOX"
+                    pwd
                     #open -g .
             esac
             ;;
