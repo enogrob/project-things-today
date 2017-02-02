@@ -14,6 +14,11 @@ __rm_if_exists() {
       rm -Rf "$PROJECTS/$1"
     fi
   fi
+  if [ -d "$CLOUD/Projects/$1" ]; then
+    if [ -n "$1"  ]; then
+      rm -Rf "$CLOUD/Projects/$1"
+    fi
+  fi
 }
 
 __save_today_and_tasks(){
@@ -33,107 +38,48 @@ __restore_today_and_tasks(){
   rm -rf /tmp/Today
 }
 
-@test "01 - tdsd" {
+@test "01 - tdc" {
   # skip
   __setup
-  run things someday > /dev/null
+
+  run things cloud > /dev/null
   [ "$status" -eq 0 ]
-  assert_line "$SOMEDAY"
+  assert_line --partial "=> Listing TODAY configuration..."
+  assert_line --partial "-- THINGS  :"
+  assert_line --partial "$THINGS"
 }
 
-@test "02 - tdsdl" {
+@test "02 - tdci" {
   # skip
   __setup
-  run things someday list > /dev/null
+
+  run things cloud start > /dev/null
   [ "$status" -eq 0 ]
-  assert_line --partial "$SOMEDAY"
-  assert_line "$PWD"
+  assert_line --partial "=> Configuring THINGS to CLOUD..."
+  assert_line --partial "-- THINGS  :"
+  assert_line --partial "$CLOUD"
 }
 
-@test "03 - tdsdi and tdsde" {
+@test "03 - tdce" {
+  # skip
+  __setup
+
+  run things cloud stop > /dev/null
+  [ "$status" -eq 0 ]
+  assert_line --partial "=> Configuring THINGS to LOCAL..."
+  assert_line --partial "-- THINGS  :"
+  assert_line --partial "$LOCAL"
+}
+
+@test "04 - tdcc" {
   # skip
   __setup
   __rm_if_exists project-test
 
-  #checking sucessful execution
   things projects new project-test > /dev/null
-  run things projects someday start > /dev/null
+  run things cloud copy > /dev/null
   [ "$status" -eq 0 ]
-
-  #checking existence project symlink in Someday
-  PROJECTDIR=`find "$SOMEDAY" -maxdepth 1 -name "*project-test"`
-  [ -n "$PROJECTDIR" ] && readlink "$PROJECTDIR"
-  [ "$status" -eq 0 ]
-
-  #checking sucessful execution
-  run things someday stop > /dev/null
-  [ "$status" -eq 0 ]
-
-  #checking non-existence project symlink in Someday
-  PROJECTDIR=`find "$SOMEDAY" -maxdepth 1 -name "*project-test"`
-  [ -z "$PROJECTDIR" ]
+  [ -e "$CLOUD/Projects/$PROJECT" ]
 
   __rm_if_exists project-test
-}
-
-@test "04 - tdsdi and tdsde <project>" {
-  # skip
-  __setup
-  __rm_if_exists project-test
-
-  #checking sucessful execution
-  things projects new project-test > /dev/null
-  run things projects someday start project-test > /dev/null
-  [ "$status" -eq 0 ]
-
-  #checking existence project symlink in Someday
-  PROJECTDIR=`find "$SOMEDAY" -maxdepth 1 -name "*project-test"`
-  [ -n "$PROJECTDIR" ] && readlink "$PROJECTDIR"
-  [ "$status" -eq 0 ]
-
-  #checking sucessful execution
-  run things someday stop project-test > /dev/null
-  [ "$status" -eq 0 ]
-
-  #checking non-existence project symlink in Someday
-  PROJECTDIR=`find "$SOMEDAY" -maxdepth 1 -name "*project-test"`
-  [ -z "$PROJECTDIR" ]
-
-  __rm_if_exists project-test
-}
-
-@test "05 - tdsdi bad number of args" {
-  # skip
-  __setup
-
-  run things someday start project-test project > /dev/null
-  [ "$status" -eq 1 ]
-  echo "$output" | grep "Error: Bad number of arguments"
-}
-
-@test "06 - tdsde bad number of args" {
-  # skip
-  __setup
-
-  run things someday stop project-test project > /dev/null
-  [ "$status" -eq 1 ]
-  echo "$output" | grep "Error: Bad number of arguments"
-}
-
-@test "07 - tdsdi bad arg" {
-  # skip
-  __setup
-
-  run things someday start project-test > /dev/null
-  [ "$status" -eq 1 ]
-  echo "$output" | grep "Error: Bad argument"
-}
-
-@test "08 - tdsde bad arg" {
-  # skip
-  __setup
-
-  run things someday stop project-test > /dev/null
-  [ "$status" -eq 1 ]
-  echo "$output" | grep "Error: Bad argument"
 }
