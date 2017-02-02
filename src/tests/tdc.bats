@@ -25,7 +25,6 @@ __save_today_and_tasks(){
   if [ ! -e "/tmp/Today" ]; then
     mkdir -p /tmp/Today
   fi
-
   cp -R "$TODAY/." /tmp/Today/
   cp "$TODO_DIR/todo.txt" /tmp
 }
@@ -58,11 +57,26 @@ __restore_today_and_tasks(){
   assert_line --partial "=> Configuring THINGS to CLOUD..."
   assert_line --partial "-- THINGS  :"
   assert_line --partial "$CLOUD"
+
+  run things cloud stop > /dev/null
 }
 
-@test "03 - tdce" {
+@test "03 - tdci already to CLOUD" {
   # skip
   __setup
+  things cloud start > /dev/null
+
+  run things cloud start > /dev/null
+  [ "$status" -eq 0 ]
+  assert_line --partial "=> THINGS already to CLOUD"
+
+  run things cloud stop > /dev/null
+}
+
+@test "04 - tdce" {
+  # skip
+  __setup
+  things cloud start > /dev/null
 
   run things cloud stop > /dev/null
   [ "$status" -eq 0 ]
@@ -71,7 +85,17 @@ __restore_today_and_tasks(){
   assert_line --partial "$LOCAL"
 }
 
-@test "04 - tdcc" {
+@test "05 - tdce already to LOCAL" {
+  # skip
+  __setup
+  things cloud stop > /dev/null
+
+  run things cloud stop > /dev/null
+  [ "$status" -eq 0 ]
+  assert_line --partial "=> THINGS already to LOCAL"
+}
+
+@test "06 - tdcc" {
   # skip
   __setup
   __rm_if_exists project-test
