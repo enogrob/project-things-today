@@ -102,7 +102,7 @@ __restore_today_and_tasks(){
   __rm_if_exists project-test
 }
 
-@test "05 - tdsi bad number of args" {
+@test "05 - tdsi bad nr of args" {
   # skip
   __setup
 
@@ -111,7 +111,7 @@ __restore_today_and_tasks(){
   echo "$output" | grep "Error: Bad number of arguments"
 }
 
-@test "06 - tdse bad number of args" {
+@test "06 - tdse bad nr of args" {
   # skip
   __setup
 
@@ -129,7 +129,7 @@ __restore_today_and_tasks(){
   run things scheduled start xxx project-test > /dev/null
   [ "$status" -eq 1 ]
   echo "$output" | grep "Error: Bad day"
-  
+
   __rm_if_exists project-test
 }
 
@@ -149,4 +149,31 @@ __restore_today_and_tasks(){
   run things scheduled stop project-test > /dev/null
   [ "$status" -eq 1 ]
   echo "$output" | grep "Error: Bad argument"
+}
+
+@test "09 - tdss" {
+  # skip
+  __setup
+
+  run things scheduled summary > /dev/null
+  [ "$status" -eq 0 ]
+  assert_line --partial "mon tue wed thu fri sat sun"
+}
+
+@test "10 - tdss <tags>" {
+  # skip
+  __setup
+
+  run things scheduled summary project > /dev/null
+  [ "$status" -eq 0 ]
+  assert_line --partial "mon tue wed thu fri sat sun"
+}
+
+@test "11 - tdss bad nr of args" {
+  # skip
+  __setup
+
+  run things scheduled summary project project > /dev/null
+  [ "$status" -eq 1 ]
+  echo "$output" | grep "Error: Bad number of arguments"
 }

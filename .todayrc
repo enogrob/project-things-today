@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA34
-## Date     : 2017-01-02
+## Version  : PA36
+## Date     : 2017-02-10
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -29,6 +29,10 @@ TODAY=$THINGS/Today
 CLOUD=$HOME/Google\ Drive/Things
 LOCAL=$HOME/Things
 DEBUG=false
+
+shopt -s extglob
+TAGSPROJECTS='+(chrome|codewar|coursera|ebook|exercism|futurelearn|hackerrank|job|linkedin|linuxacademy|project|sololearn|specialization|tutorial|tutorialspoint|udemy)'
+TAGSCONTEXTS='+(bash|bluemix|cpp|css|delphi|devops|elixir|elm|erlang|html|java|javascript|nodejs|phoenix|python|r|rails|reactjs|ruby|sql|unix|vuejs)'
 
 alias tdy='things today'
 alias tdyl='things today list'
@@ -185,10 +189,6 @@ __replace_icon(){
 }
 
 __task_name(){
-    shopt -s extglob
-    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn|exercism|linuxacademy)'
-    TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|python|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm|devops|sql|unix)'
-
     local TASKNAME=`basename $1`
     local TASKTAGS=(`tag -lN $1 | sed 's/,/ /g'`)
 
@@ -212,9 +212,6 @@ __task_name(){
 }
 
 __tag_contexts(){
-    shopt -s extglob
-    local TAGSCONTEXTS='+(java|cpp|ruby|erlang|elixir|javascript|python|html|css|nodejs|rails|phoenix|bluemix|bash|r|vuejs|elm|devops|sql|unix)'
-
     local PROJECTNAME=`basename $1`
     local PROJECTTAGS=(`echo $PROJECTNAME | sed 's/-/ /g'`)
 
@@ -394,9 +391,6 @@ fi
 }
 
 things() {
-    shopt -s extglob
-    TAGSPROJECTS='+(ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn|exercism|linuxacademy)'
-
     case $1 in
         areas)
             shift
@@ -418,7 +412,7 @@ things() {
                         return 1
                     fi
                     case $AREA in
-                         ebook|tutorialspoint|sololearn|udemy|project|hackerrank|codewar|tutorial|specialization|job|chrome|coursera|linkedin|futurelearn|exercism|linuxacademy)
+                         $TAGSPROJECTS)
                          ;;
                          *)
                          __printerr "==> Error: Bad project type."
