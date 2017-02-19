@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA36
-## Date     : 2017-02-10
+## Version  : PA37
+## Date     : 2017-02-19
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -710,8 +710,15 @@ things() {
                         re='^[0-9]+$'
                         if [[ $1 =~ $re ]] ; then
                             cd "$PROJECTS"
-                            cd $($TODOTXT list | grep "^$1" | awk {'print $3'})
-                            pwd
+                            PROJECT=$($TODOTXT list | grep "^$1" | awk {'print $3'})
+                            if [ -n "$PROJECT" ]; then
+                              cd $PROJECT
+                              pwd
+                            else
+                              __printerr "==> Error: Bad argument $1."
+                              __print
+                              return 1
+                            fi
                         else
                             __printerr "==> Error: Bad argument $1."
                             __print

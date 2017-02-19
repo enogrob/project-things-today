@@ -34,7 +34,7 @@ __restore_today_and_tasks(){
 }
 
 @test "01 - tdy" {
-  skip
+  # skip
   __setup
   run things today > /dev/null
   [ "$status" -eq 0 ]
@@ -42,7 +42,7 @@ __restore_today_and_tasks(){
 }
 
 @test "02 - tdyi and tdye" {
-  skip
+  # skip
   __setup
   __rm_if_exists project-test
 
@@ -77,7 +77,7 @@ __restore_today_and_tasks(){
 }
 
 @test "03 - tdyia" {
-  skip
+  # skip
   __setup
   __save_today_and_tasks
   run things today startall > /dev/null
@@ -86,7 +86,7 @@ __restore_today_and_tasks(){
 }
 
 @test "04 - tdyea" {
-  skip
+  # skip
   __setup
   __save_today_and_tasks
 
@@ -108,7 +108,7 @@ __restore_today_and_tasks
 }
 
 @test "06 - tdyj" {
-  skip
+  # skip
   __setup
   run things today jump > /dev/null
   [ "$status" -eq 0 ]
@@ -116,7 +116,7 @@ __restore_today_and_tasks
 }
 
 @test "07 - tdyj <task>" {
-  skip
+  # skip
   __setup
   __rm_if_exists project-test
   __save_today_and_tasks
@@ -134,7 +134,25 @@ __restore_today_and_tasks
 }
 
 @test "08 - tdyj <task> bad arg" {
-  skip
+  # skip
+  __setup
+  __rm_if_exists project-test
+  __save_today_and_tasks
+
+  things today stopall > /dev/null
+  things projects new project-test > /dev/null
+  things today start > /dev/null
+  run things today jump 2 > /dev/null
+  [ "$status" -eq 1 ]
+  echo "$output" | grep "Error: Bad argument"
+
+  things today stop > /dev/null
+  __rm_if_exists project-test
+  __restore_today_and_tasks
+}
+
+@test "09 - tdyj <task> bad arg" {
+  # skip
   __setup
 
   run things today jump A > /dev/null
@@ -142,8 +160,8 @@ __restore_today_and_tasks
   echo "$output" | grep "Error: Bad argument"
 }
 
-@test "09 - tdyj <task> bad nr of args" {
-  skip
+@test "10 - tdyj <task> bad nr of args" {
+  # skip
   __setup
 
   run things today jump 1 A > /dev/null
@@ -151,8 +169,8 @@ __restore_today_and_tasks
   echo "$output" | grep "Error: Bad number of arguments"
 }
 
-@test "10 - tdya" {
-  skip
+@test "11 - tdya" {
+  # skip
   __setup
   run things today archive > /dev/null
   [ "$status" -eq 0 ]
