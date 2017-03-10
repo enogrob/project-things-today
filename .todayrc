@@ -2,13 +2,15 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA37
-## Date     : 2017-02-19
+## Version  : PA39
+## Date     : 2017-03-10
 ## Project  : project-things-today
 ## Reference: bash
 ##
 ## Purpose  : Develop a system in order to help TODAY management directory
 ##            for projects.
+
+# set -x
 
 THINGS=$HOME/THINGS_HOME
 TODO_DIR=$HOME/.todo
@@ -95,7 +97,7 @@ __contains() {
     local n=$#
     local value=${!n}
     for ((i=1;i < $#;i++)) {
-        if [ "${!i}" == "${value}" ]; then
+        if [[ ${!i} == *"${value}"* ]]; then
             echo "y"
             return 0
         fi
@@ -655,9 +657,34 @@ things() {
                         for m in "${RESULT[@]}"
                         do
                           PROJECT="${m}"
-                          if [ ! -e "$TODAY/$PROJECT" ]; then
-                              $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
-                              ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
+                          PROJTAGS=(`tag -lN $PROJECT | sed 's/,/ /g'`)
+                          if [ $(__contains "${PROJTAGS[@]}" "start") == "y" ] && [ $(__contains "${PROJTAGS[@]}" "stop") == "y" ];
+                          then
+                            DATETODAY=$(date +%s)
+                            for i in "${PROJTAGS[@]}"; do
+                                if [ $(__contains "$i" "start") == "y" ];
+                                then
+                                  IFS=':' read -ra DATETAG <<< "$i"
+                                  DATESTART=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
+                                fi
+                                if [ $(__contains "$i" "stop") == "y" ];
+                                then
+                                  IFS=':' read -ra DATETAG <<< "$i"
+                                  DATESTOP=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
+                                fi
+                            done
+                            if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -lt $DATESTOP ];
+                            then
+                              if [ ! -e "$TODAY/$PROJECT" ]; then
+                                  $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
+                                  ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
+                              fi
+                            fi
+                          else
+                            if [ ! -e "$TODAY/$PROJECT" ]; then
+                                $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
+                                ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
+                            fi
                           fi
                         done
                         cd "$TODAY"
@@ -872,6 +899,16 @@ things() {
                               sat|sun)
                                 tag -a "scheduled,weekend,$m" "$PROJECTS/$PROJECT"
                                 ;;
+                              everyday)
+                                tag -a "scheduled,everyday,mon,tue,wed,thu,fri,sat,sun" "$PROJECTS/$PROJECT"
+                                ;;
+                              weekday)
+                                tag -a "scheduled,weekday,mon,tue,wed,thu,fri" "$PROJECTS/$PROJECT"
+                                ;;
+                              weekend)
+                                tag -a "scheduled,weekend,sat,sun" "$PROJECTS/$PROJECT"
+                                ;;
+
                               *)
                                 __printerr "==> Error: Bad day: $m"
                                 __print
