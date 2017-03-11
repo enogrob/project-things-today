@@ -2,7 +2,7 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA39
+## Version  : PA40
 ## Date     : 2017-03-10
 ## Project  : project-things-today
 ## Reference: bash
@@ -379,7 +379,16 @@ __remove_from_Scheduled() {
       scheduled)
           tag -r $m "$PROJECTS/$PROJECT"
           ;;
+      everyday)
+          tag -r $m "$PROJECTS/$PROJECT"
+          ;;
     esac
+    if [ $(__contains $m "start") == "y" ]; then
+      tag -r $m "$PROJECTS/$PROJECT"
+    fi
+    if [ $(__contains $m "stop") == "y" ]; then
+      tag -r $m "$PROJECTS/$PROJECT"
+    fi
   done
 }
 
@@ -910,9 +919,15 @@ things() {
                                 ;;
 
                               *)
-                                __printerr "==> Error: Bad day: $m"
-                                __print
-                                return 1
+                                if [ $(__contains $m "start") == "y" ]; then
+                                  tag -a "$m" "$PROJECTS/$PROJECT"
+                                elif [ $(__contains $m "stop") == "y" ]; then
+                                  tag -a "$m" "$PROJECTS/$PROJECT"
+                                else
+                                  __printerr "==> Error: Bad day: $m"
+                                  __print
+                                  return 1
+                                fi
                                 ;;
                           esac
                         done
