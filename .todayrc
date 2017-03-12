@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA41
-## Date     : 2017-03-11
+## Version  : PA42
+## Date     : 2017-03-12
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -286,39 +286,22 @@ __scheduled(){
                 SCHEDULED=$SCHEDULED"   |";
             fi
 
-            if [ $(__contains "${PROJTAGS[@]}" "start") == "y" ];
+            if [ $(__is_scheduled_with_dates "$line") == "y" ];
             then
               DATESTART=$(__gettag "${PROJTAGS[@]}" "start")
               IFS=':' read -ra DATETAG <<< "$DATESTART"
               SCHEDULED=$SCHEDULED" ${DATETAG[1]} |";
-            else
-              SCHEDULED=$SCHEDULED"            |";
-            fi
-            if [ $(__contains "${PROJTAGS[@]}" "stop") == "y" ];
-            then
               DATESTOP=$(__gettag "${PROJTAGS[@]}" "stop")
               IFS=':' read -ra DATETAG <<< "$DATESTOP"
               SCHEDULED=$SCHEDULED" ${DATETAG[1]} |";
             else
               SCHEDULED=$SCHEDULED"            |";
+              SCHEDULED=$SCHEDULED"            |";
             fi
 
-            if [ $(__contains "${PROJTAGS[@]}" "start") == "y" ] && [ $(__contains "${PROJTAGS[@]}" "stop") == "y" ];
+            if [ $(__is_scheduled_with_dates "$line") == "y" ];
             then
-              DATETODAY=$(date +%s)
-              for i in "${PROJTAGS[@]}"; do
-                  if [ $(__contains "$i" "start") == "y" ];
-                  then
-                    IFS=':' read -ra DATETAG <<< "$i"
-                    DATESTART=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
-                  fi
-                  if [ $(__contains "$i" "stop") == "y" ];
-                  then
-                    IFS=':' read -ra DATETAG <<< "$i"
-                    DATESTOP=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
-                  fi
-              done
-              if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -le $DATESTOP ];
+              if [ $(__is_active "$line") == "y" ];
               then
                 if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
                     __print "$SCHEDULED $line"
@@ -398,39 +381,22 @@ __scheduled(){
                 SCHEDULED=$SCHEDULED"   |";
             fi
 
-            if [ $(__contains "${PROJTAGS[@]}" "start") == "y" ];
+            if [ $(__is_scheduled_with_dates "$line") == "y" ];
             then
               DATESTART=$(__gettag "${PROJTAGS[@]}" "start")
               IFS=':' read -ra DATETAG <<< "$DATESTART"
               SCHEDULED=$SCHEDULED" ${DATETAG[1]} |";
-            else
-              SCHEDULED=$SCHEDULED"            |";
-            fi
-            if [ $(__contains "${PROJTAGS[@]}" "stop") == "y" ];
-            then
               DATESTOP=$(__gettag "${PROJTAGS[@]}" "stop")
               IFS=':' read -ra DATETAG <<< "$DATESTOP"
               SCHEDULED=$SCHEDULED" ${DATETAG[1]} |";
             else
               SCHEDULED=$SCHEDULED"            |";
+              SCHEDULED=$SCHEDULED"            |";
             fi
 
-            if [ $(__contains "${PROJTAGS[@]}" "start") == "y" ] && [ $(__contains "${PROJTAGS[@]}" "stop") == "y" ];
+            if [ $(__is_scheduled_with_dates "$line") == "y" ];
             then
-              DATETODAY=$(date +%s)
-              for i in "${PROJTAGS[@]}"; do
-                  if [ $(__contains "$i" "start") == "y" ];
-                  then
-                    IFS=':' read -ra DATETAG <<< "$i"
-                    DATESTART=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
-                  fi
-                  if [ $(__contains "$i" "stop") == "y" ];
-                  then
-                    IFS=':' read -ra DATETAG <<< "$i"
-                    DATESTOP=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
-                  fi
-              done
-              if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -le $DATESTOP ];
+              if [ $(__is_active "$line") == "y" ];
               then
                 if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
                     __print "$SCHEDULED $line"
@@ -453,6 +419,60 @@ __scheduled(){
     rm -f $PROJECTS/PROJECTS-SCHEDULED.txt
     popd &>/dev/null
 }
+
+__is_scheduled_with_dates() {
+  local PROJECT=$1
+  local PROJTAGS=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
+
+if [ $(__contains "${PROJTAGS[@]}" "start") == "y" ] && [ $(__contains "${PROJTAGS[@]}" "stop") == "y" ];
+then
+  echo "y"
+else
+  echo "n"
+fi
+}
+
+__is_active() {
+  local PROJECT=$1
+  local PROJTAGS=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
+  local DAYOFWEEK=$(echo $(date +"%a") | awk '{print tolower($0)}')
+
+  if [ $(__contains "${PROJTAGS[@]}" "scheduled") == "y" ]; then
+    if [ $(__contains "${PROJTAGS[@]}" "mon") == "y" ] || \
+       [ $(__contains "${PROJTAGS[@]}" "tue") == "y" ] || \
+       [ $(__contains "${PROJTAGS[@]}" "wed") == "y" ] || \
+       [ $(__contains "${PROJTAGS[@]}" "thu") == "y" ] || \
+       [ $(__contains "${PROJTAGS[@]}" "fri") == "y" ] || \
+       [ $(__contains "${PROJTAGS[@]}" "sat") == "y" ] || \
+       [ $(__contains "${PROJTAGS[@]}" "sun") == "y" ]; then
+       if [ $(__is_scheduled_with_dates "$1") == "y" ]; then
+         DATETODAY=$(date +%s)
+         for i in "${PROJTAGS[@]}"; do
+           if [ $(__contains "$i" "start") == "y" ]; then
+             IFS=':' read -ra DATETAG <<< "$i"
+             DATESTART=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
+           fi
+           if [ $(__contains "$i" "stop") == "y" ]; then
+             IFS=':' read -ra DATETAG <<< "$i"
+             DATESTOP=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
+           fi
+         done
+         if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -le $DATESTOP ]; then
+           echo "y"
+         else
+           echo "n"
+         fi
+       else
+         echo "y"
+       fi
+     else
+       echo "n"
+     fi
+  else
+    echo "n"
+  fi
+}
+
 __remove_from_Someday() {
   if [ -e "$SOMEDAY/$PROJECT" ]; then
       tag -r someday "$SOMEDAY/$PROJECT"
@@ -755,6 +775,25 @@ things() {
                                 TASK=$($TODOTXT list $PROJECT)
                                 TASK=$(echo $TASK | grep -o -E '^[0-9]+')
                                 $TODOTXT -a do $TASK
+                                if [ $(__is_scheduled_with_dates $PROJECT) == "y" ];
+                                then
+                                  DATETODAY=$(date +%s)
+                                  PROJTAGS=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
+                                  for i in "${PROJTAGS[@]}"; do
+                                    if [ $(__contains "$i" "start") == "y" ]; then
+                                      IFS=':' read -ra DATETAG <<< "$i"
+                                      DATESTART=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
+                                    fi
+                                    if [ $(__contains "$i" "stop") == "y" ]; then
+                                      IFS=':' read -ra DATETAG <<< "$i"
+                                      DATESTOP=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
+                                    fi
+                                  done
+                                  if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -ge $DATESTOP ];
+                                  then
+                                    __remove_from_Scheduled
+                                  fi
+                                fi
                             fi
 
                         fi
@@ -771,22 +810,9 @@ things() {
                         do
                           PROJECT="${m}"
                           PROJTAGS=(`tag -lN $PROJECT | sed 's/,/ /g'`)
-                          if [ $(__contains "${PROJTAGS[@]}" "start") == "y" ] && [ $(__contains "${PROJTAGS[@]}" "stop") == "y" ];
+                          if [ $(__is_scheduled_with_dates "$PROJECT") == "y" ];
                           then
-                            DATETODAY=$(date +%s)
-                            for i in "${PROJTAGS[@]}"; do
-                                if [ $(__contains "$i" "start") == "y" ];
-                                then
-                                  IFS=':' read -ra DATETAG <<< "$i"
-                                  DATESTART=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
-                                fi
-                                if [ $(__contains "$i" "stop") == "y" ];
-                                then
-                                  IFS=':' read -ra DATETAG <<< "$i"
-                                  DATESTOP=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
-                                fi
-                            done
-                            if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -le $DATESTOP ];
+                            if [ $(__is_active $PROJECT) == "y" ];
                             then
                               if [ ! -e "$TODAY/$PROJECT" ]; then
                                   $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
