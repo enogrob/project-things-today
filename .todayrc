@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA40
-## Date     : 2017-03-10
+## Version  : PA41
+## Date     : 2017-03-11
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -104,6 +104,18 @@ __contains() {
     }
     echo "n"
     return 1
+}
+
+__gettag() {
+    local n=$#
+    local value=${!n}
+    for ((i=1;i < $#;i++)) {
+        if [[ ${!i} == *"${value}"* ]]; then
+            echo ${!i}
+            return 0
+        fi
+    }
+    echo ""
 }
 
 __print(){
@@ -234,7 +246,7 @@ __scheduled(){
         pushd . &>/dev/null
         cd "$PROJECTS"
         tag -m scheduled > $PROJECTS/PROJECTS-SCHEDULED.txt
-        __print "mon tue wed thu fri sat sun" green
+        __print "mon tue wed thu fri sat sun  start        stop" green
         while read line; do
             local PROJTAGS=(`tag -lN $line | sed 's/,/ /g'`)
             local SCHEDULED=""
@@ -273,6 +285,24 @@ __scheduled(){
             else
                 SCHEDULED=$SCHEDULED"   |";
             fi
+
+            if [ $(__contains "${PROJTAGS[@]}" "start") == "y" ];
+            then
+              DATESTART=$(__gettag "${PROJTAGS[@]}" "start")
+              IFS=':' read -ra DATETAG <<< "$DATESTART"
+              SCHEDULED=$SCHEDULED" ${DATETAG[1]} |";
+            else
+              SCHEDULED=$SCHEDULED"            |";
+            fi
+            if [ $(__contains "${PROJTAGS[@]}" "stop") == "y" ];
+            then
+              DATESTOP=$(__gettag "${PROJTAGS[@]}" "stop")
+              IFS=':' read -ra DATETAG <<< "$DATESTOP"
+              SCHEDULED=$SCHEDULED" ${DATETAG[1]} |";
+            else
+              SCHEDULED=$SCHEDULED"            |";
+            fi
+
             if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
                 __print "$SCHEDULED $line"
             else
