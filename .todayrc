@@ -318,7 +318,7 @@ __scheduled(){
                     DATESTOP=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
                   fi
               done
-              if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -lt $DATESTOP ];
+              if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -le $DATESTOP ];
               then
                 if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
                     __print "$SCHEDULED $line"
@@ -430,7 +430,7 @@ __scheduled(){
                     DATESTOP=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
                   fi
               done
-              if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -lt $DATESTOP ];
+              if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -le $DATESTOP ];
               then
                 if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
                     __print "$SCHEDULED $line"
@@ -786,7 +786,7 @@ things() {
                                   DATESTOP=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
                                 fi
                             done
-                            if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -lt $DATESTOP ];
+                            if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -le $DATESTOP ];
                             then
                               if [ ! -e "$TODAY/$PROJECT" ]; then
                                   $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
