@@ -303,11 +303,39 @@ __scheduled(){
               SCHEDULED=$SCHEDULED"            |";
             fi
 
-            if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
-                __print "$SCHEDULED $line"
+            if [ $(__contains "${PROJTAGS[@]}" "start") == "y" ] && [ $(__contains "${PROJTAGS[@]}" "stop") == "y" ];
+            then
+              DATETODAY=$(date +%s)
+              for i in "${PROJTAGS[@]}"; do
+                  if [ $(__contains "$i" "start") == "y" ];
+                  then
+                    IFS=':' read -ra DATETAG <<< "$i"
+                    DATESTART=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
+                  fi
+                  if [ $(__contains "$i" "stop") == "y" ];
+                  then
+                    IFS=':' read -ra DATETAG <<< "$i"
+                    DATESTOP=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
+                  fi
+              done
+              if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -lt $DATESTOP ];
+              then
+                if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
+                    __print "$SCHEDULED $line"
+                else
+                    __print "$SCHEDULED $line" cyan
+                fi
+              else
+                __print "$SCHEDULED $line" red
+              fi
             else
-                __print "$SCHEDULED $line" cyan
+              if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
+                  __print "$SCHEDULED $line"
+              else
+                  __print "$SCHEDULED $line" cyan
+              fi
             fi
+
         done < $PROJECTS/PROJECTS-SCHEDULED.txt
     else
         local DAYOFWEEK=$1
@@ -369,7 +397,7 @@ __scheduled(){
             else
                 SCHEDULED=$SCHEDULED"   |";
             fi
-            
+
             if [ $(__contains "${PROJTAGS[@]}" "start") == "y" ];
             then
               DATESTART=$(__gettag "${PROJTAGS[@]}" "start")
