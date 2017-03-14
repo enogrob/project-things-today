@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA42
-## Date     : 2017-03-12
+## Version  : PA43
+## Date     : 2017-03-13
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -33,7 +33,7 @@ LOCAL=$HOME/Things
 DEBUG=false
 
 shopt -s extglob
-TAGSPROJECTS='+(chrome|codewar|coursera|ebook|exercism|futurelearn|hackerrank|job|linkedin|linuxacademy|project|sololearn|specialization|tutorial|tutorialspoint|udemy)'
+TAGSPROJECTS='+(chrome|codewar|coursera|ebook|exercism|futurelearn|hackerrank|job|krishnamurti|linkedin|linuxacademy|project|sololearn|specialization|tutorial|tutorialspoint|udemy)'
 TAGSCONTEXTS='+(bash|bluemix|cpp|css|delphi|devops|elixir|elm|erlang|html|java|javascript|nodejs|phoenix|python|r|rails|reactjs|ruby|sql|unix|vuejs)'
 
 alias tdy='things today'
@@ -814,15 +814,23 @@ things() {
                           then
                             if [ $(__is_active $PROJECT) == "y" ];
                             then
-                              if [ ! -e "$TODAY/$PROJECT" ]; then
-                                  $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
-                                  ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
+                              PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$PROJECT"`
+                              if [ -n "$PROJECTDIR" ]; then
+                                  PROJECTDIR=`find "$TODAY" -maxdepth 1 -lname "$PROJECTS/$PROJECT"`
+                                  if [ -z "$PROJECTDIR" ]; then
+                                      $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
+                                      ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
+                                  fi
                               fi
                             fi
                           else
-                            if [ ! -e "$TODAY/$PROJECT" ]; then
-                                $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
-                                ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
+                            PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$PROJECT"`
+                            if [ -n "$PROJECTDIR" ]; then
+                                PROJECTDIR=`find "$TODAY" -maxdepth 1 -lname "$PROJECTS/$PROJECT"`
+                                if [ -z "$PROJECTDIR" ]; then
+                                    $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
+                                    ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
+                                fi
                             fi
                           fi
                         done
