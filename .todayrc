@@ -516,6 +516,18 @@ __remove_from_Scheduled() {
   done
 }
 
+__insert_in_Today(){
+  local PROJECT=$1
+  local PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$1"`
+  if [ -n "$PROJECTDIR" ]; then
+      PROJECTDIR=`find "$TODAY" -maxdepth 1 -lname "$PROJECTS/$1"`
+      if [ -z "$PROJECTDIR" ]; then
+          $TODOTXT -t add $(__task_name "$PROJECTS/$1") #due:$(date +"%Y-%M-%d")
+          ln -sf "$PROJECTS/$1" "$TODAY/$($TODOTXT -@+ list | grep -w "$1" | head -1)"
+      fi
+  fi
+}
+
 __remove_from_Today(){
 if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then
     rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
@@ -741,14 +753,7 @@ things() {
                 case $1 in
                     start)
                         PROJECT=`basename "$PWD"`
-                        PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$PROJECT"`
-                        if [ -n "$PROJECTDIR" ]; then
-                            PROJECTDIR=`find "$TODAY" -maxdepth 1 -lname "$PROJECTS/$PROJECT"`
-                            if [ -z "$PROJECTDIR" ]; then
-                                $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
-                                ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
-                            fi
-                        fi
+                        __insert_in_Today "$PROJECT"
                         tree -L 1 -Cd -l "$TODAY"
                         $TODOTXT list
                         #open -g "$TODAY"
@@ -814,24 +819,10 @@ things() {
                           then
                             if [ $(__is_active $PROJECT) == "y" ];
                             then
-                              PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$PROJECT"`
-                              if [ -n "$PROJECTDIR" ]; then
-                                  PROJECTDIR=`find "$TODAY" -maxdepth 1 -lname "$PROJECTS/$PROJECT"`
-                                  if [ -z "$PROJECTDIR" ]; then
-                                      $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
-                                      ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
-                                  fi
-                              fi
+                              __insert_in_Today "$PROJECT"
                             fi
                           else
-                            PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$PROJECT"`
-                            if [ -n "$PROJECTDIR" ]; then
-                                PROJECTDIR=`find "$TODAY" -maxdepth 1 -lname "$PROJECTS/$PROJECT"`
-                                if [ -z "$PROJECTDIR" ]; then
-                                    $TODOTXT -t add $(__task_name "$PROJECTS/$PROJECT") #due:$(date +"%Y-%M-%d")
-                                    ln -sf "$PROJECTS/$PROJECT" "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
-                                fi
-                            fi
+                            __insert_in_Today "$PROJECT"
                           fi
                         done
                         cd "$TODAY"
