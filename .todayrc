@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA43
-## Date     : 2017-03-13
+## Version  : PA55
+## Date     : 2017-05-27
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -33,8 +33,8 @@ LOCAL=$HOME/Things
 DEBUG=false
 
 shopt -s extglob
-TAGSPROJECTS='+(chrome|codewar|coursera|ebook|exercism|futurelearn|hackerrank|job|krishnamurti|linkedin|linuxacademy|project|sololearn|specialization|tutorial|tutorialspoint|udemy)'
-TAGSCONTEXTS='+(bash|bluemix|cpp|css|delphi|devops|elixir|elm|erlang|html|java|javascript|nodejs|phoenix|python|r|rails|reactjs|ruby|sql|unix|vuejs)'
+TAGSPROJECTS='+(chrome|codewars|coursera|ebook|exercism|futurelearn|hackerrank|javabrains|job|krishnamurti|linkedin|linuxacademy|phoenix|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains)'
+TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|cpp|css|delphi|devops|elixir|elm|erlang|hadoop|html|java|javascript|nodejs|phoenix|python|r|rails|reactjs|ruby|spring|springboot|sql|unix|vim|vuejs|webpack)'
 
 alias tdy='things today'
 alias tdyl='things today list'
@@ -88,6 +88,8 @@ alias tdsia='things scheduled startall'
 alias tdsea='things scheduled stopall'
 
 alias tdei='exercism configure --dir=$PWD'
+alias tdappia="open -a Mail.app;open -a 'TheBrain 9.app';open -a 'Google Chrome.app';open -a 'Path Finder.app';caffeine"
+alias tdappea="caffeine;quitallapps"
 
 mdread(){
     pandoc "$1" -f markdown -t html | lynx -stdin
@@ -187,14 +189,20 @@ if [ "$1" == "`readlink $THINGS`" ]
   fi
 }
 
+__icon(){
+  __replace_icon "$PWD" "$RESOURCES/images/$1"
+}
+
 __replace_icon(){
     droplet=$1
-    icon=$2
+    icon=$2".icns"
     if [[ $icon =~ ^https?:// ]]; then
         curl -sLo /tmp/icon $icon
         icon=/tmp/icon
     fi
-    rm -rf $droplet$'/Icon\r'
+    if [ -e $droplet$'/Icon\r' ]; then
+      rm -rf $droplet$'/Icon\r'
+    fi
     sips -i $icon >/dev/null
     DeRez -only icns $icon > /tmp/icns.rsrc
     Rez -append /tmp/icns.rsrc -o $droplet$'/Icon\r'
@@ -403,8 +411,8 @@ __scheduled(){
                 else
                     __print "$SCHEDULED $line" cyan
                 fi
-              else
-                __print "$SCHEDULED $line" red
+              #else
+              #  __print "$SCHEDULED $line" red
               fi
             else
               if [ $(__contains "${PROJTAGS[@]}" $DAYOFWEEK) == "y" ]; then
@@ -524,6 +532,7 @@ __insert_in_Today(){
       if [ -z "$PROJECTDIR" ]; then
           $TODOTXT -t add $(__task_name "$PROJECTS/$1") #due:$(date +"%Y-%M-%d")
           ln -sf "$PROJECTS/$1" "$TODAY/$($TODOTXT -@+ list | grep -w "$1" | head -1)"
+          tag -a today "$PROJECTS/$1"
       fi
   fi
 }
@@ -534,6 +543,7 @@ if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then
     TASK=$($TODOTXT list $PROJECT)
     TASK=$(echo $TASK | grep -o -E '^[0-9]+')
     $TODOTXT -a do $TASK
+    tag -r today "$PROJECTS/$PROJECT"
 fi
 }
 
@@ -777,6 +787,7 @@ things() {
                             fi
                             if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then
                                 rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
+                                tag -r today "$PROJECTS/$PROJECT"
                                 TASK=$($TODOTXT list $PROJECT)
                                 TASK=$(echo $TASK | grep -o -E '^[0-9]+')
                                 $TODOTXT -a do $TASK
@@ -1038,7 +1049,7 @@ things() {
                                 tag -a "scheduled,weekend,$m" "$PROJECTS/$PROJECT"
                                 ;;
                               everyday)
-                                tag -a "scheduled,everyday,mon,tue,wed,thu,fri,sat,sun" "$PROJECTS/$PROJECT"
+                                tag -a "scheduled,everyday,weekend,mon,tue,wed,thu,fri,sat,sun" "$PROJECTS/$PROJECT"
                                 ;;
                               weekday)
                                 tag -a "scheduled,weekday,mon,tue,wed,thu,fri" "$PROJECTS/$PROJECT"
@@ -1187,7 +1198,7 @@ things() {
                     git init  && \
                     hub create && \
                     git add . && \
-                    git commit -am "first commit" && \
+                    git commit -am "performed first-commit" && \
                     git push origin master && \
                     hub browse .
                     ;;
