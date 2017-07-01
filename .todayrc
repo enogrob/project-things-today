@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA55
-## Date     : 2017-05-27
+## Version  : PA59
+## Date     : 2017-07-01
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -26,6 +26,7 @@ INBOX=$THINGS/Inbox
 LOGBOOK=$THINGS/Logbook
 SCHEDULED=$THINGS/Scheduled
 SOMEDAY=$THINGS/Someday
+SOMEDAYLOG=$THINGS/SomedayLog
 TODAY=$THINGS/Today
 
 CLOUD=$HOME/Google\ Drive/Things
@@ -33,8 +34,8 @@ LOCAL=$HOME/Things
 DEBUG=false
 
 shopt -s extglob
-TAGSPROJECTS='+(chrome|codewars|coursera|ebook|exercism|futurelearn|hackerrank|javabrains|job|krishnamurti|linkedin|linuxacademy|phoenix|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains)'
-TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|cpp|css|delphi|devops|elixir|elm|erlang|hadoop|html|java|javascript|nodejs|phoenix|python|r|rails|reactjs|ruby|spring|springboot|sql|unix|vim|vuejs|webpack)'
+TAGSPROJECTS='+(chrome|codewars|coursera|ebook|exercism|futurelearn|hackerrank|javabrains|job|krishnamurti|linkedin|linuxacademy|oreilly|phoenix|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains)'
+TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|cpp|css|delphi|devops|elixir|elm|erlang|hadoop|html|java|javascript|jekyll|nodejs|phoenix|python|r|rails|reactjs|ruby|spring|springboot|sql|unix|vim|vuejs|webpack)'
 
 alias tdy='things today'
 alias tdyl='things today list'
@@ -66,6 +67,12 @@ alias tdsd='things someday'
 alias tdsdl='things someday list'
 alias tdsdi='things someday start'
 alias tdsde='things someday stop'
+alias tdsdr='things someday random'
+
+alias tdsdl='things somedaylog'
+alias tdsdll='things somedaylog list'
+alias tdsdli='things somedaylog start'
+alias tdsdle='things somedaylog stop'
 
 alias tdc='things cloud'
 alias tdci='things cloud start'
@@ -93,6 +100,15 @@ alias tdappea="caffeine;quitallapps"
 
 mdread(){
     pandoc "$1" -f markdown -t html | lynx -stdin
+}
+
+__random() {
+  local projects_list
+  IFS=$'\n' read -d '' -ra projects_list
+  i=$(( $RANDOM % ${#projects_list[@]} ))
+  # echo ${#projects_list[@]}
+  echo ${projects_list[$i]}
+  unset project_list
 }
 
 __contains() {
@@ -487,6 +503,20 @@ __remove_from_Someday() {
       rm -f "$SOMEDAY/$PROJECT";
   fi
 }
+
+__remove_from_SomedayLog() {
+  if [ -e "$SOMEDAYLOG/$PROJECT" ]; then
+      tag -r somedaylog "$SOMEDAYLOG/$PROJECT"
+      rm -f "$SOMEDAYLOG/$PROJECT";
+      PROJTAGS=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
+      for i in "${PROJTAGS[@]}"; do
+        if [ $(__contains "$i" "random") == "y" ]; then
+          tag -r random "$PROJECTS/$PROJECT"
+        fi
+      done
+  fi
+}
+
 __remove_from_LogBook() {
   if [ -e "$LOGBOOK/$PROJECT" ]; then
       tag -r logbook "$LOGBOOK/$PROJECT"
@@ -527,6 +557,7 @@ __remove_from_Scheduled() {
 __insert_in_Today(){
   local PROJECT=$1
   local PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$1"`
+  echo $PROJECTDIR
   if [ -n "$PROJECTDIR" ]; then
       PROJECTDIR=`find "$TODAY" -maxdepth 1 -lname "$PROJECTS/$1"`
       if [ -z "$PROJECTDIR" ]; then
@@ -644,8 +675,8 @@ things() {
                         rm -f $PROJECTS/PROJECTS.txt
                         mv $PROJECTS/PROJECTS_TEMP.txt $PROJECTS/PROJECTS.txt
 
-                        printf "==> Projects with tag(s): "
-                        __print $1 green
+                        # printf "==> Projects with tag(s): "
+                        # __print $1 green
                         while read line; do
                                 __print $line cyan
                         done < $PROJECTS/PROJECTS.txt
@@ -757,7 +788,7 @@ things() {
             shift
             if [ $# -eq 0 ]; then
                 cd "$TODAY"
-               #open -g .
+                #open -g .
                 pwd
             elif [ $# -eq 1 ]; then
                 case $1 in
@@ -766,7 +797,7 @@ things() {
                         __insert_in_Today "$PROJECT"
                         tree -L 1 -Cd -l "$TODAY"
                         $TODOTXT list
-                        #open -g "$TODAY"
+                        open -g "$TODAY"
                         ;;
 
                     stop)
@@ -788,6 +819,14 @@ things() {
                             if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then
                                 rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
                                 tag -r today "$PROJECTS/$PROJECT"
+
+                                PROJTAGS=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
+                                for i in "${PROJTAGS[@]}"; do
+                                  if [ $(__contains "$i" "random") == "y" ]; then
+                                    things somedaylog start
+                                  fi
+                                done
+
                                 TASK=$($TODOTXT list $PROJECT)
                                 TASK=$(echo $TASK | grep -o -E '^[0-9]+')
                                 $TODOTXT -a do $TASK
@@ -881,6 +920,47 @@ things() {
                 esac
             elif [ $# -eq 2 ]; then
                 case $1 in
+                    start)
+                        shift
+                        if [ $# -eq 0 ]; then
+                          PROJECT=`basename "$PWD"`
+                        elif [ $# -eq 1 ]; then
+                          PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name "$1"`
+                          if [ -n "$PROJECTDIR" ]; then
+                            PROJECT=$1
+                          else
+                            PROJTAGS=$1
+                            pushd . &>/dev/null
+                            cd "$PROJECTS"
+                            PROJTAGS=(`echo $PROJTAGS | sed 's/,/ /g'`)
+
+                            for m in "${PROJTAGS[@]}"
+                            do
+                              tag -m "${m}" >> $PROJECTS/PROJECTS.txt
+                            done
+
+                            cat $PROJECTS/PROJECTS.txt | sort | uniq > $PROJECTS/PROJECTS_TEMP.txt
+                            rm -f $PROJECTS/PROJECTS.txt
+                            mv $PROJECTS/PROJECTS_TEMP.txt $PROJECTS/PROJECTS.txt
+
+                            IFS=$'\n' read -d '' -ra PROJECTSLIST < $PROJECTS/PROJECTS.txt
+
+                            i=$(( $RANDOM % ${#PROJECTSLIST[@]} ))
+                            PROJECT=${PROJECTSLIST[$i]}
+                            rm -f $PROJECTS/PROJECTS.txt
+                            popd &>/dev/null
+                          fi
+                        else
+                          __printerr "==> Error: Bad number of arguments."
+                          __print
+                          return 1
+                        fi
+                        __insert_in_Today "$PROJECT"
+                        tree -L 1 -Cd -l "$TODAY"
+                        $TODOTXT list
+                        #open -g "$TODAY"
+                        ;;
+
                     jump)
                         shift
                         re='^[0-9]+$'
@@ -1151,6 +1231,7 @@ things() {
                             ln -sf "$PROJECTS/$PROJECT" "$SOMEDAY/$PROJECT";
                             tag -a someday "$PROJECTS/$PROJECT"
                         fi
+                        __remove_from_SomedayLog
                         __remove_from_Scheduled
                         __remove_from_LogBook
                         __remove_from_Today
@@ -1184,8 +1265,98 @@ things() {
                     fi
                     #open -g "$SOMEDAY"
                     ;;
+
+                random)
+                    shift
+                    if [ $# -eq 0 ]; then
+                      PROJECT=`things projects list someday | __random | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"`
+                      PROJECT=`echo $PROJECT | tr -d '\n'`
+                    elif [ $# -eq 1 ]; then
+                      PROJECT=`things projects list someday,$1 | __random | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"`
+                      PROJECT=`echo $PROJECT | tr -d '\n'`
+                    else
+                      __printerr "==> Error: Bad number of arguments."
+                      __print
+                      return 1
+                    fi
+                    tag -r random "$PROJECTS/$PROJECT"
+                    __insert_in_Today "$PROJECT"
+                    __remove_from_Someday "$PROJECT"
+                    tree -L 1 -Cd -l "$TODAY"
+                    $TODOTXT list
+                    open -g "$TODAY"
+                    ;;
+
                 *)
                     cd "$SOMEDAY"
+                    pwd
+                    #open -g .
+            esac
+            ;;
+
+
+        somedaylog)
+            shift
+            case $1 in
+                list)
+                    tree -L 1 -Cd -l "$SOMEDAYLOG"
+                    pwd
+                    #open -g "$SOMEDAYDAY"
+                    ;;
+
+                start)
+                    shift
+                    if [ $# -eq 0 ]; then
+                        PROJECT=`basename "$PWD"`
+                    elif [ $# -eq 1 ]; then
+                        PROJECT=$1
+                    else
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
+                        return 1
+                    fi
+                    PROJECTDIR=`find "$PROJECTS" -maxdepth 1 -name $PROJECT`
+                    if [ -n "$PROJECTDIR" ]; then
+                        if [ ! -e "$SOMEDAYLOG/$PROJECT" ]; then
+                            ln -sf "$PROJECTS/$PROJECT" "$SOMEDAYLOG/$PROJECT";
+                            tag -a somedaylog "$PROJECTS/$PROJECT"
+                        fi
+                        __remove_from_Someday
+                        __remove_from_Scheduled
+                        __remove_from_LogBook
+                        __remove_from_Today
+                    else
+                        __printerr "==> Error: Bad argument $PROJECT."
+                        __print
+                        return 1
+                    fi
+                    #open -g "$SOMEDAYLOG"
+                    ;;
+
+                stop)
+                    shift
+                    if [ $# -eq 0 ]; then
+                        PROJECT=`basename "$PWD"`
+                    elif [ $# -eq 1 ]; then
+                        PROJECT=$1
+                    else
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
+                        return 1
+                    fi
+
+                    PROJECTDIR=`find "$PROJECTS" -name $PROJECT`
+                    if [ -n "$PROJECTDIR" ]; then
+                      __remove_from_SomedayLog
+                    else
+                      __printerr "==> Error: Bad argument $PROJECT."
+                      __print
+                      return 1
+                    fi
+                    #open -g "$SOMEDAYLOG"
+                    ;;
+                *)
+                    cd "$SOMEDAYLOG"
                     pwd
                     #open -g .
             esac
