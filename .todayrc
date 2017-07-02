@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA59
-## Date     : 2017-07-01
+## Version  : PA60
+## Date     : 2017-07-02
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -69,10 +69,10 @@ alias tdsdi='things someday start'
 alias tdsde='things someday stop'
 alias tdsdr='things someday random'
 
-alias tdsdl='things somedaylog'
-alias tdsdll='things somedaylog list'
-alias tdsdli='things somedaylog start'
-alias tdsdle='things somedaylog stop'
+alias tdsdlg='things somedaylog'
+alias tdsdlgl='things somedaylog list'
+alias tdsdlgi='things somedaylog start'
+alias tdsdlge='things somedaylog stop'
 
 alias tdc='things cloud'
 alias tdci='things cloud start'
@@ -657,36 +657,34 @@ things() {
             case $1 in
                 list)
                     shift
+                    pushd . &>/dev/null
+                    cd "$PROJECTS"
                     if [ $# -eq 0 ]; then
-                        tree -L 1 -Cd -l "$PROJECTS"
+                        ls -la | awk '{print $9}' | tr -d '/' >> $PROJECTS/PROJECTS.txt
                         #open -g "$PROJECTS"
                     elif [ $# -eq 1 ]; then
                         local PROJTAGS=$1
-                        pushd . &>/dev/null
-                        cd "$PROJECTS"
                         PROJTAGS=(`echo $PROJTAGS | sed 's/,/ /g'`)
 
                         for m in "${PROJTAGS[@]}"
                         do
                             tag -m "${m}" >> $PROJECTS/PROJECTS.txt
                         done
-
-                        cat $PROJECTS/PROJECTS.txt | sort | uniq > $PROJECTS/PROJECTS_TEMP.txt
-                        rm -f $PROJECTS/PROJECTS.txt
-                        mv $PROJECTS/PROJECTS_TEMP.txt $PROJECTS/PROJECTS.txt
-
-                        # printf "==> Projects with tag(s): "
-                        # __print $1 green
-                        while read line; do
-                                __print $line cyan
-                        done < $PROJECTS/PROJECTS.txt
-                        rm -f $PROJECTS/PROJECTS.txt
-                        popd &>/dev/null
                     else
                         __printerr "==> Error: Bad number of arguments."
                         __print
                         return 1
                     fi
+                    cat $PROJECTS/PROJECTS.txt | sort | uniq > $PROJECTS/PROJECTS_TEMP.txt
+                    rm -f $PROJECTS/PROJECTS.txt
+                    mv $PROJECTS/PROJECTS_TEMP.txt $PROJECTS/PROJECTS.txt
+                    # printf "==> Projects with tag(s): "
+                    # __print $1 green
+                    while read line; do
+                            __print $line cyan
+                    done < $PROJECTS/PROJECTS.txt
+                    rm -f $PROJECTS/PROJECTS.txt
+                    popd &>/dev/null
                     ;;
 
                 new)
@@ -1209,9 +1207,35 @@ things() {
             shift
             case $1 in
                 list)
-                    tree -L 1 -Cd -l "$SOMEDAY"
-                    pwd
-                    #open -g "$SOMEDAY"
+                    shift
+                    pushd . &>/dev/null
+                    cd "$PROJECTS"
+                    if [ $# -eq 0 ]; then
+                        tag -m "someday" >> $SOMEDAY/PROJECTS.txt
+                        #open -g "$SOMEDAY"
+                    elif [ $# -eq 1 ]; then
+                        local PROJTAGS=$1
+                        PROJTAGS=(`echo $PROJTAGS | sed 's/,/ /g'`)
+
+                        for m in "${PROJTAGS[@]}"
+                        do
+                            tag -m "someday,${m}" >> $SOMEDAY/PROJECTS.txt
+                        done
+                    else
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
+                        return 1
+                    fi
+                    cat $SOMEDAY/PROJECTS.txt | sort | uniq > $SOMEDAY/PROJECTS_TEMP.txt
+                    rm -f $SOMEDAY/PROJECTS.txt
+                    mv $SOMEDAY/PROJECTS_TEMP.txt $SOMEDAY/PROJECTS.txt
+                    # printf "==> Projects with tag(s): "
+                    # __print $1 green
+                    while read line; do
+                      __print $line cyan
+                    done < $SOMEDAY/PROJECTS.txt
+                    rm -f $SOMEDAY/PROJECTS.txt
+                    popd &>/dev/null
                     ;;
 
                 start)
@@ -1269,10 +1293,10 @@ things() {
                 random)
                     shift
                     if [ $# -eq 0 ]; then
-                      PROJECT=`things projects list someday | __random | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"`
+                      PROJECT=`things someday list | __random | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"`
                       PROJECT=`echo $PROJECT | tr -d '\n'`
                     elif [ $# -eq 1 ]; then
-                      PROJECT=`things projects list someday,$1 | __random | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"`
+                      PROJECT=`things someday list $1 | __random | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"`
                       PROJECT=`echo $PROJECT | tr -d '\n'`
                     else
                       __printerr "==> Error: Bad number of arguments."
