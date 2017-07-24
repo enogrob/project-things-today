@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA61
-## Date     : 2017-07-04
+## Version  : PA63
+## Date     : 2017-07-24
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -34,7 +34,7 @@ LOCAL=$HOME/Things
 DEBUG=false
 
 shopt -s extglob
-TAGSPROJECTS='+(chrome|codewars|coursera|ebook|exercism|futurelearn|hackerrank|javabrains|job|krishnamurti|linkedin|linuxacademy|oreilly|phoenix|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains)'
+TAGSPROJECTS='+(chrome|codewars|coursera|ebook|edx|exercism|futurelearn|hackerrank|javabrains|job|krishnamurti|linkedin|linuxacademy|oreilly|phoenix|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains)'
 TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|cpp|css|delphi|devops|elixir|elm|erlang|hadoop|html|java|javascript|jekyll|nodejs|phoenix|python|r|rails|reactjs|ruby|spring|springboot|sql|unix|vim|vuejs|webpack)'
 
 alias tdy='things today'
@@ -68,6 +68,10 @@ alias tdsdl='things someday list'
 alias tdsdi='things someday start'
 alias tdsde='things someday stop'
 alias tdsdr='things someday random'
+alias tdsdrl='things someday random list'
+alias tdsdrs='things someday random scheduled'
+alias tdsdri='things someday random start'
+alias tdsdre='things someday random stop'
 
 alias tdsdlg='things somedaylog'
 alias tdsdlgl='things somedaylog list'
@@ -100,6 +104,17 @@ alias tdappea="caffeine;quitallapps"
 
 mdread(){
     pandoc "$1" -f markdown -t html | lynx -stdin
+}
+
+__tdsdrl() {
+  local tags
+  IFS=$'\n' read -d '' -ra tags
+  if [ ! ${#tags[@]} -eq 0 ]; then
+    for i in "${tags[@]}"; do
+      things someday random list ${tags[$i]}
+    done
+  fi
+  unset tags
 }
 
 __random() {
@@ -207,6 +222,7 @@ if [ "$1" == "`readlink $THINGS`" ]
 
 __icon(){
   __replace_icon "$PWD" "$RESOURCES/images/$1"
+  tag -a $1 "$PWD"
 }
 
 __replace_icon(){
@@ -503,6 +519,16 @@ if [ $1 = "$TODAY" ]; then
   tag -m random | awk '{print $3}' | awk '{print var"/"$1}' var="$PROJECTS" | xargs -t -L 1 tag -r random
 else
   tag -m random | awk '{print $1}' | awk '{print var"/"$1}' var="$PROJECTS" | xargs -t -L 1 tag -r random
+fi
+popd
+}
+
+__remove_today_tag_from(){
+pushd .
+if [ $1 = "$TODAY" ]; then
+  tag -m today | awk '{print $3}' | awk '{print var"/"$1}' var="$PROJECTS" | xargs -t -L 1 tag -r today
+else
+  tag -m today | awk '{print $1}' | awk '{print var"/"$1}' var="$PROJECTS" | xargs -t -L 1 tag -r today
 fi
 popd
 }
@@ -890,8 +916,9 @@ things() {
 
                     stopall)
                         __remove_random_tag_from "$TODAY"
+                        __remove_today_tag_from "$TODAY"
                         find "$TODAY" -type l -delete
-                        > $TODO_DIR/todo.txt
+                        cat /dev/null > $TODO_DIR/todo.txt
                         cd "$TODAY"
                         $TODOTXT list
                         #open -g .
@@ -1231,7 +1258,7 @@ things() {
 
                         for m in "${PROJTAGS[@]}"
                         do
-                            tag -m "someday,${m}" >> $SOMEDAY/PROJECTS.txt
+                            tag -m "someday,$m" >> $SOMEDAY/PROJECTS.txt
                         done
                     else
                         __printerr "==> Error: Bad number of arguments."
@@ -1307,20 +1334,101 @@ things() {
                     if [ $# -eq 0 ]; then
                       PROJECT=`things someday list | __random | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"`
                       PROJECT=`echo $PROJECT | tr -d '\n'`
+                      tag -a random "$PROJECTS/$PROJECT"
+                      __insert_in_Today "$PROJECT"
+                      __remove_from_Someday "$PROJECT"
+                      tree -L 1 -Cd -l "$TODAY"
+                      $TODOTXT list
+                      # open -g "$TODAY"
                     elif [ $# -eq 1 ]; then
-                      PROJECT=`things someday list $1 | __random | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"`
-                      PROJECT=`echo $PROJECT | tr -d '\n'`
+                      case $1 in
+                        scheduled)
+                          pushd .
+                          cd "$SOMEDAY/.random"
+                          tag -l *
+                          popd
+                          ;;
+
+                        start)
+                        pushd .
+                          cd "$SOMEDAY/.random"
+                          if [[ $(date +%u) -eq 1 ]] ; then
+                            # monday
+                            tag -m mon | __tdsdrl
+                          elif [[ $(date +%u) -eq 2 ]] ; then
+                            # tuesday
+                            tag -m tue | __tdsdrl
+                          elif [[ $(date +%u) -eq 3 ]] ; then
+                            # wednesday
+                            tag -m wed | __tdsdrl
+                          elif [[ $(date +%u) -eq 4 ]] ; then
+                            #thursday
+                            tag -m thu | __tdsdrl
+                          elif [[ $(date +%u) -eq 5 ]] ; then
+                            #friday
+                            tag -m fri | __tdsdrl
+                          elif [[ $(date +%u) -eq 6 ]] ; then
+                            # saturday
+                            tag -m sat | __tdsdrl
+                          else
+                            # sunday
+                            tag -m sun | __tdsdrl
+                          fi
+                          popd
+                          ;;
+
+                        stop)
+                          find "$SOMEDAY/.random" -type d -empty -delete -mindepth 1
+                          tree -L 1 -Cd -l "$SOMEDAY/.random"
+                          ;;
+
+                        *)
+                          __printerr "==> Error: Bad argument $1."
+                          __print
+                          return 1
+                          ;;
+                      esac
+                    elif [ $# -eq 2 ]; then
+                      pushd .
+                      cd "$SOMEDAY/.random"
+                      case $1 in
+                        mon|tue|wed|thu|fri|sat|sun)
+                          if [ -n "$2" ]; then
+                            mkdir $2
+                          fi
+                          tag -a $1 $2
+                          tag -l $2
+                          popd
+                          ;;
+
+                        list)
+                            if [ $2 = "none" ] || [ -z $2 ]; then
+                              PROJECT=`things someday list | __random | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"`
+                            else
+                              PROJECT=`things someday list $2 | __random | sed "s,$(printf '\033')\\[[0-9;]*[a-zA-Z],,g"`
+                            fi
+                            echo $PROJECT
+                            PROJECT=`echo $PROJECT | tr -d '\n'`
+                            tag -a random "$PROJECTS/$PROJECT"
+                            __insert_in_Today "$PROJECT"
+                            __remove_from_Someday "$PROJECT"
+                            tree -L 1 -Cd -l "$TODAY"
+                            $TODOTXT list
+                            # open -g "$TODAY"
+                            popd
+                            ;;
+                        *)
+                          __printerr "==> Error: Bad argument $1."
+                          __print
+                          popd
+                          return 1
+                          ;;
+                      esac
                     else
                       __printerr "==> Error: Bad number of arguments."
                       __print
                       return 1
                     fi
-                    tag -a random "$PROJECTS/$PROJECT"
-                    __insert_in_Today "$PROJECT"
-                    __remove_from_Someday "$PROJECT"
-                    tree -L 1 -Cd -l "$TODAY"
-                    $TODOTXT list
-                    open -g "$TODAY"
                     ;;
 
                 *)
