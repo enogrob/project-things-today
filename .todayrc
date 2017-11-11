@@ -1,9 +1,9 @@
 #!/bin/bash
-## Crafted (c) 2013~2016 by ZoatWorks Software LTDA.
+## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA63
-## Date     : 2017-07-24
+## Version  : PA68
+## Date     : 2017-11-11
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -34,8 +34,11 @@ LOCAL=$HOME/Things
 DEBUG=false
 
 shopt -s extglob
-TAGSPROJECTS='+(chrome|codewars|coursera|ebook|edx|exercism|futurelearn|hackerrank|javabrains|job|krishnamurti|linkedin|linuxacademy|oreilly|phoenix|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains)'
-TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|cpp|css|delphi|devops|elixir|elm|erlang|hadoop|html|java|javascript|jekyll|nodejs|phoenix|python|r|rails|reactjs|ruby|spring|springboot|sql|unix|vim|vuejs|webpack)'
+TAGSPROJECTS='+(chrome|codewars|coursera|ebook|edx|exercism|futurelearn|hackerrank|javabrains|job|krishnamurti|linkedin|linuxacademy|oreilly|phoenix|pragmaticstudio|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains)'
+TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|cpp|css|delphi|design|devops|elixir|elm|erlang|grails|hadoop|html|java|javascript|jekyll|nodejs|phoenix|python|r|rails|reactjs|rspec|ruby|spring|sinatra|springboot|sql|unix|vim|vuejs|webpack)'
+
+alias t='~/.todo/todo.sh'
+alias reload='exec bash'
 
 alias tdy='things today'
 alias tdyl='things today list'
@@ -89,6 +92,7 @@ alias tdil='things inbox list'
 alias tdg='things git'
 alias tdgi='things git start'
 alias tdge='things git stop'
+alias tdgl='things git log'
 
 alias tds='things scheduled'
 alias tdsl='things scheduled list'
@@ -99,8 +103,6 @@ alias tdsia='things scheduled startall'
 alias tdsea='things scheduled stopall'
 
 alias tdei='exercism configure --dir=$PWD'
-alias tdappia="open -a Mail.app;open -a 'TheBrain 9.app';open -a 'Google Chrome.app';open -a 'Path Finder.app';caffeine"
-alias tdappea="caffeine;quitallapps"
 
 mdread(){
     pandoc "$1" -f markdown -t html | lynx -stdin
@@ -926,9 +928,9 @@ things() {
 
                     list)
                         #open -g "$TODAY"
+                        # pwd
                         tree -L 1 -Cd -l "$TODAY"
-                        pwd
-                        $TODOTXT list
+                        # $TODOTXT list
                         ;;
 
                     jump)
@@ -1530,6 +1532,10 @@ things() {
                     git commit -am "$*" && \
                     git push origin master && \
                     hub browse .
+                    ;;
+
+                  log)
+                    git log --oneline
                     ;;
 
                 *)  git status -s

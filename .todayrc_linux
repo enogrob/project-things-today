@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA01
-## Date     : 2017-11-10
+## Version  : PA02
+## Date     : 2017-11-11
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -37,7 +37,9 @@ shopt -s extglob
 TAGSPROJECTS='+(chrome|codewars|coursera|ebook|edx|exercism|futurelearn|hackerrank|javabrains|job|krishnamurti|linkedin|linuxacademy|oreilly|phoenix|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains)'
 TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|cpp|css|delphi|devops|elixir|elm|erlang|hadoop|html|java|javascript|jekyll|nodejs|phoenix|python|r|rails|reactjs|ruby|spring|springboot|sql|unix|vim|vuejs|webpack)'
 
-alias t='todo.sh list'
+alias t='todo.sh'
+alias reload='exec bash'
+
 alias tdy='things today'
 alias tdyl='things today list'
 alias tdyi='things today start'
