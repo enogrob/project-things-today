@@ -106,6 +106,13 @@ alias tdei='exercism configure --dir=$PWD'
 alias tdappia="open -a Mail.app;open -a 'TheBrain 9.app';open -a 'Google Chrome.app';open -a 'Path Finder.app';caffeine"
 alias tdappea="caffeine;quitallapps"
 
+logshell(){
+P2=$*
+FILENAME=`echo $P2 | sed 's/ /-/g'`
+FILELOG=$(date +%Y%m%d%H%M)"_$FILENAME.log"
+script $FILELOG
+}
+
 mdread(){
     pandoc "$1" -f markdown -t html | lynx -stdin
 }

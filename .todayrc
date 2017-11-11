@@ -104,6 +104,13 @@ alias tdsea='things scheduled stopall'
 
 alias tdei='exercism configure --dir=$PWD'
 
+logshell(){
+P2=$*
+FILENAME=`echo $P2 | sed 's/ /-/g'`
+FILELOG=$(date +%Y%m%d%H%M)"_$FILENAME.log"
+script $FILELOG
+}
+
 mdread(){
     pandoc "$1" -f markdown -t html | lynx -stdin
 }
