@@ -29,6 +29,7 @@ SOMEDAY=$THINGS/Someday
 SOMEDAYLOG=$THINGS/SomedayLog
 TODAY=$THINGS/Today
 
+TAGSFILE=$PROJECTS/.tags
 CLOUD=$HOME/Google\ Drive/Things
 LOCAL=$HOME/Things
 DEBUG=false
@@ -115,6 +116,29 @@ script $FILELOG
 
 mdread(){
     pandoc "$1" -f markdown -t html | lynx -stdin
+}
+
+__tag() {
+  case $1 in
+    -l)
+      cat $TAGSFILE $2 | grep $2
+      ;;
+    -a)
+      TAGS=`grep $TAGSFILE $3 | awk '{print $2}'`
+      TAGS="$TAGS,$2"
+      echo $TAGS
+      ;;
+    -r)
+      TAGS=(`echo $TAGS | sed 's/,/ /g'`)
+      TAGS=grep $TAGSFILE $3 | awk '{print $2}'
+      echo $TAGS
+      ;;
+    -m)
+      TAGS=`cat $TAGSFILE | awk '{print $2}' | grep $2`
+      echo "${TAGS[@]}"
+      ;;
+  esac
+
 }
 
 __tdsdrl() {
