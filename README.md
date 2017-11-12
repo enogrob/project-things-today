@@ -29,3 +29,13 @@ Done recently
 [x] 2016-11-29 tdpi-tdpe -> tdyi-tdye and then renamed to tdyia-tdyea
 [x] 2016-11-28 Improved Git Integration
 ```
+
+```git
+diff --git a/filea.extension b/fileb.extension
+index d28nd309d..b3nu834uj 111111
+--- a/filea.extension
++++ b/fileb.extension
+@@ -1,6 +1,6 @@
+-oldLine
++newLine
+```

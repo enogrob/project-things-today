@@ -1,2 +1,10 @@
-cp .todayrc ~/
-source ~/.todayrc
+#!/bin/bash
+
+OS=`uname`
+if [ $OS == "Darwin" ]; then
+  cp .todayrc ~/
+else
+  cp .todayrc_linux ~/
+fi
+
+exec bash
