@@ -121,17 +121,26 @@ mdread(){
 __tag() {
   case $1 in
     -l)
-      cat $TAGSFILE $2 | grep $2
+      grep $2 $TAGSFILE
       ;;
     -a)
-      TAGS=`grep $TAGSFILE $3 | awk '{print $2}'`
-      TAGS="$TAGS,$2"
-      echo $TAGS
+      local TAGS=(`grep $3 $TAGSFILE | awk '{print $2}' | sed 's/,/ /g'`)
+      TAGS+=(`echo $2 | sed 's/,/ /g'`)
+      TAGS=($(echo "${TAGS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+      TAGS=`echo "${TAGS[@]}" | sed 's/ /,/g'`
+      sed -i "/$3.*/c $3 $TAGS" $TAGSFILE
+      # echo "$TAGS"
       ;;
     -r)
-      TAGS=(`echo $TAGS | sed 's/,/ /g'`)
-      TAGS=grep $TAGSFILE $3 | awk '{print $2}'
-      echo $TAGS
+      local TAGS=(`grep $3 $TAGSFILE | awk '{print $2}' | sed 's/,/ /g'`)
+      local TAGSDEL=(`echo $2 | sed 's/,/ /g'`)
+      for del in ${TAGSDEL[@]}
+      do
+        TAGS=("${TAGS[@]/$del}") #Quotes when working with strings
+      done
+      TAGS=($(echo "${TAGS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+      TAGS=`echo "${TAGS[@]}" | sed 's/ /,/g'`
+      sed -i "/$3.*/c $3 $TAGS" $TAGSFILE
       ;;
     -m)
       TAGS=`cat $TAGSFILE | awk '{print $2}' | grep $2`
