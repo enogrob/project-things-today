@@ -118,7 +118,7 @@ mdread(){
     pandoc "$1" -f markdown -t html | lynx -stdin
 }
 
-__tag() {
+tag() {
   case $1 in
     -l)
       grep $2 $TAGSFILE
