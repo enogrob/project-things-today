@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA02
-## Date     : 2017-11-11
+## Version  : PA03
+## Date     : 2017-11-13
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -127,6 +127,14 @@ tag() {
         local P=`basename "$2"`
       fi
       grep $P $TAGSFILE
+      ;;
+    -lN)
+      if [ $2 == "." ]; then
+        local P=`basename "$PWD"`
+      else
+        local P=`basename "$2"`
+      fi
+      grep $P $TAGSFILE | awk '{print $2}'
       ;;
     -a)
       if [ $3 == "." ]; then
