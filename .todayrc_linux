@@ -173,12 +173,7 @@ tag() {
       sed -i "/$P.*/c $P $TAGS" $TAGSFILE
       ;;
     -m)
-      if [ $3 == "." ]; then
-        local P=`basename "$PWD"`
-      else
-        local P=`basename "$3"`
-      fi
-      local TAGS=(`grep $P $TAGSFILE | awk '{print $2}' | sed 's/,/ /g'`)
+      local TAGS=(`awk '{print $2}' | sed 's/,/ /g'`)
       while read line; do
         local PROJTAGS=(`echo $line | awk '{print $2}' | sed 's/,/ /g'`)
         local PROJNAME=(`echo $line | awk '{print $1}'`)
@@ -785,7 +780,7 @@ things() {
                     cd "$PROJECTS"
                     if [ $# -eq 0 ]; then
                         ls -la | awk '{print $9}' | tr -d '/' >> $PROJECTS/PROJECTS.txt
-                        #open -g "$PROJECTS"
+                        # open -g "$PROJECTS"
                     # elif [ $# -eq 1 ]; then
                     #     local PROJTAGS=$1
                     #     PROJTAGS=(`echo $PROJTAGS | sed 's/,/ /g'`)
@@ -1015,7 +1010,7 @@ things() {
                     list)
                         #open -g "$TODAY"
                         # tree -L 1 -Cd -l "$TODAY"
-                        pwd
+                        # pwd
                         tree "$TODAY"
                         # $TODOTXT list
                         ;;
