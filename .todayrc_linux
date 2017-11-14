@@ -3,7 +3,7 @@
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
 ## Version  : PA03
-## Date     : 2017-11-13
+## Date     : 2017-11-14
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -142,11 +142,19 @@ tag() {
       else
         local P=`basename "$3"`
       fi
-      local TAGS=(`grep $P $TAGSFILE | awk '{print $2}' | sed 's/,/ /g'`)
-      TAGS+=(`echo $2 | sed 's/,/ /g'`)
-      TAGS=($(echo "${TAGS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
-      TAGS=`echo "${TAGS[@]}" | sed 's/ /,/g'`
-      sed -i "/$P.*/c $P $TAGS" $TAGSFILE
+      local PROJNAME=(`grep $P $TAGSFILE | awk '{print $1}'`)
+      if [ -z $PROJNAME ]; then
+        TAGS=(`echo $2 | sed 's/,/ /g'`)
+        TAGS=($(echo "${TAGS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+        TAGS=`echo "${TAGS[@]}" | sed 's/ /,/g'`
+        echo -e "$P $TAGS" >> $TAGSFILE
+      else
+        local TAGS=(`grep $P $TAGSFILE | awk '{print $2}' | sed 's/,/ /g'`)
+        TAGS+=(`echo $2 | sed 's/,/ /g'`)
+        TAGS=($(echo "${TAGS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+        TAGS=`echo "${TAGS[@]}" | sed 's/ /,/g'`
+        sed -i "/$P.*/c $P $TAGS" $TAGSFILE
+      fi
       ;;
     -r)
       if [ $3 == "." ]; then
@@ -1008,7 +1016,7 @@ things() {
                         #open -g "$TODAY"
                         # tree -L 1 -Cd -l "$TODAY"
                         pwd
-                        tree
+                        tree "$TODAY"
                         # $TODOTXT list
                         ;;
 
