@@ -147,7 +147,6 @@ tag() {
       TAGS=($(echo "${TAGS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
       TAGS=`echo "${TAGS[@]}" | sed 's/ /,/g'`
       sed -i "/$P.*/c $P $TAGS" $TAGSFILE
-      # echo "$TAGS"
       ;;
     -r)
       if [ $3 == "." ]; then
@@ -166,11 +165,25 @@ tag() {
       sed -i "/$P.*/c $P $TAGS" $TAGSFILE
       ;;
     -m)
-      # TAGS=`cat $TAGSFILE | awk '{print $2}' | grep $2`
-      # echo "${TAGS[@]}"
+      if [ $3 == "." ]; then
+        local P=`basename "$PWD"`
+      else
+        local P=`basename "$3"`
+      fi
+      local TAGS=(`grep $P $TAGSFILE | awk '{print $2}' | sed 's/,/ /g'`)
+      while read line; do
+        local PROJTAGS=(`echo $line | awk '{print $2}' | sed 's/,/ /g'`)
+        local PROJNAME=(`echo $line | awk '{print $1}'`)
+        for t in ${TAGS[@]}
+        do
+          if [ $(__contains "${PROJTAGS[@]}" $t) == "y" ]; then
+            echo $PROJNAME
+            break
+          fi
+        done
+      done < $TAGSFILE
       ;;
   esac
-
 }
 
 __tdsdrl() {
