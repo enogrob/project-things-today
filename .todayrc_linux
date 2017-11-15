@@ -194,7 +194,7 @@ tag() {
         for _tag in ${TAGS[@]}
         do
           if [ $(__contains "${PROJTAGS[@]}" "$_tag") == "y" ]; then
-            echo $PROJNAME
+            __print "$PROJNAME" cyan
           fi
         done
       done < $TAGSFILE
