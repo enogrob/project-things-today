@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA03
-## Date     : 2017-11-14
+## Version  : PA04
+## Date     : 2017-11-15
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -38,7 +38,8 @@ shopt -s extglob
 TAGSPROJECTS='+(chrome|codewars|coursera|ebook|edx|exercism|futurelearn|hackerrank|javabrains|job|krishnamurti|linkedin|linuxacademy|oreilly|phoenix|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains)'
 TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|cpp|css|delphi|devops|elixir|elm|erlang|hadoop|html|java|javascript|jekyll|nodejs|phoenix|python|r|rails|reactjs|ruby|spring|springboot|sql|unix|vim|vuejs|webpack)'
 
-alias t='todo.sh'
+alias src='cd src;tree'
+alias t='todo.sh list'
 alias reload='exec bash'
 
 alias tdy='things today'
@@ -118,6 +119,19 @@ mdread(){
     pandoc "$1" -f markdown -t html | lynx -stdin
 }
 
+__contains() {
+    local n=$#
+    local value=${!n}
+    for ((i=1;i < $#;i++)) {
+        if [[ ${!i} == *"${value}"* ]]; then
+            echo "y"
+            return 0
+        fi
+    }
+    echo "n"
+    return 1
+}
+
 tag() {
   case $1 in
     -l)
@@ -173,15 +187,14 @@ tag() {
       sed -i "/$P.*/c $P $TAGS" $TAGSFILE
       ;;
     -m)
-      local TAGS=(`awk '{print $2}' | sed 's/,/ /g'`)
+      local TAGS=(`echo $2 | sed 's/,/ /g'`)
       while read line; do
         local PROJTAGS=(`echo $line | awk '{print $2}' | sed 's/,/ /g'`)
         local PROJNAME=(`echo $line | awk '{print $1}'`)
-        for t in ${TAGS[@]}
+        for _tag in ${TAGS[@]}
         do
-          if [ $(__contains "${PROJTAGS[@]}" $t) == "y" ]; then
+          if [ $(__contains "${PROJTAGS[@]}" "$_tag") == "y" ]; then
             echo $PROJNAME
-            break
           fi
         done
       done < $TAGSFILE
@@ -209,18 +222,6 @@ __random() {
   unset project_list
 }
 
-__contains() {
-    local n=$#
-    local value=${!n}
-    for ((i=1;i < $#;i++)) {
-        if [[ ${!i} == *"${value}"* ]]; then
-            echo "y"
-            return 0
-        fi
-    }
-    echo "n"
-    return 1
-}
 
 __gettag() {
     local n=$#
