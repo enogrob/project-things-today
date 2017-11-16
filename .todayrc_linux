@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA04
-## Date     : 2017-11-15
+## Version  : PA05
+## Date     : 2017-11-16
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -194,7 +194,7 @@ tag() {
         for _tag in ${TAGS[@]}
         do
           if [ $(__contains "${PROJTAGS[@]}" "$_tag") == "y" ]; then
-            __print "$PROJNAME" cyan
+            echo "$PROJNAME"
           fi
         done
       done < $TAGSFILE
@@ -780,16 +780,16 @@ things() {
                     pushd . &>/dev/null
                     cd "$PROJECTS"
                     if [ $# -eq 0 ]; then
-                        ls -la | awk '{print $9}' | tr -d '/' >> $PROJECTS/PROJECTS.txt
+                        ls -l | egrep '^d' | grep -v "_gsdata_" | awk '{print $9}' | tr -d '/' >> $PROJECTS/PROJECTS.txt
                         # open -g "$PROJECTS"
-                    # elif [ $# -eq 1 ]; then
-                    #     local PROJTAGS=$1
-                    #     PROJTAGS=(`echo $PROJTAGS | sed 's/,/ /g'`)
-                    #
-                    #     for m in "${PROJTAGS[@]}"
-                    #     do
-                    #         tag -m "${m}" >> $PROJECTS/PROJECTS.txt
-                    #     done
+                    elif [ $# -eq 1 ]; then
+                        local PROJTAGS=$1
+                        PROJTAGS=(`echo $PROJTAGS | sed 's/,/ /g'`)
+
+                        for m in "${PROJTAGS[@]}"
+                        do
+                            tag -m "${m}" >> $PROJECTS/PROJECTS.txt
+                        done
                     else
                         __printerr "==> Error: Bad number of arguments."
                         __print
