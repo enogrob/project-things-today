@@ -683,7 +683,7 @@ __insert_in_Today(){
       if [ -z "$PROJECTDIR" ]; then
           $TODOTXT -t add $(__task_name "$PROJECTS/$1") #due:$(date +"%Y-%M-%d")
           ln -sf "$PROJECTS/$1" "$TODAY/$($TODOTXT -@+ list | grep -w "$1" | head -1)"
-          # tag -a today "$PROJECTS/$1"
+          tag -a today "$PROJECTS/$1"
       fi
   fi
 }
@@ -694,7 +694,7 @@ if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then
     TASK=$($TODOTXT list $PROJECT)
     TASK=$(echo $TASK | grep -o -E '^[0-9]+')
     $TODOTXT -a do $TASK
-    # tag -r today "$PROJECTS/$PROJECT"
+    tag -r today "$PROJECTS/$PROJECT"
 fi
 }
 
