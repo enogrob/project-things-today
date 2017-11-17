@@ -808,46 +808,46 @@ things() {
                     ;;
 
                 new)
-                    # shift
-                    #
-                    # if [ $# -eq 0 ]; then
-                    #     __printerr "==> Error: Bad number of arguments."
-                    #     __print
-                    #     return 1
-                    # elif [ $# -eq 1 ]; then
-                    #     export PROJECT=`echo $1 | awk '{print tolower($0)}'`
-                    #     export PROJECT_TYPE=project
-                    # else
-                    #    length=$(($#-1))
-                    #     P1=${@:1:$length}
-                    #     export PROJECT_TYPE=${@: -1}
-                    #     P2=`echo $P1 | awk '{print tolower($0)}'`
-                    #     export PROJECT=`echo $P2 | sed 's/ /-/g'`
-                    #     case $PROJECT_TYPE in
-                    #         $TAGSPROJECTS)
-                    #             ;;
-                    #         *)  length=$(($#))
-                    #             P1=${@:1:$length}
-                    #             P2=`echo $P1 | awk '{print tolower($0)}'`
-                    #             PROJECT=`echo $P2 | sed 's/ /-/g'`
-                    #             PROJECT_TYPE=project
-                    #             ;;
-                    #     esac
-                    # fi
-                    # case $PROJECT_TYPE in
-                    #     $TAGSPROJECTS)
-                    #         cp -rf "$RESOURCES/project-types/$PROJECT_TYPE" "$PROJECTS/$PROJECT"
-                    #         tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
-                    #         __tag_contexts "$PROJECTS/$PROJECT"
-                    #         ;;
-                    #     *)  __printerr "==> Error: Bad project type."
-                    #         __print
-                    #         return 1
-                    #         ;;
-                    # esac
-                    # cd "$PROJECTS/$PROJECT"
-                    # #open -g .
-                    # tag -l "$PROJECTS/$PROJECT"
+                    shift
+
+                    if [ $# -eq 0 ]; then
+                        __printerr "==> Error: Bad number of arguments."
+                        __print
+                        return 1
+                    elif [ $# -eq 1 ]; then
+                        export PROJECT=`echo $1 | awk '{print tolower($0)}'`
+                        export PROJECT_TYPE=project
+                    else
+                       length=$(($#-1))
+                        P1=${@:1:$length}
+                        export PROJECT_TYPE=${@: -1}
+                        P2=`echo $P1 | awk '{print tolower($0)}'`
+                        export PROJECT=`echo $P2 | sed 's/ /-/g'`
+                        case $PROJECT_TYPE in
+                            $TAGSPROJECTS)
+                                ;;
+                            *)  length=$(($#))
+                                P1=${@:1:$length}
+                                P2=`echo $P1 | awk '{print tolower($0)}'`
+                                PROJECT=`echo $P2 | sed 's/ /-/g'`
+                                PROJECT_TYPE=project
+                                ;;
+                        esac
+                    fi
+                    case $PROJECT_TYPE in
+                        $TAGSPROJECTS)
+                            cp -rf "$RESOURCES/project-types/$PROJECT_TYPE" "$PROJECTS/$PROJECT"
+                            tag -a $PROJECT_TYPE "$PROJECTS/$PROJECT"
+                            __tag_contexts "$PROJECTS/$PROJECT"
+                            ;;
+                        *)  __printerr "==> Error: Bad project type."
+                            __print
+                            return 1
+                            ;;
+                    esac
+                    cd "$PROJECTS/$PROJECT"
+                    #open -g .
+                    tag -l "$PROJECTS/$PROJECT"
                     ;;
 
                 jump)
@@ -936,37 +936,37 @@ things() {
                             fi
                             if [ -L "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)" ]; then
                                 rm -f "$TODAY/$($TODOTXT -@+ list | grep -w "$PROJECT" | head -1)"
-                                # tag -r today "$PROJECTS/$PROJECT"
+                                tag -r today "$PROJECTS/$PROJECT"
 
-                                # PROJTAGS=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
-                                # for i in "${PROJTAGS[@]}"; do
-                                #   if [ $(__contains "$i" "random") == "y" ]; then
-                                #     things somedaylog start
-                                #   fi
-                                # done
+                                PROJTAGS=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
+                                for i in "${PROJTAGS[@]}"; do
+                                  if [ $(__contains "$i" "random") == "y" ]; then
+                                    things somedaylog start
+                                  fi
+                                done
 
                                 TASK=$($TODOTXT list $PROJECT)
                                 TASK=$(echo $TASK | grep -o -E '^[0-9]+')
                                 $TODOTXT -a do $TASK
-                                # if [ $(__is_scheduled_with_dates $PROJECT) == "y" ];
-                                # then
-                                #   DATETODAY=$(date +%s)
-                                #   PROJTAGS=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
-                                #   for i in "${PROJTAGS[@]}"; do
-                                #     if [ $(__contains "$i" "start") == "y" ]; then
-                                #       IFS=':' read -ra DATETAG <<< "$i"
-                                #       DATESTART=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
-                                #     fi
-                                #     if [ $(__contains "$i" "stop") == "y" ]; then
-                                #       IFS=':' read -ra DATETAG <<< "$i"
-                                #       DATESTOP=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
-                                #     fi
-                                #   done
-                                #   if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -ge $DATESTOP ];
-                                #   then
-                                #     __remove_from_Scheduled
-                                #   fi
-                                # fi
+                                if [ $(__is_scheduled_with_dates $PROJECT) == "y" ];
+                                then
+                                  DATETODAY=$(date +%s)
+                                  PROJTAGS=(`tag -lN "$PROJECTS/$PROJECT" | sed 's/,/ /g'`)
+                                  for i in "${PROJTAGS[@]}"; do
+                                    if [ $(__contains "$i" "start") == "y" ]; then
+                                      IFS=':' read -ra DATETAG <<< "$i"
+                                      DATESTART=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
+                                    fi
+                                    if [ $(__contains "$i" "stop") == "y" ]; then
+                                      IFS=':' read -ra DATETAG <<< "$i"
+                                      DATESTOP=$(date -j -f '%Y-%m-%d' "${DATETAG[1]}" '+%s')
+                                    fi
+                                  done
+                                  if [ $DATETODAY -ge $DATESTART ] && [ $DATETODAY -ge $DATESTOP ];
+                                  then
+                                    __remove_from_Scheduled
+                                  fi
+                                fi
                             fi
 
                         fi
@@ -976,31 +976,31 @@ things() {
                         ;;
 
                     startall)
-                        # DAYOFWEEK=`echo $(date +"%a") | awk '{print tolower($0)}'`
-                        # cd "$PROJECTS"
-                        # RESULT=(`tag -m $DAYOFWEEK`)
-                        # for m in "${RESULT[@]}"
-                        # do
-                        #   PROJECT="${m}"
-                        #   PROJTAGS=(`tag -lN $PROJECT | sed 's/,/ /g'`)
-                        #   if [ $(__is_scheduled_with_dates "$PROJECT") == "y" ];
-                        #   then
-                        #     if [ $(__is_active $PROJECT) == "y" ];
-                        #     then
-                        #       __insert_in_Today "$PROJECT"
-                        #     fi
-                        #   else
-                        #     __insert_in_Today "$PROJECT"
-                        #   fi
-                        # done
-                        # cd "$TODAY"
-                        # $TODOTXT list
-                        # #open -g .
+                        DAYOFWEEK=`echo $(date +"%a") | awk '{print tolower($0)}'`
+                        cd "$PROJECTS"
+                        RESULT=(`tag -m $DAYOFWEEK`)
+                        for m in "${RESULT[@]}"
+                        do
+                          PROJECT="${m}"
+                          PROJTAGS=(`tag -lN $PROJECT | sed 's/,/ /g'`)
+                          if [ $(__is_scheduled_with_dates "$PROJECT") == "y" ];
+                          then
+                            if [ $(__is_active $PROJECT) == "y" ];
+                            then
+                              __insert_in_Today "$PROJECT"
+                            fi
+                          else
+                            __insert_in_Today "$PROJECT"
+                          fi
+                        done
+                        cd "$TODAY"
+                        $TODOTXT list
+                        #open -g .
                         ;;
 
                     stopall)
                         # __remove_random_tag_from "$TODAY"
-                        # __remove_today_tag_from "$TODAY"
+                        __remove_today_tag_from "$TODAY"
                         find "$TODAY" -type l -delete
                         cat /dev/null > $TODO_DIR/todo.txt
                         cd "$TODAY"
