@@ -1,10 +1,19 @@
 #!/bin/bash
 
+cp .todayrc ~/
+
 OS=`uname`
-if [ $OS == "Darwin" ]; then
-  cp .todayrc ~/
-else
+if [ $OS == "Linux" ]; then
   cp .todayrc_linux ~/
+  if [ ! -L "/Users" ]; then
+      ln -sf /home Users
+  fi
+  if [ ! -d "/Volumes/Data HD" ]; then
+      mkdir -p /Volumes/Data\ HD
+      chmod 777 /Volumes/Data\ HD
+      cd /Volumes/Data\ HD
+      ln -sf /home/enogrob enogrob
+  fi
 fi
 
 exec bash
