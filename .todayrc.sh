@@ -831,7 +831,7 @@ things() {
                         __insert_in_Today "$PROJECT"
                         tree -L 1 -Cd -l "$TODAY"
                         $TODOTXT list
-                        open -g "$TODAY"
+#                        open -g "$TODAY"
                         ;;
 
                     stop)
