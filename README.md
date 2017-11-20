@@ -13,29 +13,6 @@ Solution Integrator Experienced - Certified by Ericsson
 Table of Contents
 
 Done recently
-[x] 2017-02-10 performed tdss tests
-[x] 2017-01-21 implemented tdphi and tdph
-[x] 2017-01-18 perform other tdp tests with bats
-[x] 2017-01-13 check tdse with no parameter fails removing link in Today.
-[x] 2017-01-13 performed tdpn tests with bats
-[x] 2017-01-06 performed tests test_tdp upto 10
-[x] 2016-12-30 performed refactoring in favor of functions
-[x] 2016-12-23 performed functions as private
-[x] 2016-12-05 performed things someday e.g. tdsd-tdsdl-tdsdi-tdsde
-[x] 2016-11-29 performed tdps move to tds domain
-[x] 2016-11-29 performed tdsi-tdse
-[x] 2016-11-29 performed tdsia-tdsea
-[x] 2016-11-29 tdpj # -> tdyj # and tdpj shall handle only project name jumps
-[x] 2016-11-29 tdpi-tdpe -> tdyi-tdye and then renamed to tdyia-tdyea
-[x] 2016-11-28 Improved Git Integration
-```
 
-```git
-diff --git a/filea.extension b/fileb.extension
-index d28nd309d..b3nu834uj 111111
---- a/filea.extension
-+++ b/fileb.extension
-@@ -1,6 +1,6 @@
--oldLine
-+newLine
+[x] 2017-11-20 Linux Support
 ```
