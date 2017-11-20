@@ -27,7 +27,8 @@ else
   TODOTXT=$HOME/.todo/todo.sh
 fi
 
-alias src='cd src;tree'
+alias rc='__print $(rvm current) red'
+alias src='cd src;rc;tree'
 alias t='$TODOTXT list'
 alias reload='exec bash'
 
