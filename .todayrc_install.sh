@@ -36,8 +36,8 @@ fi
 
 if [ ! -d "$HOME/Things" ]; then
   cp -rf Things "$HOME/Things"
-else
   ln -sf $LOCAL $HOME/THINGS_HOME
+else
   if [ ! -L $HOME/Things/Areas ] && [ ! -d $HOME/Things/Areas ]; then
     cp -rf Things/Areas $HOME/Things/Areas
   fi
@@ -67,12 +67,14 @@ else
   fi
 fi
 
+if [ ! -L "$HOME/THINGS_HOME" ]; then
+  ln -sf $LOCAL $HOME/THINGS_HOME
+fi
 if [ ! -L "$HOME/Projects" ]; then
   ln -sf $PROJECTS $HOME/Projects
 fi
 if [ ! -L "$HOME/Today" ]; then
   ln -sf $TODAY $HOME/Today
 fi
-
 
 exec bash
