@@ -26,7 +26,7 @@ if [ $OS == "Linux" ]; then
   if [ ! -d "$HOME/Books" ]; then
     mkdir -p "$HOME/Books"
     touch $HOME/Books/My_Kindle_Content
-    touch $HOME/Books/Calibre\ library
+    touch $HOME/Books/Calibre\ Library
   fi
   if [ ! -d "/Volumes/Data HD" ]; then
       mkdir -p /Volumes/Data\ HD
