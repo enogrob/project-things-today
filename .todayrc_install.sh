@@ -12,58 +12,60 @@
 
 # set -x
 
-source .todayrc_vars.sh
+cp ./.todayrc.sh ~/
+cp ./.todayrc_vars.sh ~/
 
-cp .todayrc.sh ~/
-cp .todayrc_vars.sh ~/
+source ./.todayrc_vars.sh
 
 OS=`uname`
 if [ $OS == "Linux" ]; then
-  cp .todayrc_linux.sh ~/
+  cp ./.todayrc_linux.sh ~/
   if [ ! -L "/Users" ]; then
-      ln -sf /home Users
+      ln -sf /home /Users
+  fi
+  if [ ! -d "$HOME/Books" ]; then
+    mkdir -p $HOME/Books/My_Kindle_Content
   fi
   if [ ! -d "/Volumes/Data HD" ]; then
       mkdir -p /Volumes/Data\ HD
       chmod 777 /Volumes/Data\ HD
-      cd /Volumes/Data\ HD
-      ln -sf /home/enogrob enogrob
+      ln -sf /home/enogrob /Volumes/Data\ HD/enogrob
   fi
   if [ ! -f "$TAGSFILE" ]; then
-    cp .tags "$PROJECTS"
+    cp ./.tags "$PROJECTS"
   fi
 fi
 
 if [ ! -d "$HOME/Things" ]; then
-  cp -rf Things "$HOME/Things"
+  cp -rf ./Things "$HOME/Things"
   ln -sf $LOCAL $HOME/THINGS_HOME
 else
   if [ ! -L $HOME/Things/Areas ] && [ ! -d $HOME/Things/Areas ]; then
-    cp -rf Things/Areas $HOME/Things/Areas
+    cp -rf ./Things/Areas $HOME/Things/Areas
   fi
   if [ ! -L $HOME/Things/Inbox ] && [ ! -d $HOME/Things/Inbox ]; then
-    cp -rf Things/Inbox $HOME/Things/Inbox
+    cp -rf ./Things/Inbox $HOME/Things/Inbox
   fi
   if [ ! -L $HOME/Things/LogBook ] && [ ! -d $HOME/Things/LogBook ]; then
-    cp -rf Things/LogBook $HOME/Things/LogBook
+    cp -rf ./Things/LogBook $HOME/Things/LogBook
   fi
   if [ ! -L $HOME/Things/Projects ] && [ ! -d $HOME/Things/Projects ]; then
-    cp -rf Things/Projects $HOME/Things/Projects
+    cp -rf ./Things/Projects $HOME/Things/Projects
   fi
   if [ ! -L $HOME/Things/Resources ] && [ ! -d $HOME/Things/Resources ]; then
-    cp -rf Things/Resources $HOME/Things/Resources
+    cp -rf ./Things/Resources $HOME/Things/Resources
   fi
   if [ ! -L $HOME/Things/Scheduled ] && [ ! -d $HOME/Things/Scheduled ]; then
-    cp -rf Things/Scheduled $HOME/Things/Scheduled
+    cp -rf ./Things/Scheduled $HOME/Things/Scheduled
   fi
   if [ ! -L $HOME/Things/Someday ] && [ ! -d $HOME/Things/Someday ]; then
-    cp -rf Things/Someday $HOME/Things/Someday
+    cp -rf ./Things/Someday $HOME/Things/Someday
   fi
   if [ ! -L $HOME/Things/SomedayLog ] && [ ! -d $HOME/Things/SomedayLog ]; then
-    cp -rf Things/SomedayLog $HOME/Things/SomedayLog
+    cp -rf ./Things/SomedayLog $HOME/Things/SomedayLog
   fi
   if [ ! -L $HOME/Things/Trash ] && [ ! -d $HOME/Things/Trash ]; then
-    cp -rf Things/Trash $HOME/Things/Trash
+    cp -rf ./Things/Trash $HOME/Things/Trash
   fi
 fi
 
