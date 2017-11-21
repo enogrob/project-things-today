@@ -7,12 +7,20 @@ Solution Integrator Experienced - Certified by Ericsson
 
 ![ebook_cover](images/things.png)
 
-## Table of Contents
+## Installation
 
+Run the following command in order to install the `Things Today` system.
+```shell
+$ sudo bash ./.todayrc_install.sh
 ```
-Table of Contents
 
-Done recently
+### Pos-installation
 
-[x] 2017-11-20 Linux Support
+From `~/Books` the `Calibre` and kindle libraries shall be linked:
+```shell
+$ ln -sf ~/Calibre\ Library/ Calibre\ Library
+$ ln -sf ~/My_Kindle_Content/ My_Kindle_Content
 ```
+
+The `Things Today` system depends on the `todotxt` system and so it shall be installed (see below):
+[todotxt-cli](https://github.com/todotxt/todo.txt-cli)

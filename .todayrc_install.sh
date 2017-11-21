@@ -48,8 +48,8 @@ else
   if [ ! -L $HOME/Things/Inbox ] && [ ! -d $HOME/Things/Inbox ]; then
     cp -rf ./Things/Inbox $HOME/Things/Inbox
   fi
-  if [ ! -L $HOME/Things/LogBook ] && [ ! -d $HOME/Things/LogBook ]; then
-    cp -rf ./Things/LogBook $HOME/Things/LogBook
+  if [ ! -L $HOME/Things/Logbook ] && [ ! -d $HOME/Things/Logbook ]; then
+    cp -rf ./Things/Logbook $HOME/Things/Logbook
   fi
   if [ ! -L $HOME/Things/Projects ] && [ ! -d $HOME/Things/Projects ]; then
     cp -rf ./Things/Projects $HOME/Things/Projects
