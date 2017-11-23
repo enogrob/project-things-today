@@ -21,7 +21,7 @@ TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|cpp|css|delphi|design|devops|elix
 
 OS=`uname`
 if [ $OS == "Linux" ]; then
-  source ~/.todayrc_linux.sh
+  # source ~/.todayrc_linux.sh
   TODOTXT=/usr/local/bin/todo.sh
 else
   TODOTXT=$HOME/.todo/todo.sh

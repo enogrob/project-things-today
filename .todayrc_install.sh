@@ -19,7 +19,7 @@ source ./.todayrc_vars.sh
 
 OS=`uname`
 if [ $OS == "Linux" ]; then
-  cp ./.todayrc_linux.sh ~/
+  cp ./tag ~/bin
   if [ ! -L "/Users" ]; then
       ln -sf /home /Users
   fi
