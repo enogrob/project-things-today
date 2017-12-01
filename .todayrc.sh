@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA68
-## Date     : 2017-11-30
+## Version  : PA69
+## Date     : 2017-12-01
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -28,7 +28,6 @@ else
 fi
 
 alias rc='__print $(rvm current) red'
-alias src='cd src;rc;tree'
 alias t='$TODOTXT list'
 alias reload='exec bash'
 
@@ -95,6 +94,14 @@ alias tdsia='things scheduled startall'
 alias tdsea='things scheduled stopall'
 
 alias tdei='exercism configure --dir=$PWD'
+
+src(){
+  cd src
+  if [ -e ".ruby-gemset" ] && [ -e ".ruby-version" ]; then
+    __print $(rvm current) red
+  fi
+  tree
+}
 
 logshell(){
   P2=$*
