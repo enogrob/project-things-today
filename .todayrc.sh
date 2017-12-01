@@ -797,7 +797,8 @@ things() {
                 home)
                     shift
                     if [ $# -eq 0 ]; then
-                        cd "$PROJECTS/$PROJECT"
+                        CURRENT_PROJECT=`echo $PWD | awk -F"/" '{print $6}'`
+                        cd "$PROJECTS/$CURRENT_PROJECT"
                     elif [ $# -eq 1 ]; then
                       case $1 in
                         start)
