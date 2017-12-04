@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc_vars.sh
-## Version  : PA67
-## Date     : 2017-11-19
+## Version  : PA68
+## Date     : 2017-12-04
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -33,4 +33,3 @@ LOCAL=$HOME/Things
 DEBUG=false
 
 TAGSFILE="$PROJECTS/.tags"
-

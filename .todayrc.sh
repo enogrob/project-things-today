@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA69
-## Date     : 2017-12-01
+## Version  : PA70
+## Date     : 2017-12-04
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -531,13 +531,9 @@ fi
 popd
 }
 
-__remove_today_tag_from(){
+__remove_today_tags(){
 pushd .
-if [ $1 = "$TODAY" ]; then
-  tag -m today | awk '{print $3}' | awk '{print var"/"$1}' var="$PROJECTS" | xargs -t -L 1 tag -r today
-else
   tag -m today | awk '{print $1}' | awk '{print var"/"$1}' var="$PROJECTS" | xargs -t -L 1 tag -r today
-fi
 popd
 }
 
@@ -925,7 +921,7 @@ things() {
 
                     stopall)
                         __remove_random_tag_from "$TODAY"
-                        __remove_today_tag_from "$TODAY"
+                        __remove_today_tags
                         find "$TODAY" -type l -delete
                         cat /dev/null > $TODO_DIR/todo.txt
                         cd "$TODAY"
