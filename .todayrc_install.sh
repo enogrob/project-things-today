@@ -39,7 +39,7 @@ if [ $OS == "Linux" ]; then
 fi
 
 if [ ! -d "$HOME/Things" ]; then
-  cp -rf ./Things "$HOME/Things"
+  cp -rf ./Things "$HOME"
   ln -sf $LOCAL $HOME/THINGS_HOME
 else
   if [ ! -L $HOME/Things/Areas ] && [ ! -d $HOME/Things/Areas ]; then
