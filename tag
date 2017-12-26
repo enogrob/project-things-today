@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc_linux.sh
-## Version  : PA07
-## Date     : 2017-11-20
+## Version  : PA08
+## Date     : 2017-12-13
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -34,7 +34,7 @@ case $1 in
     else
       P=`basename "$2"`
     fi
-    grep $P $TAGSFILE
+    grep "$P\s" $TAGSFILE
     ;;
   -lN)
     if [ $2 == "." ]; then
@@ -42,7 +42,7 @@ case $1 in
     else
       P=`basename "$2"`
     fi
-    grep $P $TAGSFILE | awk '{print $2}'
+    grep "$P\s" $TAGSFILE | awk '{print $2}'
     ;;
   -a)
     if [ $3 == "." ]; then
@@ -50,14 +50,14 @@ case $1 in
     else
       P=`basename "$3"`
     fi
-    PROJNAME=(`grep $P $TAGSFILE | awk '{print $1}'`)
+    PROJNAME=(`grep "$P\s" $TAGSFILE | awk '{print $1}'`)
     if [ -z $PROJNAME ]; then
       TAGS=(`echo $2 | sed 's/,/ /g'`)
       TAGS=($(echo "${TAGS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
       TAGS=`echo "${TAGS[@]}" | sed 's/ /,/g'`
       echo -e "$P $TAGS" >> $TAGSFILE
     else
-      TAGS=(`grep $P $TAGSFILE | awk '{print $2}' | sed 's/,/ /g'`)
+      TAGS=(`grep "$P\s" $TAGSFILE | awk '{print $2}' | sed 's/,/ /g'`)
       TAGS+=(`echo $2 | sed 's/,/ /g'`)
       TAGS=($(echo "${TAGS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
       TAGS=`echo "${TAGS[@]}" | sed 's/ /,/g'`
@@ -70,7 +70,7 @@ case $1 in
     else
       P=`basename "$3"`
     fi
-    TAGS=(`grep $P $TAGSFILE | awk '{print $2}' | sed 's/,/ /g'`)
+    TAGS=(`grep "$P\s" $TAGSFILE | awk '{print $2}' | sed 's/,/ /g'`)
     TAGSDEL=(`echo $2 | sed 's/,/ /g'`)
     for del in ${TAGSDEL[@]}
     do
