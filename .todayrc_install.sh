@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc_install.sh
-## Version  : PA01
-## Date     : 2017-11-20
+## Version  : PA02
+## Date     : 2018-12-27
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -25,11 +25,13 @@ if [ $OS == "Linux" ]; then
   fi
   if [ ! -d "$HOME/Books" ]; then
     mkdir -p "$HOME/Books"
+    chown enogrob:enogrob "$HOME/Books"
     touch $HOME/Books/My_Kindle_Content
     touch $HOME/Books/Calibre\ Library
   fi
   if [ ! -d "/Volumes/Data HD" ]; then
       mkdir -p /Volumes/Data\ HD
+      chown enogrob:enogrob /Volumes/Data\ HD
       chmod 777 /Volumes/Data\ HD
       ln -sf /home/enogrob /Volumes/Data\ HD/enogrob
   fi
