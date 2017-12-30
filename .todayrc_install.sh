@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc_install.sh
-## Version  : PA03
-## Date     : 2018-12-27
+## Version  : PA04
+## Date     : 2017-12-30
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -25,15 +25,15 @@ if [ $OS == "Linux" ]; then
   fi
   if [ ! -d "$HOME/Books" ]; then
     mkdir -p "$HOME/Books"
-    chown enogrob:enogrob "$HOME/Books"
+    chown $USER:$USER "$HOME/Books"
     touch $HOME/Books/My_Kindle_Content
     ln -sf "$HOME/Books/Calibre Library" "Calibre Library"
   fi
   if [ ! -d "/Volumes/Data HD" ]; then
       mkdir -p /Volumes/Data\ HD
-      chown enogrob:enogrob /Volumes/Data\ HD
+      chown e$USER:$USER /Volumes/Data\ HD
       chmod 777 /Volumes/Data\ HD
-      ln -sf /home/enogrob /Volumes/Data\ HD/enogrob
+      ln -sf /home/$USER /Volumes/Data\ HD/$USER
   fi
   if [ ! -f "$TAGSFILE" ]; then
     cp ./.tags "$PROJECTS"
@@ -42,44 +42,44 @@ fi
 
 if [ ! -d "$HOME/Things" ]; then
   cp -rf ./Things "$HOME"
-  chown enogrob:enogrob $HOME/Things
+  chown $USER:$USER $HOME/Things
   ln -sf $LOCAL $HOME/THINGS_HOME
 else
   if [ ! -L $HOME/Things/Areas ] && [ ! -d $HOME/Things/Areas ]; then
     cp -rf ./Things/Areas $HOME/Things/Areas
-    chown enogrob:enogrob $HOME/Things/Areas
+    chown $USER:$USER $HOME/Things/Areas
   fi
   if [ ! -L $HOME/Things/Inbox ] && [ ! -d $HOME/Things/Inbox ]; then
     cp -rf ./Things/Inbox $HOME/Things/Inbox
-    chown enogrob:enogrob $HOME/Things/Inbox
+    chown $USER:$USER $HOME/Things/Inbox
   fi
   if [ ! -L $HOME/Things/Logbook ] && [ ! -d $HOME/Things/Logbook ]; then
     cp -rf ./Things/Logbook $HOME/Things/Logbook
-    chown enogrob:enogrob $HOME/Things/Logbook
+    chown $USER:$USER $HOME/Things/Logbook
   fi
   if [ ! -L $HOME/Things/Projects ] && [ ! -d $HOME/Things/Projects ]; then
     cp -rf ./Things/Projects $HOME/Things/Projects
-    chown enogrob:enogrob $HOME/Things/Projects
+    chown $USER:$USER $HOME/Things/Projects
   fi
   if [ ! -L $HOME/Things/Resources ] && [ ! -d $HOME/Things/Resources ]; then
     cp -rf ./Things/Resources $HOME/Things/Resources
-    chown enogrob:enogrob $HOME/Things/Resources
+    chown $USER:$USER $HOME/Things/Resources
   fi
   if [ ! -L $HOME/Things/Scheduled ] && [ ! -d $HOME/Things/Scheduled ]; then
     cp -rf ./Things/Scheduled $HOME/Things/Scheduled
-    chown enogrob:enogrob $HOME/Things/Scheduled
+    chown $USER:$USER $HOME/Things/Scheduled
   fi
   if [ ! -L $HOME/Things/Someday ] && [ ! -d $HOME/Things/Someday ]; then
     cp -rf ./Things/Someday $HOME/Things/Someday
-    chown enogrob:enogrob $HOME/Things/Someday
+    chown $USER:$USER $HOME/Things/Someday
   fi
   if [ ! -L $HOME/Things/SomedayLog ] && [ ! -d $HOME/Things/SomedayLog ]; then
     cp -rf ./Things/SomedayLog $HOME/Things/SomedayLog
-    chown enogrob:enogrob $HOME/Things/SomedayLog
+    chown $USER:$USER $HOME/Things/SomedayLog
   fi
   if [ ! -L $HOME/Things/Trash ] && [ ! -d $HOME/Things/Trash ]; then
     cp -rf ./Things/Trash $HOME/Things/Trash
-    chown enogrob:enogrob $HOME/Things/Trash
+    chown $USER:$USER $HOME/Things/Trash
   fi
 fi
 
