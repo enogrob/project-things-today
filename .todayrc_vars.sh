@@ -1,9 +1,9 @@
 #!/bin/bash
-## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
+## Crafted (c) 2013~2018 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc_vars.sh
-## Version  : PA68
-## Date     : 2017-12-04
+## Version  : PA69
+## Date     : 2018-01-02
 ## Project  : project-things-today
 ## Reference: bash
 ##

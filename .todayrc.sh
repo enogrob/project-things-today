@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA71
-## Date     : 2017-12-19
+## Version  : PA72
+## Date     : 2018-01-02
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -94,6 +94,7 @@ alias tdsia='things scheduled startall'
 alias tdsea='things scheduled stopall'
 
 alias tdei='exercism configure --dir=$PWD'
+alias tdti='__templates_init'
 
 src(){
   cd src
@@ -226,6 +227,10 @@ if [ "$1" == "`readlink $THINGS`" ]
     # 1 = false
     return 1
   fi
+}
+
+__templates_init(){
+  cp $RESOURCES/templates/* .
 }
 
 __icon(){
