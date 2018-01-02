@@ -4,15 +4,17 @@ MAINTAINER Roberto Nogueira <roberto.nogueira@atlanticsolutions.com.br>
 # Install dependencies.
 RUN apt-get update \
   # build-essential
-  && apt-get install -y build-essential --no-install-recommends \
+  && apt-get install -y build-essential \
   # nodejs and npm
-  && apt-get install -y nodejs nodejs-legacy npm --no-install-recommends \
+  && curl -sL https://deb.nodesource.com/setup | sudo bash - && \
+  && apt-get install -yq nodejs \
+  && npm install -g npm \
   # postgresql
-  && apt-get install -y libpq-dev --no-install-recommends \
+  && apt-get install -y libpq-dev \
   # capybara-webkit
-  && apt-get install -y libqt4-dev libqtwebkit-dev --no-install-recommends \
+  && apt-get install -y libqt4-dev libqtwebkit-dev \
   # rmagick
-  && apt-get install -y imagemagick libmagickwand-dev --no-install-recommends \
+  && apt-get install -y imagemagick libmagickwand-dev \
   # cleanup
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
