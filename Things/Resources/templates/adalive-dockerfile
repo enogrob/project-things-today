@@ -6,9 +6,8 @@ RUN apt-get update \
   # build-essential
   && apt-get install -y build-essential \
   # nodejs and npm
-  && curl -sL https://deb.nodesource.com/setup | sudo bash - && \
+  && curl -sL https://deb.nodesource.com/setup_4.x | bash \
   && apt-get install -yq nodejs \
-  && npm install -g npm \
   # postgresql
   && apt-get install -y libpq-dev \
   # capybara-webkit
@@ -23,4 +22,4 @@ RUN apt-get update \
 WORKDIR /usr/src/app
 COPY . ./
 COPY sample.env .env
-RUN gem install bundler && bundle install && npm install
+RUN gem install bundler && bundle config git.allow_insecure true && bundle install && npm install
