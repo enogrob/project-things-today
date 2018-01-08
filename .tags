@@ -2,13 +2,13 @@ AdAlive                        	project
 AdAlive_old                    	project
 AdAlive_orig                   	project
 AdAlive_ubuntu                 	project
-blog
+blog project
 capstone_demoapp               	github
 capstone_docker                	github
-chocolatey-caffe1ne
-chocolatey-dragking
-chocolatey-v41
-chocolatey-virt-dimension
+chocolatey-caffe1ne chocolatey
+chocolatey-dragking chocolatey
+chocolatey-v41 chocolatey
+chocolatey-virt-dimension chocolatey
 chromeapps-all                 	chrome
 chromeapps-devops              	chrome
 chromeapps-rails               	chrome
@@ -141,7 +141,7 @@ hackerrank-python              	hackerrank,python
 hackerrank-ruby                	hackerrank,ruby
 homebrew-cask                  	homebrew,project
 homebrew-versions              	homebrew,project
-homepage
+homepage jekill
 javabrains-spring              	javabrains,spring
 javabrains-springboot          	javabrains,springboot
 jello-server                   	rails
@@ -152,7 +152,7 @@ job-avenuecode-java            	job,logbook
 job-bairesdev                  	job
 job-bankfacil                  	job
 job-bkconsultoria              	job,rails
-job-bkconsultoria-test
+job-bkconsultoria-test job
 job-bluecoding                 	job
 job-catho                      	job
 job-ciandt                     	job
@@ -166,7 +166,7 @@ job-daitangroup                	devops,java,job,logbook
 job-decisiongroup              	job,logbook
 job-deepx                      	job
 job-e-core                     	job
-job-e-core-test
+job-e-core-test job
 job-ebanx                      	job
 job-elo7                       	job
 job-embraer                    	job
@@ -175,8 +175,8 @@ job-energias                   	job,logbook
 job-ericsson-peru              	job,logbook
 job-firstpointgroup            	job
 job-fitec                      	cpp,java,job,oracle,sql
-job-fitec-cpp
-job-fitejava
+job-fitec-cpp job
+job-fitejava job
 job-focusnetworks              	job
 job-geekhunter                 	job,logbook
 job-geru                       	job
@@ -185,7 +185,7 @@ job-guichevirtual              	job
 job-gympass                    	job
 job-ibm                        	job,logbook
 job-improving                  	job
-job-integragrp-rails
+job-integragrp-rails job
 job-keyrus                     	bigdata,hadoop,job
 job-kiskadi                    	job
 job-lets-events                	job
@@ -214,7 +214,7 @@ job-twopix                     	job
 job-vagas                      	job
 job-verity-ti                  	job,logbook
 job-vrj                        	job
-job-vrj-test
+job-vrj-test job
 kitchen-sink                   	github
 krishnamurti-book-of-life      	krishnamurti
 krishnamurti-in-pdf            	krishnamurti
@@ -232,7 +232,7 @@ linuxacademy-aws-concepts      	linuxacademy,logbook
 linuxacademy-aws-devops-engineer	devops,linuxacademy
 linuxacademy-aws-essentials    	devops,linuxacademy
 linuxacademy-devops-essentials 	devops,linuxacademy
-nodejs-twitter-notes-app
+nodejs-twitter-notes-app nodejs
 opencpu-spark-executor         	github
 pragmaticstudio-building-web-apps-with-elm	elm,pragmaticstudio
 project-blocks-bootstrap       	bootstrap,project
@@ -248,10 +248,17 @@ project-enogrob-blog           	blog,project,ruby
 project-enogrob-homepage       	project
 project-fgr-garantia-de-receita-vivo
 project-freelance-bootcamp     	project
-project-gem-axe-engine
+project-gem-axe-engine project,ruby
 project-inatel-trends-mobile   	inatel,project
-project-lab360-adalive         	project,today
-project-lab360-album-show      	project
+project-lab360-adalive         	project,today,lab360,rails
+project-lab360-helpdesk         project,rails,lab360
+project-lab360-helpdesk-dasboard project,dashing,lab360,ruby
+project-lab360-maisamigas        project,lab360,rails
+project-lab360-diniz         	   project,lab360,rails
+project-lab360-mygloss         	 project,lab360,rails
+project-lab360-feshop        	   project,lab360,rails
+project-lab360-shoppingbh        project,lab360,rails
+project-lab360-album-show      	 project,lab360
 project-lotteries-bash         	bash,project
 project-lotteries-cpp          	cpp,project
 project-lotteries-elixir       	elixir,project
@@ -263,7 +270,7 @@ project-lotteries-python       	project,python
 project-lotteries-r            	project,r
 project-lotteries-ruby         	project,ruby
 project-open-terminal-here     	java,project
-project-pigshell-unix-the-web
+project-pigshell-unix-the-web unix,project
 project-ruby-thursday          	project,rails
 project-thebrain-to-neo4j      	project,python,sql
 project-things-today           	project,unix
@@ -276,17 +283,17 @@ quickstart-reactjs             	reactjs,tutorial
 quickstart-shoppe              	rails,tutorial
 quickstart-spree               	rails,tutorial
 rails-axego-project            	rails
-rails-capstone-demo-app
+rails-capstone-demo-app rails
 rails-depot-app                	rails
 rails-jello-server-app         	rails
-rails-recipes-app
+rails-recipes-app rails
 rails-reddit-project           	rails
 rails-sales-app                	rails
-rails-tweets-app
-rails-upload-app
+rails-tweets-app rails
+rails-upload-app rails
 recrutamento-pedido-online-ruby-enogrob
 residential_sales              	rails
-ruby-confs-app
+ruby-confs-app ruby
 sololearn-cpp                  	cpp,logbook,sololearn
 sololearn-csharp               	csharp,sololearn
 sololearn-css                  	css,logbook,sololearn
@@ -411,460 +418,6 @@ udemy-rapidly-building-apps-on-the-cloud	bluemix,udemy
 udemy-restful-apis             	rails,udemy
 udemy-restful-web-api-design-with-nodejs	nodejs,udemy
 udemy-ruby-on-rails-foundations	rails,today,udemy
-udemy-sites-and-blogs-with-jekyll	jekyll,ruby,udemy
-udemy-sketchnote-workbook      	udemy
-udemy-the-complete-elixir-and-phoenix-bootcamp	elixir,phoenix,udemy
-udemy-the-complete-guide-to-nodejs	nodejs,udemy
-udemy-vim-for-ruby-developers  	ruby,udemy,vim
-udemy-visual-paradigm-essential	udemy,visualparadigm
-udemy-vuejs-2-the-complete-guide	udemy,vuejs
-udemy-web-development-with-nodejs-and-mongodb	mongodb,nodejs,udemy
-udemy-webpack-2-the-complete-developers-guide	javascript,udemy,webpack
-weather                        	rails
-week01-rails-raddit-app        	rails
-week02-rails-blog-app          	rails
-week03-rails-recipe-box-app    	rails
-week04-rails-pinterest-app     	rails
-week05-rails-movie-review-app  	rails
-week06-rails-todo-app          	rails
-week07-rails-jobs-board-app    	rails
-week08-rails-workout-log-app   	rails
-week09-rails-wiki-app          	rails
-week10-rails-forum-app         	rails
-week11-rails-notenote-app      	rails
-week12-rails-muse-app          	rails
-AdAlive                        	project
-Chart.js
-DataVizToolkit.github.io       	nodejs
-Icon
-_gsdata_
-blog
-capstone_demoapp               	github
-capstone_docker                	github
-chocolatey-caffe1ne
-chocolatey-dragking
-chocolatey-v41
-chocolatey-virt-dimension
-chromeapps-all                 	chrome
-chromeapps-devops              	chrome
-chromeapps-rails               	chrome
-codewars-katas                 	codewar,kata
-course-build-applications-with-oracle-jet-and-netbeans	course,oracle,sql
-coursera-algorithmic-toolbox   	algorithm,coursera
-coursera-capstone-photo-tourist-web-application	coursera
-coursera-html-css-and-javascript-for-web-developers	course,coursera,css,html,javascript
-coursera-introduction-to-ancient-egypt-and-its-civilization	coursera,logbook
-coursera-photo-tourist-web-application-capstone-project	course
-coursera-rails-with-active-record-and-action-pack	course
-coursera-ruby-on-rails-an-introduction	course
-coursera-ruby-on-rails-web-services-and-integration-with-mongodb	coursera,rails,ruby
-coursera-single-page-web-applications-with-angularjs	angularjs,coursera,rails
-courseware                     	github
-departures                     	rails
-devops-challenge               	test
-ebook-agile-web-development-with-rails-5	ebook,rails
-ebook-clean-code               	design,ebook
-ebook-confident-ruby           	ebook,ruby
-ebook-creating-blogs-with-jekyll	ebook,jekyll
-ebook-data-visualization-toolkit-using-javascript-rails-and-postgres	ebook,javascript,postgres,rails
-ebook-deploying-rails-with-docker-and-kubernetes	ebook,rails
-ebook-design-patterns-in-ruby  	design,ebook,ruby
-ebook-designing-for-scalability-with-erlang	ebook,erlang
-ebook-developing-rails-api-applications	ebook,rails
-ebook-devops-bootcamp          	devops,ebook
-ebook-devops-for-web-development	devops,ebook
-ebook-docker-bootcamp          	devops,ebook,scheduled,thu,today,tue,weekday
-ebook-docker-in-practice       	devops,ebook
-ebook-domain-driven-design     	design,ebook
-ebook-effective-testing-with-rspec-3	ebook,someday
-ebook-efficient-rails          	ebook,rails
-ebook-elixir-cookbook          	ebook,elixir
-ebook-eloquent-ruby            	ebook,ruby
-ebook-engineering-software-as-a-service	design,ebook,someday
-ebook-erlang-programming       	ebook,erlang,mon,scheduled,today,weekday
-ebook-everyday-rails-testing-with-rspec	ebook,rails,rspec,scheduled,test,thu,today,tue,weekday
-ebook-falando-de-grails        	ebook,grails
-ebook-getting-started-with-tmux	ebook
-ebook-grails-2-a-quick-start-guide	ebook,grails
-ebook-grails-in-action         	ebook,grails
-ebook-groovy-in-action         	ebook
-ebook-head-first-design-patterns	design,ebook,java
-ebook-head-first-python        	ebook,python
-ebook-head-first-ruby          	ebook,ruby
-ebook-implementing-devops-on-aws	devops,ebook
-ebook-ios-on-rails             	ebook,rails
-ebook-java-for-testers         	ebook,java
-ebook-jumpstart-nodejs         	ebook,jumpstart,nodejs
-ebook-jumpstart-sinatra        	ebook
-ebook-learn-to-program-with-minecraft	ebook
-ebook-learn-you-some-erlang-for-great-good	ebook,erlang
-ebook-learning-chef            	chef,devops,ebook
-ebook-learning-cypher          	cypher,ebook,nodejs
-ebook-learning-devise-for-rails	ebook,rails,someday
-ebook-learning-hadoop-2        	bigdata,ebook
-ebook-learning-ibm-bluemix     	bluemix,ebook
-ebook-learning-neo4j           	ebook,neo4j,sql
-ebook-let-understanding-be-the-law
-ebook-metaprogramming-elixir   	ebook,elixir
-ebook-modern-cpp-programming-with-tdd	cpp,ebook
-ebook-mongodb-data-modeling    	ebook,mongodb
-ebook-nodejs-by-example        	ebook,javascript,nodejs
-ebook-practical-devops         	devops,ebook
-ebook-practical-object-oriented-design-in-ruby	design,ebook,ruby
-ebook-practical-vim            	ebook,vim
-ebook-practicing-rails         	ebook,rails
-ebook-programming-elixir       	ebook,elixir,scheduled,wed,weekday
-ebook-programming-erlang       	ebook,erlang
-ebook-programming-phoenix      	ebook,fri,phoenix,scheduled,weekday
-ebook-puppet-3                 	devops,ebook
-ebook-rails-4-test-prescriptions	ebook,rails
-ebook-rails-5-revealed         	ebook,rails,someday
-ebook-rails-antipatterns       	design,ebook,rails
-ebook-reactive-ruby            	design,ebook,ruby
-ebook-real-time-apps-with-nodejs	ebook,nodejs
-ebook-refactoring              	design,ebook,ruby
-ebook-rspec-essentials         	ebook,rspec,test
-ebook-ruby-and-mongodb-web-development	ebook,ruby
-ebook-ruby-programming         	ebook,ruby
-ebook-rubyfu-ruby-programming-for-hacker	ebook,ruby
-ebook-service-oriented-design-with-ruby-on-rails	design,ebook,rails,ruby
-ebook-seven-databases-in-seven-weeks	couchdb,ebook,hbase,mongodb,neo4j,postgresql,redis,riak,sql
-ebook-seven-languages-in-seven-weeks	closure,ebook,erlang,haskell,io,prolog,ruby,scala
-ebook-seven-more-languages-in-seven-weeks	ebook,elixir,elm,factor,idris,julia,lua,minikanren
-ebook-sketchnote-workbook      	ebook
-ebook-springboot-in-action     	ebook,springboot
-ebook-sty-angularjs-javascript-and-jquery-all-in-one	angularjs,ebook,javascript,jquery,sty
-ebook-sty-cpp-in-24-hours      	cpp,ebook,sty
-ebook-sty-java-in-24-hours     	ebook,java,sty
-ebook-sty-javascript-in-24-hours	ebook,javascript,sty
-ebook-sty-perl-in-24-hours     	ebook,perl,sty
-ebook-sty-python-in-24-hours   	ebook,python,sty
-ebook-sty-r-in-24-hours        	ebook,r,sty
-ebook-the-algorithm-design-manual	cpp,ebook
-ebook-the-docker-book          	ebook
-ebook-the-majesty-of-vuejs     	ebook,vuejs
-ebook-the-minitest-cookbook    	ebook,fri,mon,rails,scheduled,wed,weekday
-ebook-the-rails-4-way          	ebook,rails
-edx-agile-development-using-ruby-on-rails-advanced	edx,rails,ruby
-edx-agile-development-using-ruby-on-rails-basics	edx,rails,ruby
-enogrob-unix-dotfiles
-erlang_programming
-everydayrails-rspec-2017       	rails
-exercism-cpp                   	cpp,exercism
-exercism-elixir                	elixir,exercism
-exercism-erlang                	erlang,exercism
-exercism-java                  	exercism,java
-exercism-javascript            	exercism,javascript
-exercism-python                	exercism,python
-exercism-ruby                  	exercism,ruby
-fullstack-capstone-course      	github
-fullstack-capstone-module1     	github
-futurelearn-bigdata            	bigdata,futurelearn
-futurelearn-concurrent-programming-in-erlang	erlang,futurelearn
-futurelearn-functional-programming-in-erlang	erlang,futurelearn
-futurelearn-introduction-to-radio-network-optimization	futurelearn
-futurelearn-managing-big-data-with-r-and-hadoop	bigdata,futurelearn,hadoop,r
-grails-qotd-app                	grails
-guides-opal-in-pdf             	opal,project
-guides-phoenix-in-pdf          	guide,phoenix,project
-guides-rails-in-pdf            	guide,project,rails
-hackerrank-30-days-of-code     	cpp,hackerrank
-hackerrank-algorithms          	algorithm,cpp,hackerrank
-hackerrank-cpp                 	cpp,hackerrank,random
-hackerrank-data-structures     	algorithm,cpp,hackerrank
-hackerrank-functional-programming	hackerrank,random
-hackerrank-java                	hackerrank,java
-hackerrank-linux-shell         	hackerrank
-hackerrank-practice            	hackerrank
-hackerrank-python              	hackerrank,python
-hackerrank-ruby                	hackerrank,ruby
-helpdesk                       	lab360,project,rails
-helpdesk-dashboard
-homebrew-cask                  	homebrew,project
-homebrew-versions              	homebrew,project
-homepage
-javabrains-spring              	javabrains,spring
-javabrains-springboot          	javabrains,springboot
-jello-server                   	rails
-jetbrains-clion-cpp            	cpp,tutorial
-job-amazon                     	job,logbook
-job-atlantic-solutions         	job
-job-avenuecode-java            	job,logbook
-job-bairesdev                  	job
-job-bankfacil                  	job
-job-bkconsultoria              	job,rails
-job-bkconsultoria-test
-job-bluecoding                 	job
-job-catho                      	job
-job-ciandt                     	job
-job-codeavenue                 	job,logbook
-job-codeminer42                	job,logbook
-job-comarch                    	job,logbook
-job-couchsurfing               	job
-job-creditas                   	job
-job-crossover                  	job
-job-daitangroup                	devops,java,job,logbook
-job-decisiongroup              	job,logbook
-job-deepx                      	job
-job-e-core                     	job
-job-e-core-test
-job-ebanx                      	job
-job-elo7                       	job
-job-embraer                    	job
-job-empregoligado              	job
-job-energias                   	job,logbook
-job-ericsson-peru              	job,logbook
-job-firstpointgroup            	job
-job-fitec                      	cpp,java,job,oracle,sql
-job-fitec-cpp
-job-fitec-java
-job-focusnetworks              	job
-job-geekhunter                 	job,logbook
-job-geru                       	job
-job-globo                      	job,rails,ruby
-job-guichevirtual              	job
-job-gympass                    	job
-job-ibm                        	job,logbook
-job-improving                  	job
-job-integragrp-rails
-job-keyrus                     	bigdata,hadoop,job
-job-kiskadi                    	job
-job-lets-events                	job
-job-lexisnexis                 	job,logbook
-job-locaweb                    	job
-job-mazzatech-devops           	job,logbook
-job-mre                        	job
-job-nexaas                     	job,logbook
-job-nubank                     	job,logbook
-job-padtec                     	job,logbook
-job-philips                    	job,logbook
-job-quero-educacao             	job
-job-rankdone                   	job
-job-rd                         	job,logbook,rails
-job-roga                       	job,logbook
-job-samsung                    	job,logbook
-job-seek                       	job
-job-semantix                   	hadoop,job
-job-softplan                   	job
-job-solvian                    	job
-job-taxweb                     	job,logbook
-job-thoughtworks               	job,logbook
-job-tivia-ti                   	job,logbook
-job-tramasso                   	job
-job-twopix                     	job
-job-vagas                      	job
-job-verity-ti                  	job,logbook
-job-vrj                        	job
-job-vrj-test
-kitchen-sink                   	github
-krishnamurti-book-of-life      	krishnamurti
-krishnamurti-in-pdf            	krishnamurti
-krishnamurti-teachings         	krishnamurti,pdf
-lambda-spark-executor          	github
-linkedin-building-a-slack-bot-with-nodejs-microservices	linkedin,nodejs
-linkedin-building-web-services-with-Java-ee	linkedin
-linkedin-devops-fundamentals   	devops,linkedin
-linkedin-introduction-to-java-enterprise-edition	java,linkedin
-linkedin-java-advanced-training	java,linkedin
-linkedin-java-database-integration-with-jdbc	java,linkedin
-linkedin-java-ee-essentials-servlets-and-javaServer-faces	java,linkedin
-linuxacademy-aws-certified-devops-engineer	devops,linuxacademy
-linuxacademy-aws-concepts      	linuxacademy,logbook
-linuxacademy-aws-devops-engineer	devops,linuxacademy
-linuxacademy-aws-essentials    	devops,linuxacademy
-linuxacademy-devops-essentials 	devops,linuxacademy
-minitest_cookbook_source       	github
-monitorama
-nodejs-twitter-notes-app
-opencpu-spark-executor         	github
-pragmaticstudio-building-web-apps-with-elm	elm,pragmaticstudio
-project-blocks-bootstrap       	bootstrap,project
-project-blog-with-rails-5-and-bootstrap-4	bootstrap,project,rails
-project-business-card          	project
-project-code-love-boards       	phoenix,project,rails,reactjs
-project-cpsh-script-environment-and-interactive-shell
-project-crondose-dev-guides    	project,ruby
-project-delphi-bootcamp        	delphi,project
-project-delphi-iot-bootcamp-2017	delphi,project
-project-delphi-programming     	delphi,project
-project-enogrob-blog           	blog,project,ruby
-project-enogrob-homepage       	project
-project-fgr-garantia-de-receita-vivo
-project-freelance-bootcamp     	project
-project-gem-axe-engine
-project-inatel-trends-mobile   	inatel,project
-project-lab360-adalive         	lab360,project,rails,today
-project-lab360-album-show      	lab360,project
-project-lab360-helpdesk        	lab360,project,rails,today
-project-lab360-helpdesk-dashboard	lab360,project,ruby,today
-project-linux-recover          	project,today
-project-lotteries-bash         	bash,project
-project-lotteries-cpp          	cpp,project
-project-lotteries-elixir       	elixir,project
-project-lotteries-erlang       	erlang,project
-project-lotteries-java         	java,project
-project-lotteries-javascript   	javascript,project
-project-lotteries-perl         	project
-project-lotteries-python       	project,python
-project-lotteries-r            	project,r
-project-lotteries-ruby         	project,ruby
-project-open-terminal-here     	java,project
-project-pigshell-unix-the-web
-project-rails-vuejs            	project,rails,vuejs
-project-ruby-thursday          	project,rails
-project-thebrain-to-neo4j      	project,python,sql
-project-things-today
-project-working-remotely       	project
-quickstart-aurelia             	aureliajs,tutorial
-quickstart-flask               	flask,tutorial
-quickstart-gitflow             	gitflow,tutorial
-quickstart-puppet              	puppet,tutorial
-quickstart-reactjs             	reactjs,tutorial
-quickstart-shoppe              	rails,tutorial
-quickstart-spree               	rails,tutorial
-rails-axego-project            	rails
-rails-capstone-demo-app
-rails-depot-app                	rails
-rails-jello-server-app         	rails
-rails-recipes-app
-rails-reddit-project           	rails
-rails-sales-app                	rails
-rails-tweets-app
-rails-upload-app
-recrutamento-pedido-online-ruby-enogrob
-residential_sales              	rails
-ruby-confs-app
-sololearn-cpp                  	cpp,logbook,sololearn
-sololearn-csharp               	csharp,sololearn
-sololearn-css                  	css,logbook,sololearn
-sololearn-html                 	html,logbook,sololearn
-sololearn-java                 	java,logbook,sololearn
-sololearn-javascript           	javascript,logbook,sololearn
-sololearn-python               	python,sololearn
-sololearn-ruby                 	logbook,ruby,sololearn
-sololearn-sql                  	logbook,sololearn,sql
-sololearn-swift                	sololearn,swift
-specialization-coursera-data-science	coursera,datascience,r
-specialization-coursera-full-stack-web-development	coursera,mongodb,nodejs
-specialization-coursera-robotics	coursera
-specialization-coursera-ruby-on-rails-web-development	coursera
-specialization-erlang          	erlang,specialization
-specialization-futurelearn-erlang	erlang,specialization
-specialization-nodejs          	nodejs,specialization
-specialization-phoenix         	phoenix,specialization
-specialization-programming     	specialization
-specialization-rails           	rails,specialization
-spigot-docker-quickstart       	github
-tested-api-example             	rails
-tutorial-atom                  	atom,tutorial
-tutorial-be-a-minecraft-modman-with-purugin	tutorial
-tutorial-boost-test-library    	cpp,test,tutorial
-tutorial-chartjs               	tutorial
-tutorial-criando-uma-api-completa-com-rails	rails,tutorial
-tutorial-delphi                	delphi,tutorial
-tutorial-devops-aws            	devops,logbook,tutorial
-tutorial-docker-for-java-developers	java,tutorial
-tutorial-elixir-express        	elixir,logbook,tutorial
-tutorial-elm-conf-2016         	conf,elm,tutorial
-tutorial-erlang                	erlang,tutorial
-tutorial-erlang-engine-tuning  	erlang,tutorial
-tutorial-erlang-otp            	erlang,logbook,tutorial
-tutorial-eunit                 	erlang,test,tutorial
-tutorial-exunit                	elixir,test,tutorial
-tutorial-facebook-react-apps   	reactjs,tutorial
-tutorial-getting-unstuck       	tutorial
-tutorial-gorails               	sat,scheduled,sun,today,weekend
-tutorial-julia                 	julia,logbook,tutorial
-tutorial-mastering-vim         	tutorial,vim
-tutorial-phoenix-framework     	elixir,phoenix,tutorial
-tutorial-rails-12-apps-in-12-weeks	rails,sat,scheduled,sun,today,tutorial,weekend
-tutorial-rails-admin           	tutorial
-tutorial-shopify-dashing       	tutorial
-tutorial-testing-your-rails-apis-with-airbourne	rails,tutorial
-tutorial-transitioning-ruby-on-rails-to-elixir-phoenix	elixir,phoenix,rails,ruby,tutorial
-tutorial-vscode                	tutorial,visualstudio
-tutorial-zotonic-framework     	erlang,tutorial,zotonic
-tutorialspoint-ant             	ant,java,tutorialspoint
-tutorialspoint-aurelia         	aureliajs,tutorialspoint
-tutorialspoint-c               	c,tutorialspoint
-tutorialspoint-cassandra       	sql,tutorialspoint
-tutorialspoint-closure         	closure,tutorialspoint
-tutorialspoint-cpp-stl         	cpp,tutorialspoint
-tutorialspoint-cpp-tutorial    	cpp,tutorialspoint
-tutorialspoint-csharp          	csharp,tutorialspoint
-tutorialspoint-data-structures-and-algorithms	algorithm,cpp,tutorialspoint
-tutorialspoint-developers-best-practices	tutorialspoint
-tutorialspoint-effective-resume-writing	tutorialspoint
-tutorialspoint-elixir          	elixir,tutorialspoint
-tutorialspoint-erlang          	erlang,tutorialspoint
-tutorialspoint-gradle          	java,tutorialspoint
-tutorialspoint-groovy          	tutorialspoint
-tutorialspoint-hibernate       	hibernate,java,tutorialspoint
-tutorialspoint-hr-interview-questions	tutorialspoint
-tutorialspoint-jasminejs       	javascript,test,tutorialspoint
-tutorialspoint-java-interview  	java,tutorialspoint
-tutorialspoint-java-tutorial   	java,tutorialspoint
-tutorialspoint-javascript-tutorial	javascript,tutorialspoint
-tutorialspoint-jenkins         	devops,java,tutorialspoint
-tutorialspoint-junit           	java,junit,test,tutorialspoint
-tutorialspoint-linux           	linux,tutorialspoint
-tutorialspoint-maven           	java,maven,tutorialspoint
-tutorialspoint-mongodb         	mongodb,sql,tutorialspoint
-tutorialspoint-mysql           	logbook,sql,tutorialspoint
-tutorialspoint-nodejs          	nodejs,tutorialspoint
-tutorialspoint-oracle          	random,sql,tutorialspoint
-tutorialspoint-perl            	perl,tutorialspoint
-tutorialspoint-postgresql      	postgresql,sql,tutorialspoint
-tutorialspoint-pytest          	python,test,tutorialspoint
-tutorialspoint-python          	python,tutorialspoint
-tutorialspoint-questions-and-answers	tutorialspoint
-tutorialspoint-r               	r,tutorialspoint
-tutorialspoint-reactjs         	reactjs,tutorialspoint
-tutorialspoint-redis           	sql,tutorialspoint
-tutorialspoint-restful-web-services	tutorialspoint
-tutorialspoint-rspec           	rails,ruby,test,tutorialspoint
-tutorialspoint-sql-overview    	sql,tutorialspoint
-tutorialspoint-sqlite          	sql,tutorialspoint
-tutorialspoint-statistics      	algorithm,tutorialspoint
-tutorialspoint-testng          	java,testng,tutorialspoint
-tutorialspoint-unix            	random,somedaylog,tutorialspoint,unix
-tutorialspoint-visualbasic     	tutorialspoint,visualbasic
-tutorialspoint-vuejs           	tutorialspoint,vuejs
-udemy-amazon-web-services      	devops,udemy
-udemy-angular-2-and-rails-5-bootcamp	angularjs,rails,udemy
-udemy-angular2-and-nodejs      	angularjs,nodejs,somedaylog,udemy
-udemy-angularjs-reactjs-vuejs-quickstart-comparison	angularjs,reactjs,udemy,vuejs
-udemy-deep-learning-with-tensorflow	bigdata,tensorflow,udemy
-udemy-devops-for-web-development	devops,udemy
-udemy-elm-programming          	elm,udemy
-udemy-freelance-bootcamp       	udemy
-udemy-how-to-get-a-new-job-in-30-days	udemy
-udemy-ibm-bluemix-application-development-and-certification	bluemix,devops,udemy
-udemy-learn-hadoop-mapreduce-and-bigdata-from-scratch	bigdata,udemy
-udemy-learn-oracle-11g         	oracle,sql,udemy
-udemy-learn-oracle-pl-sql      	oracle,sql,udemy
-udemy-learn-to-build-apps-using-neo4j	neo4j,sql,udemy
-udemy-learn-to-run-linux-servers-lpi-1-101	linux,udemy,unix
-udemy-learn-to-run-linux-servers-lpi-1-102	linux,udemy,unix
-udemy-learning-ecmascript-6    	javascript,udemy
-udemy-learning-elasticsearch   	sql,udemy
-udemy-learning-flask           	flask,python,udemy
-udemy-learning-hadoop-2        	bigdata,hadoop,udemy
-udemy-learning-path-master-web-development-with-ruby-on-rails-5	rails,ruby,udemy
-udemy-learning-reactjs         	reactjs,udemy
-udemy-learning-springboot      	java,springboot,udemy
-udemy-master-ruby-development-with-rspec	rspec,ruby,udemy
-udemy-mastering-devops         	devops,logbook,udemy
-udemy-mastering-selenium-testing-tools	test,udemy
-udemy-modern-devops            	devops,udemy
-udemy-professional-rails-code-along	rails,udemy
-udemy-professional-ruby-on-rails-developer-with-rails-5	rails,ruby,udemy
-udemy-progressive-web-apps     	udemy
-udemy-python-programming-for-beginners	python,udemy
-udemy-rapidly-building-apps-on-the-cloud	bluemix,udemy
-udemy-restful-apis             	rails,udemy
-udemy-restful-web-api-design-with-nodejs	nodejs,udemy
-udemy-ruby-on-rails-foundations	rails,udemy
 udemy-sites-and-blogs-with-jekyll	jekyll,ruby,udemy
 udemy-sketchnote-workbook      	udemy
 udemy-the-complete-elixir-and-phoenix-bootcamp	elixir,phoenix,udemy
