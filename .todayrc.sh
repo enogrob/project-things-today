@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA72
-## Date     : 2018-01-02
+## Version  : PA73
+## Date     : 2018-01-09
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -28,8 +28,10 @@ else
 fi
 
 alias rc='__print $(rvm current) red'
-alias t='$TODOTXT list'
+alias t='$TODOTXT'
+alias tl='$TODOTXT list'
 alias reload='exec bash'
+alias projects='cd projects;tree'
 
 alias tdy='things today'
 alias tdyl='things today list'
