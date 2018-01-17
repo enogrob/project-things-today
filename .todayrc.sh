@@ -1537,7 +1537,7 @@ things() {
                     git add . && \
                     git commit -am "performed-first-commit" && \
                     git push -u origin master && \
-                    hub browse .
+                    # hub browse .
                     ;;
 
                 stop)
