@@ -22,7 +22,12 @@ TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|chartjs|cpp|css|delphi|design|dev
 OS=`uname`
 if [ $OS == "Linux" ]; then
   # source ~/.todayrc_linux.sh
-  TODOTXT=/usr/local/bin/todo.sh
+  OS=`uname -n`
+  if [ $OS == "parallels-vm" ];then
+    TODOTXT=$HOME/.todo/todo.sh
+  else
+    TODOTXT=/usr/local/bin/todo.sh
+  fi
 else
   TODOTXT=$HOME/.todo/todo.sh
 fi

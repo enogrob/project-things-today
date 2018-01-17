@@ -19,21 +19,29 @@ source ./.todayrc_vars.sh
 
 OS=`uname`
 if [ $OS == "Linux" ]; then
+  if [ ! -d "$HOME/bin" ]; then
+    mkdir -p "$HOME/bin"
+    chown $USER:$USER "$HOME/bin"
+  fi
   cp ./tag ~/bin
   if [ ! -L "/Users" ]; then
       ln -sf /home /Users
+      chown $USER:$USER /Users
   fi
   if [ ! -d "$HOME/Books" ]; then
     mkdir -p "$HOME/Books"
     chown $USER:$USER "$HOME/Books"
     touch $HOME/Books/My_Kindle_Content
     ln -sf "$HOME/Books/Calibre Library" "Calibre Library"
+    ln -sf /media/psf/Calibre\ Library/ 'Calibre Library'
+    ln -sf /media/psf/Calibre\ Library/ "$HOME/Books/Calibre Library"
+    ln -sf /media/psf/My_Kindle_Content "$HOME/Books/My_Kindle_Content"
   fi
   if [ ! -d "/Volumes/Data HD" ]; then
       mkdir -p /Volumes/Data\ HD
-      chown e$USER:$USER /Volumes/Data\ HD
-      chmod 777 /Volumes/Data\ HD
+      chown $USER:$USER /Volumes/Data\ HD
       ln -sf /home/$USER /Volumes/Data\ HD/$USER
+      chown $USER:$USER /Volumes/Data\ HD/$USER
   fi
   if [ ! -f "$TAGSFILE" ]; then
     cp ./.tags "$PROJECTS"
@@ -44,6 +52,7 @@ if [ ! -d "$HOME/Things" ]; then
   cp -rf ./Things "$HOME"
   chown $USER:$USER $HOME/Things
   ln -sf $LOCAL $HOME/THINGS_HOME
+  ln -sf /media/psf/Home/Things $HOME/THINGS_HOME
 else
   if [ ! -L $HOME/Things/Areas ] && [ ! -d $HOME/Things/Areas ]; then
     cp -rf ./Things/Areas $HOME/Things/Areas
@@ -88,9 +97,11 @@ if [ ! -L "$HOME/THINGS_HOME" ]; then
 fi
 if [ ! -L "$HOME/Projects" ]; then
   ln -sf $PROJECTS $HOME/Projects
+  ln -sf /media/psf/Projects $HOME/Projects
 fi
 if [ ! -L "$HOME/Today" ]; then
   ln -sf $TODAY $HOME/Today
+  ln -sf /media/psf/Today $HOME/Today
 fi
 
 exec bash
