@@ -1536,7 +1536,7 @@ things() {
                     hub create && \
                     git add . && \
                     git commit -am "performed-first-commit" && \
-                    git push -u origin master && \
+                    git push -u origin master #&& \
                     # hub browse .
                     ;;
 
