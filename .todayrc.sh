@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA73
-## Date     : 2018-01-09
+## Version  : PA74
+## Date     : 2018-03-09
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -16,7 +16,7 @@ source ~/.todayrc_vars.sh
 
 shopt -s extglob
 
-TAGSPROJECTS='+(chrome|codewars|coursera|ebook|edx|exercism|futurelearn|hackerrank|javabrains|job|krishnamurti|lab360|linkedin|linuxacademy|oreilly|phoenix|pragmaticstudio|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains)'
+TAGSPROJECTS='+(aws,chrome|codewars|coursera|ebook|edx|exercism|futurelearn|hackerrank|javabrains|job|krishnamurti|lab360|linkedin|linuxacademy|oreilly|phoenix|pragmaticstudio|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains)'
 TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|chartjs|cpp|css|delphi|design|devops|elixir|elm|erlang|grails|groovy|hadoop|html|java|javascript|jekyll|nodejs|phoenix|python|r|rails|reactjs|rspec|ruby|spring|sinatra|springboot|sql|unix|vim|vuejs|webpack)'
 
 OS=`uname`
