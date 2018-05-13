@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2017 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA74
-## Date     : 2018-03-09
+## Version  : PA75
+## Date     : 2018-05-13
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -108,7 +108,7 @@ src(){
   if [ -e ".ruby-gemset" ] && [ -e ".ruby-version" ]; then
     __print $(rvm current) red
   fi
-  tree
+  tree -L 1
 }
 
 logshell(){
