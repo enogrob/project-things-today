@@ -1,9 +1,9 @@
 #!/bin/bash
-## Crafted (c) 2013~2018 by ZoatWorks Software LTDA.
+## Crafted (c) 2013~2019 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA77
-## Date     : 2018-07-27
+## Version  : PA78
+## Date     : 2019-04-02
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -91,6 +91,7 @@ alias tdg='things git'
 alias tdgi='things git start'
 alias tdge='things git stop'
 alias tdgl='things git log'
+alias tdglg='things git graph'
 
 alias tds='things scheduled'
 alias tdsl='things scheduled list'
@@ -1550,6 +1551,9 @@ things() {
 
                   log)
                     git log --oneline
+                    ;;
+                  graph)
+                    git log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
                     ;;
 
                 *)  git status -s
