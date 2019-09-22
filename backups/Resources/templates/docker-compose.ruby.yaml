@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  app:
+    container_name: ruby-league-app
+    build: .
+    image: enogrob/ruby-league-app
+    command: ruby -e "while true;end"
+    volumes:
+      - .:/usr/src/app

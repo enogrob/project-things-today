@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  iex:
+    container_name: elixir-counter-app
+    build: .
+    image: enogrob/elixir-counter-app
+    command: iex -S mix
+    volumes:
+      - .:/usr/src/app
