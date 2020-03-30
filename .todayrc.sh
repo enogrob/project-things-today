@@ -103,6 +103,7 @@ alias tdsea='things scheduled stopall'
 
 alias tdei='exercism configure --dir=$PWD'
 alias tdti='__templates_init'
+alias tdd='cd ~/Downloads'
 
 src(){
   cd src
