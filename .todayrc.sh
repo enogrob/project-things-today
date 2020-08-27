@@ -17,7 +17,7 @@ source ~/.todayrc_vars.sh
 shopt -s extglob
 
 TAGSPROJECTS='+(aws|chrome|codewars|conf|coursera|ebook|edx|exercism|futurelearn|graphacademy|hackerrank|javabrains|job|krishnamurti|lab360|linkedin|linuxacademy|oreilly|phoenix|pragmaticstudio|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains|research)'
-TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|chartjs|cpp|css|delphi|design|devops|elixir|elm|erlang|grails|groovy|hadoop|html|java|javascript|jekyll|jquery|nodejs|neo4j|phoenix|python|r|rails|reactjs|rspec|ruby|spring|sinatra|springboot|sql|sveltejs|unix|vim|vuejs|webpack|youtube|roblox|scratch)'
+TAGSCONTEXTS='+(bash|bigdata|bluemix|bootstrap|chartjs|cpp|css|delphi|design|devops|elixir|elm|erlang|grails|groovy|hadoop|html|java|javascript|jekyll|jquery|nodejs|neo4j|phoenix|python|r|rails|reactjs|rspec|ruby|spring|sinatra|springboot|sql|sveltejs|unix|vim|vuejs|webpack|youtube|roblox|scratch|anki)'
 
 OS=`uname`
 if [ $OS == "Linux" ]; then
