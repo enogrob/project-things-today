@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2019 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA83
-## Date     : 2020-09-01
+## Version  : PA84
+## Date     : 2020-09-25
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -104,6 +104,11 @@ alias tdsea='things scheduled stopall'
 alias tdei='exercism configure --dir=$PWD'
 alias tdti='__templates_init'
 alias tdd='cd ~/Downloads'
+
+title(){
+  title=$1
+  export PROMPT_COMMAND='echo -ne "\033]0;${title##*/}\007"'
+}
 
 src(){
   cd src
@@ -791,6 +796,7 @@ things() {
                     elif [ $# -eq 1 ]; then
                         if [ -e "$PROJECTS/$1" ]; then
                                 cd "$PROJECTS/$1"
+                                title "$1"
                             else
                                 __printerr "==> Error: Bad argument $1."
                                 __print
@@ -951,6 +957,7 @@ things() {
 
                     jump)
                         cd "$TODAY"
+                        title "$PROJECT"
                         pwd
                         ;;
 
@@ -1023,6 +1030,7 @@ things() {
                             PROJECT=$($TODOTXT list | grep "^$1" | awk {'print $3'})
                             if [ -n "$PROJECT" ]; then
                               cd $PROJECT
+                              title "$PROJECT"
                               pwd
                             else
                               __printerr "==> Error: Bad argument $1."
