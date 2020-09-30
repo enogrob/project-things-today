@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2019 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA84
-## Date     : 2020-09-25
+## Version  : PA85
+## Date     : 2020-09-29
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -1562,7 +1562,7 @@ things() {
                     git log --oneline
                     ;;
                   graph)
-                    git log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+                    git log --graph --oneline --decorate --all
                     ;;
 
                 *)  git status -s
