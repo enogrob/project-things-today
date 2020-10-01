@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2019 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA85
-## Date     : 2020-09-29
+## Version  : PA86
+## Date     : 2020-10-01
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -17,7 +17,7 @@ source ~/.todayrc_vars.sh
 shopt -s extglob
 
 TAGSPROJECTS='+(aws|chrome|codewars|conf|coursera|ebook|edx|exercism|futurelearn|graphacademy|hackerrank|javabrains|job|krishnamurti|lab360|linkedin|linuxacademy|oreilly|phoenix|pragmaticstudio|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains|research)'
-TAGSCONTEXTS='+(anki|bash|bigdata|bluemix|bootstrap|chartjs|cpp|css|delphi|design|devops|docker|elixir|elm|erlang|grails|groovy|hadoop|html|java|javascript|jekyll|jquery|nodejs|neo4j|phoenix|python|r|rails|reactjs|roblox|rspec|ruby|scratch|spring|sinatra|springboot|sql|sveltejs|unix|vim|vuejs|webpack|youtube)'
+TAGSCONTEXTS='+(anki|bash|bigdata|bluemix|bootstrap|chartjs|cpp|css|delphi|design|devops|docker|elixir|elm|erlang|grails|groovy|hadoop|html|java|javascript|jekyll|jquery|nodejs|neo4j|phoenix|python|r|rails|reactjs|roblox|rspec|ruby|scratch|spring|sinatra|springboot|sql|sveltejs|unix|vim|vuejs|webpack|youtube|stimulusreflex)'
 
 OS=`uname`
 if [ $OS == "Linux" ]; then
