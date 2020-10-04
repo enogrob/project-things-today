@@ -107,6 +107,9 @@ alias tdd='cd ~/Downloads'
 
 title(){
   title=$1
+  if [ -z "$title" ]; then
+    title=$(basename "$PWD")
+  fi
   export PROMPT_COMMAND='echo -ne "\033]0;${title##*/}\007"'
 }
 
