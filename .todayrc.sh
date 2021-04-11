@@ -19,18 +19,7 @@ shopt -s extglob
 TAGSPROJECTS='+(aws|chrome|codewars|conf|coursera|ebook|edx|exercism|futurelearn|graphacademy|hackerrank|javabrains|job|krishnamurti|lab360|linkedin|linuxacademy|oreilly|phoenix|pragmaticstudio|project|rails|sololearn|specialization|tutorial|tutorialspoint|udemy|jetbrains|research)'
 TAGSCONTEXTS='+(anki|bash|bigdata|bluemix|bootstrap|chartjs|cpp|css|delphi|design|devops|docker|elixir|elm|erlang|grails|groovy|hadoop|html|java|javascript|jekyll|jquery|nodejs|neo4j|phoenix|python|r|rails|reactjs|roblox|rspec|ruby|scratch|spring|sinatra|springboot|sql|sveltejs|unix|vim|vuejs|webpack|youtube|stimulusreflex)'
 
-OS=`uname`
-if [ $OS == "Linux" ]; then
-  # source ~/.todayrc_linux.sh
-  OS=`uname -n`
-  if [ $OS == "parallels-vm" ];then
-    TODOTXT=$HOME/.todo/todo.sh
-  else
-    TODOTXT=/usr/local/bin/todo.sh
-  fi
-else
-  TODOTXT=$HOME/.todo/todo.sh
-fi
+TODOTXT=$HOME/.todo/todo.sh
 
 alias rc='__print $(rvm current) red'
 alias t='$TODOTXT'
