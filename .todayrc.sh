@@ -1,9 +1,9 @@
 #!/bin/bash
-## Crafted (c) 2013~2019 by ZoatWorks Software LTDA.
+## Crafted (c) 2013~2022 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA87
-## Date     : 2021-12-16
+## Version  : PA88
+## Date     : 2022-06-10
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -23,7 +23,6 @@ alias rc='__print $(rvm current) red'
 alias t='$TODOTXT'
 alias tl='$TODOTXT list'
 alias reload='exec bash'
-alias projects='cd projects;tree'
 
 alias tdy='things today'
 alias tdyl='things today list'
