@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2022 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA88
-## Date     : 2022-06-10
+## Version  : PA89
+## Date     : 2022-07-27
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -14,7 +14,7 @@
 
 shopt -s extglob
 
-TAGSPROJECTS='+(aws|chrome|codewars|conf|coursera|ebook|edx|exercism|futurelearn|graphacademy|hackerrank|javabrains|job|krishnamurti|lab360|linkedin|linuxacademy|oreilly|phoenix|pragmaticstudio|project|rails|sololearn|specialization|windriver|tutorial|tutorialspoint|udemy|jetbrains|research)'
+TAGSPROJECTS='+(aws|chrome|codewars|conf|coursera|ebook|edx|etc|exercism|futurelearn|graphacademy|hackerrank|javabrains|job|krishnamurti|lab360|linkedin|linuxacademy|oreilly|phoenix|pragmaticstudio|project|rails|sololearn|specialization|windriver|tutorial|tutorialspoint|udemy|jetbrains|research)'
 TAGSCONTEXTS='+(anki|bash|bigdata|bluemix|bootstrap|chartjs|cpp|css|delphi|design|devops|docker|elixir|elm|erlang|grails|groovy|hadoop|html|java|javascript|jekyll|jquery|nodejs|neo4j|phoenix|puppet|python|r|rails|reactjs|roblox|rspec|ruby|scratch|spring|sinatra|springboot|sql|sveltejs|unix|vim|vuejs|webpack|youtube|stimulusreflex)'
 
 TODOTXT=$HOME/.todo/todo.sh
@@ -74,6 +74,7 @@ alias tdi='things inbox'
 alias tdil='things inbox list'
 
 alias tdg='things git'
+alias tdgf='git fetch;git pull;git status -s'
 alias tdgi='things git start'
 alias tdge='things git stop'
 alias tdgl='things git log'
