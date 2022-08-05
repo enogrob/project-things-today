@@ -74,7 +74,7 @@ alias tdi='things inbox'
 alias tdil='things inbox list'
 
 alias tdg='things git'
-alias tdgf='git fetch;git pull;git status -s'
+alias tdgf='git checkout -- Gemfile;git checkout -- Gemfile.lock;git checkout -- db/schema.rb;git fetch;git pull;git status -s'
 alias tdgi='things git start'
 alias tdge='things git stop'
 alias tdgl='things git log'
