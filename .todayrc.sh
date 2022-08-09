@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2022 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA89
-## Date     : 2022-07-27
+## Version  : PA90
+## Date     : 2022-08-09
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -39,6 +39,7 @@ alias tdpn='things projects new'
 alias tdpj='things projects jump'
 alias tdph='things projects home'
 alias tdphi='things projects home start'
+alias tdpu='back=~/Projects; for d in `find "$back" \-type d \-name .git` ; do cd "$d/.."; git pull ; cd $back ; done'
 
 alias tda='things areas'
 alias tdal='things areas list'
