@@ -2,8 +2,8 @@
 ## Crafted (c) 2013~2022 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA90
-## Date     : 2022-08-09
+## Version  : PA91
+## Date     : 2022-09-11
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -75,7 +75,7 @@ alias tdi='things inbox'
 alias tdil='things inbox list'
 
 alias tdg='things git'
-alias tdgf='git checkout -- Gemfile;git checkout -- Gemfile.lock;git checkout -- db/schema.rb;git fetch;git pull;git status -s'
+alias tdgf='things git fetch'
 alias tdgi='things git start'
 alias tdge='things git stop'
 alias tdgl='things git log'
@@ -1554,6 +1554,29 @@ things() {
                     ;;
                   graph)
                     git log --graph --oneline --decorate --all
+                    ;;
+                  fetch)
+                    git fetch
+                    git pull
+                    if [ $? -eq 1 ]; then
+                      git checkout -- .gitignore
+                    else
+                      git status -S
+                      return 0
+                    fi
+                    git pull
+                    if [ $? -eq 1 ]; then
+                      git checkout -- db/schema.rb
+                    else
+                      git status -S
+                      return 0
+                    fi
+                    git pull
+                    if [ $? -eq 1 ]; then
+                      git checkout -- Gemfile
+                      git checkout -- Gemfile.lock
+                    fi
+                    git status -s
                     ;;
 
                 *)  git status -s
