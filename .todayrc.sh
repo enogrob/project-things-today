@@ -1561,14 +1561,14 @@ things() {
                     if [ $? -eq 1 ]; then
                       git checkout -- .gitignore
                     else
-                      git status -S
+                      git status -s
                       return 0
                     fi
                     git pull
                     if [ $? -eq 1 ]; then
                       git checkout -- db/schema.rb
                     else
-                      git status -S
+                      git status -s
                       return 0
                     fi
                     git pull
