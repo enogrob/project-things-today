@@ -39,7 +39,7 @@ alias tdpn='things projects new'
 alias tdpj='things projects jump'
 alias tdph='things projects home'
 alias tdphi='things projects home start'
-alias tdpu='back=~/Projects; for d in `find "$back" \-type d \-name .git` ; do cd "$d/.."; git pull ; cd $back ; done'
+alias tdpu='back="$HOME/Projects/"; for d in `find "$back" \-type d \-name .git` ; do cd "$d/.."; git pull ; cd $back ; done'
 
 alias tda='things areas'
 alias tdal='things areas list'
