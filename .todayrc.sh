@@ -1,9 +1,9 @@
 #!/bin/bash
-## Crafted (c) 2013~2022 by ZoatWorks Software LTDA.
+## Crafted (c) 2013~2023 by ZoatWorks Software LTDA.
 ## Prepared : Roberto Nogueira
 ## File     : .todayrc.sh
-## Version  : PA91
-## Date     : 2022-09-11
+## Version  : PA92
+## Date     : 2023-06-12
 ## Project  : project-things-today
 ## Reference: bash
 ##
@@ -15,7 +15,7 @@
 shopt -s extglob
 
 TAGSPROJECTS='+(aws|chrome|codewars|conf|coursera|ebook|edx|etc|exercism|futurelearn|graphacademy|hackerrank|javabrains|job|krishnamurti|lab360|linkedin|linuxacademy|oreilly|phoenix|pragmaticstudio|project|rails|sololearn|specialization|windriver|tutorial|tutorialspoint|udemy|jetbrains|research)'
-TAGSCONTEXTS='+(anki|bash|bigdata|bluemix|bootstrap|chartjs|cpp|css|delphi|design|devops|docker|elixir|elm|erlang|grails|groovy|hadoop|html|java|javascript|jekyll|jquery|nodejs|neo4j|phoenix|puppet|python|r|rails|reactjs|roblox|rspec|ruby|scratch|spring|sinatra|springboot|sql|sveltejs|unix|vim|vuejs|webpack|youtube|stimulusreflex)'
+TAGSCONTEXTS='+(ai|anki|bash|bigdata|bluemix|bootstrap|chartjs|chatgpt|cpp|css|delphi|design|devops|docker|elixir|elm|erlang|grails|graphql|groovy|hadoop|html|java|javascript|jekyll|jquery|metaverse|nodejs|neo4j|phoenix|postman|puppet|python|r|react|rails|reactjs|roblox|rspec|ruby|scratch|spring|sinatra|springboot|sql|sveltejs|unix|vim|vuejs|webpack|youtube|stimulusreflex)'
 
 TODOTXT=$HOME/.todo/todo.sh
 
