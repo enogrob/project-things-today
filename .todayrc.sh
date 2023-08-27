@@ -15,7 +15,7 @@
 shopt -s extglob
 
 TAGSPROJECTS='+(aws|chrome|codewars|conf|coursera|ebook|edx|etc|encoracademy|exercism|futurelearn|graphacademy|hackerrank|javabrains|job|krishnamurti|lab360|linkedin|linuxacademy|oreilly|phoenix|pragmaticstudio|project|rails|sololearn|specialization|windriver|tutorial|tutorialspoint|udemy|jetbrains|research)'
-TAGSCONTEXTS='+(ai|anki|bash|bigdata|bluemix|bootstrap|chartjs|chatgpt|cpp|css|delphi|design|devops|docker|elixir|elm|erlang|grails|graphql|groovy|hadoop|html|java|javascript|jekyll|jquery|metaverse|nodejs|neo4j|phoenix|postman|puppet|python|r|react|rails|reactjs|roblox|rspec|ruby|scratch|spring|sinatra|springboot|sql|sveltejs|unix|vim|vuejs|webpack|youtube|stimulusreflex)'
+TAGSCONTEXTS='+(ai|anki|bash|bigdata|bluemix|bootstrap|chartjs|chatgpt|cpp|css|delphi|design|devops|docker|elixir|elm|erlang|grails|graphql|groovy|hadoop|html|java|javascript|jekyll|jquery|metaverse|nodejs|neo4j|phoenix|postman|puppet|python|r|react|rails|reactjs|roblox|rspec|ruby|scratch|spring|sinatra|springboot|sql|sveltejs|unity|unix|vim|vuejs|webpack|youtube|stimulusreflex)'
 
 TODOTXT=$HOME/.todo/todo.sh
 
